@@ -8,8 +8,9 @@ long-range dependencies in medical time series than pure-transformer baselines?
 Two datasets are supported: **MIMIC-IV** (multi-modal, 5 input types) and **eICU** (tabular,
 7 event types).
 
-> Both datasets require institutional data access agreements (PhysioNet). Precomputed embeddings
-> and raw data are not distributed with this repository.
+> Both datasets require institutional data access agreements (PhysioNet). The scripts assume
+> access to pre-processed data in WebDataset shard format; preparing these shards requires
+> institutional access and is not covered by this repository.
 
 ---
 
@@ -116,6 +117,16 @@ log-transformed targets.
 
 Baseline (non-LLM) models are in `eICU/finetune_sequential_baseline.py` and use a lighter
 CNN/LSTM encoder stack without the LLM backbone.
+
+---
+
+## CLI Differences: MIMIC-IV vs eICU
+
+> MIMIC-IV training delegates all argument parsing to `MIMIC-IV/picme_src/argparser.py`.
+> eICU training defines its own `argparse` parameters directly in each script. The two
+> interfaces are not identical — use each script's `--help` for the authoritative argument
+> list. In particular, the epoch count argument is `--num_train_epochs` in the MIMIC scripts
+> and `--epochs` in the eICU scripts.
 
 ---
 

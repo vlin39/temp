@@ -100,14 +100,22 @@ patched = ablate_single_attn_module(model, layer_idx=12)
 
 ## Environment Setup
 
-```bash
-# pip
-pip install -r Env/requirements.txt
+> **Note:** `Env/environment.yml` and `Env/requirements.txt` are broader snapshots from a
+> previous project and should not be treated as guaranteed minimal or clean environments.
+> `Env/colored_objects_environment.yml` is the recommended starting point for lightweight
+> reproduction.
 
-# conda
-conda env create -f Env/environment.yml
-conda activate hybrid-ablation
+```bash
+# Recommended: conda env for colored objects / state tracking tasks
+conda env create -f Env/colored_objects_environment.yml
+conda activate dol-colored-objects
+
+# pip (broader)
+pip install -r Env/requirements.txt
 ```
+
+Key dependencies: Python 3.10, PyTorch, Transformers, Accelerate, Datasets,
+NumPy / pandas / tqdm, PyYAML.
 
 The NIAH benchmark has a lighter self-contained environment:
 
@@ -167,6 +175,40 @@ Figs/
 ├── Clinical-Sequence-Modeling/ ← AUROC-vs-sequence-length plots
 └── Misc/                   ← reference figures from related work
 ```
+
+---
+
+## Pre-existing Results
+
+This repo includes committed result files — it is not scaffolding only.
+
+- **In-Context Retrieval**: 14 JSON output files + 3 SVG comparison plots in
+  `Tasks/In-Context Retrieval/colored_objects/output/`
+- **State Tracking**: 34 JSON result files across 5 box-count sweeps in
+  `Tasks/State-Tracking/entity-tracking-lms/output/`
+
+---
+
+## Key Findings
+
+From the saved OLMo results:
+
+- At **0 operations** (pure retrieval, no state updates) the pure transformer leads clearly
+  (set accuracy 0.953 vs 0.593 on the 6-box task).
+- For **1+ operations** the hybrid leads across all operation counts, degrading far less as
+  the sequence of state updates grows.
+
+This is consistent with a division-of-labor hypothesis: linear/gated-recurrent attention
+carries iterative state-update computation that standard MHA handles poorly under ablation.
+
+---
+
+## Suggested Reading Order
+
+1. Read each task README for context on the benchmarks.
+2. Inspect `Models/model_util.py` to understand the ablation primitives.
+3. Open the committed JSON files in task `output/` directories to explore pre-computed results.
+4. Extend with new model or ablation runs using the commands in each task README.
 
 ---
 

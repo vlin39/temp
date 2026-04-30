@@ -50,12 +50,13 @@ python src/dataset_generation/generate_boxes_data.py \
     --max_items_per_box 3 \
     --num_operations 12 \
     --num_samples 1000 \
-    --output_dir data/boxes5_nso_exp2_max3_zero_shot
+    --output_dir data/boxes5_exp2_max3_nops12_zero_shot
 ```
 
 Generated datasets follow the naming convention
-`boxes{N}_exp{expected}_max{max}_{num_ops}_zero_shot`, where `N` is the number of boxes. The
-script writes `train-t5.jsonl`, `dev-t5.jsonl`, and `test-t5.jsonl` into `--output_dir`.
+`boxes{N}_exp{expected}_max{max}_nops{nops}_zero_shot`, where `N` is the number of boxes and
+`nops` is the number of operations. The script writes `train-t5.jsonl`, `dev-t5.jsonl`, and
+`test-t5.jsonl` into `--output_dir`.
 
 ---
 
@@ -75,7 +76,7 @@ Point directly at an existing dataset directory:
 ```bash
 python run_evaluation.py \
     --model_name allenai/Olmo-Hybrid-Instruct-SFT-7B \
-    --dataset_dir data/boxes6_nso_exp2_max3_zero_shot \
+    --dataset_dir data/boxes6_exp2_max3_nops12_zero_shot \
     --prompt_mode chat
 ```
 
@@ -163,6 +164,43 @@ against every model configuration.
 `exact_accuracy` requires the model output to match the gold content list in order; `set_accuracy`
 only requires the same set of items, ignoring order. The gap between the two metrics reflects how
 often models predict the correct items but in a wrong sequence.
+
+---
+
+## Saved Results
+
+Pre-computed results are in `output/` across 5 box-count configurations and 4 model families.
+
+**Set accuracy by `numops`** — OLMo pair, `boxes6_exp2_max3_nops12_zero_shot`, chat mode:
+
+| numops | OLMo-Hybrid-7B | OLMo-3-7B (pure) |
+|--------|---------------|------------------|
+| 0 | 0.593 | 0.953 |
+| 1 | 0.447 | 0.160 |
+| 2 | 0.300 | 0.197 |
+| 3 | 0.233 | 0.137 |
+| 4 | 0.217 | 0.063 |
+| 5 | 0.210 | 0.097 |
+
+At 0 operations the pure transformer leads strongly; the hybrid leads for all 1+ operation
+counts. This crossover is the central finding of the state-tracking ablation.
+
+**Overall set accuracy vs. `n_boxes`** — OLMo pair, chat mode, all ops pooled:
+
+| n_boxes | OLMo-Hybrid-7B | OLMo-3-7B (pure) |
+|---------|---------------|------------------|
+| 2 | 0.488 | 0.356 |
+| 3 | 0.404 | 0.304 |
+| 4 | 0.363 | 0.280 |
+| 5 | 0.357 | 0.272 |
+| 6 | 0.333 | 0.268 |
+
+The hybrid advantage persists across all box counts. The strongest overall results in the
+saved outputs come from `Qwen/Qwen3.5-27B` (0.757–0.869 across box counts).
+
+`output/def_ds/` contains results on the default boxes dataset (not the nops12 sweep);
+OLMo-Hybrid outperforms OLMo-3 in both chat (0.323 vs 0.246) and continuation (0.226 vs
+0.175) prompt modes.
 
 ---
 
