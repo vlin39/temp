@@ -66,6 +66,14 @@ def resolve_ablate_groups(args: argparse.Namespace) -> list[str]:
     return groups
 
 
+def default_layer_output_json_path(
+    model_name: str,
+    prompt_mode: str,
+    layer_idx: int,
+) -> Path:
+    return _OUTPUT_DIR / f"{model_slug(model_name)}_{prompt_mode}_layer{layer_idx}.json"
+
+
 def resolve_model_name(model_name: str) -> str:
     _DOL_INTERP = _ROOT.parents[2]
     if str(_DOL_INTERP) not in sys.path:
@@ -113,6 +121,15 @@ def parse_args() -> argparse.Namespace:
         "--sweep_ablate_groups",
         action="store_true",
         help="Run none, self_attn, and linear_attn ablations.",
+    )
+    p.add_argument(
+        "--sweep_layer_indices",
+        action="store_true",
+        help=(
+            "Ablate one decoder layer at a time via ablate_single_attn_module. "
+            "Writes one JSON per layer; ignored if --sweep_ablate_groups is set. "
+            "Output: output/<slug>_<mode>_layer<N>.json"
+        ),
     )
     p.add_argument(
         "--cache_dir",
@@ -226,6 +243,8 @@ def main() -> None:
     num_runs = len(prompt_modes) * len(ablate_group_values)
     if args.output_json and num_runs != 1:
         sys.exit("--output_json can only be used when running a single configuration.")
+    if args.output_json and args.sweep_layer_indices:
+        sys.exit("--output_json cannot be used with --sweep_layer_indices.")
 
     print(
         f"Resolved model={model_name!r}; running {num_runs} configuration(s) "
@@ -239,7 +258,13 @@ def main() -> None:
     _DOL_INTERP = _ROOT.parents[2]
     if str(_DOL_INTERP) not in sys.path:
         sys.path.insert(0, str(_DOL_INTERP))
-    from Models.model_util import ablate_groups, load_model_and_tokenizer
+    from Models.model_util import (
+        ablate_groups,
+        ablate_single_attn_module,
+        list_decoder_attention_layer_indices,
+        load_model_and_tokenizer,
+        restore_attention_ablation,
+    )
 
     model, tokenizer = load_model_and_tokenizer(model_name)
 
@@ -247,23 +272,64 @@ def main() -> None:
         return ablate_groups(model, group)
 
     failures: list[tuple[str, str, str]] = []
-    for prompt_mode, ablate_group in product(prompt_modes, ablate_group_values):
-        print("\n" + "=" * 80)
-        print(f"Run config: prompt_mode={prompt_mode}, ablate_group={ablate_group}")
-        try:
-            run_single_config(
-                args=args,
-                examples=examples,
-                model_name=model_name,
-                model=model,
-                tokenizer=tokenizer,
-                apply_ablation=apply_ablation,
-                prompt_mode=prompt_mode,
-                ablate_group=ablate_group,
-            )
-        except ValueError as e:
-            failures.append((prompt_mode, ablate_group, str(e)))
-            print(f"Failed: {e}")
+
+    if args.sweep_layer_indices:
+        layer_indices = list_decoder_attention_layer_indices(model)
+        print(f"Layerwise sweep: {len(layer_indices)} layers × {len(prompt_modes)} prompt modes")
+        for prompt_mode in prompt_modes:
+            for layer_idx in layer_indices:
+                print("\n" + "=" * 80)
+                print(f"Run config: prompt_mode={prompt_mode}, layer_idx={layer_idx}")
+                out_path = default_layer_output_json_path(model_name, prompt_mode, layer_idx)
+                try:
+                    patched_names = ablate_single_attn_module(model, layer_idx)
+                    layer_type = "self_attn" if any("self_attn" in n for n in patched_names) else "linear_attn"
+                    print(f"  Ablated layer {layer_idx} ({layer_type}): {patched_names}")
+                    result_path = run_single_config(
+                        args=args,
+                        examples=examples,
+                        model_name=model_name,
+                        model=model,
+                        tokenizer=tokenizer,
+                        apply_ablation=lambda _g: [],  # ablation already applied
+                        prompt_mode=prompt_mode,
+                        ablate_group="none",
+                    )
+                    restore_attention_ablation(model)
+                    # Rewrite the output to include layer metadata.
+                    with open(result_path, encoding="utf-8") as f:
+                        saved = json.load(f)
+                    saved["ablate_mode"] = "single_layer"
+                    saved["layer_idx"] = layer_idx
+                    saved["layer_type"] = layer_type
+                    saved["ablation_modules"] = patched_names
+                    out_path.parent.mkdir(parents=True, exist_ok=True)
+                    with open(out_path, "w", encoding="utf-8") as f:
+                        json.dump(saved, f, indent=2, ensure_ascii=False)
+                    result_path.unlink(missing_ok=True)
+                    print(f"Wrote {out_path}")
+                except (ValueError, RuntimeError) as e:
+                    restore_attention_ablation(model)
+                    failures.append((prompt_mode, f"layer{layer_idx}", str(e)))
+                    print(f"Failed: {e}")
+    else:
+        for prompt_mode, ablate_group in product(prompt_modes, ablate_group_values):
+            print("\n" + "=" * 80)
+            print(f"Run config: prompt_mode={prompt_mode}, ablate_group={ablate_group}")
+            try:
+                run_single_config(
+                    args=args,
+                    examples=examples,
+                    model_name=model_name,
+                    model=model,
+                    tokenizer=tokenizer,
+                    apply_ablation=apply_ablation,
+                    prompt_mode=prompt_mode,
+                    ablate_group=ablate_group,
+                )
+            except ValueError as e:
+                failures.append((prompt_mode, ablate_group, str(e)))
+                print(f"Failed: {e}")
 
     if failures:
         print("\nSome configurations failed:")
