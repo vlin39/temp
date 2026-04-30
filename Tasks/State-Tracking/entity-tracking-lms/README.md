@@ -17,6 +17,28 @@ Adapted from Kim & Schuster, ACL 2023.
 
 ---
 
+## Dataset
+
+The dataset is provided as a password-protected ZIP file to prevent leakage into the training data
+of future language models. Please do not include the uncompressed files in any repositories if you
+use the data.
+
+- Download: [`data/boxes-dataset-v1.zip`](data/boxes-dataset-v1.zip)
+- Password: `iamnotaLM`
+
+---
+
+## Model Outputs
+
+The predictions from the original model runs are provided as a password-protected ZIP file to
+prevent leakage into the training data of future language models. Please do not include the
+uncompressed files in any repositories if you use the predictions.
+
+- Download: [`model-outputs/model-outputs.zip`](model-outputs/model-outputs.zip)
+- Password: `iamnotaLM`
+
+---
+
 ## Dataset Generation
 
 ```bash
