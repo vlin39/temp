@@ -1,0 +1,267 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2026
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% 0. "default" for submission
+\usepackage{neurips_2026}
+% the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
+% 1. "main" option is used for the Main Track
+%  \usepackage[main]{neurips_2026}
+% 2. "position" option is used for the Position Paper Track
+%  \usepackage[position]{neurips_2026}
+% 3. "eandd" option is used for the Evaluations & Datasets Track
+ % \usepackage[eandd]{neurips_2026}
+ % if you want to opt-in for a de-anomymized submission (not recommended, but OK):
+ %\usepackage[eandd, nonanonymous]{neurips_2026}
+% 4. "creativeai" option is used for the Creative AI Track
+%  \usepackage[creativeai]{neurips_2026}
+% 5. "sglblindworkshop" option is used for the Workshop with single-blind reviewing
+ % \usepackage[sglblindworkshop]{neurips_2026}
+% 6. "dblblindworkshop" option is used for the Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop]{neurips_2026}
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% 1. Main Track
+ % \usepackage[main, final]{neurips_2026}
+% 2. Position Paper Track
+%  \usepackage[position, final]{neurips_2026}
+% 3. Evaluations & Datasets Track
+ % \usepackage[eandd, final]{neurips_2026}
+% 4. Creative AI Track
+%  \usepackage[creativeai, final]{neurips_2026}
+% 5. Workshop with single-blind reviewing
+%  \usepackage[sglblindworkshop, final]{neurips_2026}
+% 6. Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop, final]{neurips_2026}
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+% For workshops (5., 6.), the authors should add the name of the workshop, "\workshoptitle" command is used to set the workshop title.
+% \workshoptitle{WORKSHOP TITLE}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2026}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2026}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{natbib}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote. 
+\title{Division of Labor Between Attention and SSM Layers in Hybrid Language Models}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  David S.~Hippocampus\thanks{Use footnote for providing further information
+    about author (webpage, alternative address)---\emph{not} for acknowledging
+    funding agencies.} \\
+  Department of Computer Science\\
+  Cranberry-Lemon University\\
+  Pittsburgh, PA 15213 \\
+  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+    
+
+\begin{abstract}
+TBD
+\end{abstract}
+
+
+
+\section{Introduction}
+\label{sec:intro}
+
+Hybrid language models combine transformer attention with state-space or linear-attention style components in order to improve efficiency while preserving strong reasoning and retrieval performance.
+These architectures are becoming increasingly common, but it remains unclear how their internal components divide computational labor across tasks. 
+In particular, although pure transformers and hybrid models may achieve similar end-task accuracy, they may rely on very different layers or module types to do so. 
+Our central question is whether hybrid language models exhibit a division of labor between attention-based and SSM-style layers, and how that organization differs from pure transformers.
+
+The central problem we study is functional localization in hybrid language models: where is task-relevant computation located, and how does this differ from pure transformers? 
+Answering this question is necessary for interpreting hybrid architectures beyond aggregate benchmark performance. 
+If hybrids distribute computation differently across layers, 
+then similar task accuracy may hide substantial architectural differences in how retrieval, reasoning, and state tracking are implemented.
+
+Prior work has shown ...
+
+We study this problem through inference-time functional ablations on pure transformer and hybrid language models. 
+Rather than treating performance alone as the object of comparison, we ask how computation is distributed across layers and how model behavior changes when individual components are removed. 
+Our analysis focuses on layerwise interventions and evaluates their effects across retrieval, reasoning, and state-tracking tasks. 
+This allows us to test whether hybrid models preserve transformer-like patterns of sensitivity or instead exhibit qualitatively different internal organization.
+
+
+We report both baseline task accuracy and layerwise sensitivity profiles. 
+This allows us to compare not only which models perform well, but also whether they achieve that performance through localized or distributed computation. 
+More broadly, our results speak to a growing interpretability question for non-transformer and hybrid architectures: 
+whether efficient alternatives preserve transformer-like computational structure or solve the same tasks through qualitatively different internal mechanisms.
+
+To summarize, our contributions are as follows:
+\begin{itemize}
+    \item{}
+	\item{}
+    \item{}
+\end{itemize}
+
+
+
+
+\section{Related Work}
+\label{sec:rw}
+Hybrid architectures are often explicitly engineered to divide computational roles. For example, \cite{Zhu2025} strictly partition processing into a transformer encoder and an SSM decoder, while \cite{ryoo2025generalizablerealtimeneuraldecoding} use attention for initial tokenization followed by SSM layers for fast inference. Other approaches enforce this division during training, such as using distillation to replace retrieval-heavy attention heads with efficient SSM layers \cite{bick2026retrievalawaredistillationtransformerssmhybrids}. While these designs prove the practical utility of mixed architectures, they leave open the question of how natively trained hybrids organically distribute computation.
+
+Currently, most comparative evaluations of hybrids and pure transformers focus on aggregate performance, such as long-context modeling capabilities \cite{wornow2025contextcluesevaluatinglong}, leaving their internal mechanisms opaque. However, recent mechanistic work has begun opening the black box, demonstrating that pure transformers and pure SSMs solve identical tasks, using fundamentally different internal circuits \cite{arora2026mechanisticevaluationtransformersstate}.
+
+Our work bridges the gap between these mechanistic insights and hybrid architecture analysis. We build directly upon recent ablation studies by \cite{borobia2026functionalcomponentablationreveals}, who establish that both attention and SSM components are critical to performance and that earlier layers exhibit higher sensitivity.
+
+\section{Method}
+\label{sec:method}
+
+We study where task-relevant computation is localized in pure transformer and hybrid language models. Our approach uses inference-time functional ablations to measure how model behavior changes when specific components are removed.
+
+\subsection{Ablation Framework}
+At inference time, we ablate a target module by replacing its forward pass with an identity mapping. 
+This intervention removes the computation performed by that module while keeping the rest of the network unchanged. 
+In our experiments, we perform layerwise ablations: for a decoder layer indexed by $\ell$, we ablate exactly one attention module at that layer and evaluate the resulting change in accuracy. 
+In the pure transformer model, this always corresponds to removing one self-attention module. 
+In the hybrid models, it corresponds to removing whichever attention module is active at layer $\ell$. 
+By sweeping over all decoder layers, we obtain a layerwise sensitivity profile for each model and task.
+
+\section{Experimental Setup}
+\label{sec:exp}
+
+\subsection{Models and Tasks}
+\label{sec:models_and_tasks}
+We evaluate six instruction-tuned language models from two distinct model families. The first family comprises \texttt{Olmo-3-7B-Instruct-SFT} \cite{olmo2025olmo3} and \texttt{Olmo-Hybrid-Instruct-SFT-7B} \cite{merrill2026olmohybridtheorypractice}. The second family consists of the Qwen models \cite{yang2025qwen3technicalreport}: \texttt{Qwen3-8B}, \texttt{Qwen3.5-9B}, \texttt{Qwen3.5-27B}, and \texttt{Qwen3-32B}. In our setup, \texttt{Olmo-3-7B-Instruct-SFT}, \texttt{Qwen3-8B}, and the larger \texttt{Qwen3-32B} serve as our pure transformer baselines. Conversely, \texttt{Olmo-Hybrid-Instruct-SFT-7B}, \texttt{Qwen3.5-9B}, and the larger-scale \texttt{Qwen3.5-27B} are evaluated as our hybrid models. This selection allows us to isolate the functional differences between pure transformer and hybrid architectures across both different model families and parameter scales.
+
+We study these models on two broad task families: in-context retrieval and state tracking. 
+The in-context retrieval family includes the \texttt{colored-objects} benchmark and \texttt{Needle-in-a-Haystack style} retrieval tasks. 
+The state-tracking family consists of tasks that probe whether models can maintain and update latent state across sequential operations.
+
+\subsection{Evaluation Protocol}\label{sec:eval}
+We report both baseline performance and layerwise ablation results. For the \texttt{colored\_objects} benchmark, evaluation is balanced by prompt object count: 
+we group examples by the number of objects mentioned in the prompt and sample equally from each group.
+For each task subtype, we use the largest feasible balanced subset allowed by the smallest object-count group. 
+All \texttt{colored\_objects} experiments use chat prompting, exact-match accuracy, and a maximum generation length of 16 tokens.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Baseline Performance}
+\subsection{Layerwise Ablations in OLMo and OLMo-Hybrid}
+\subsection{Layerwise Ablations in Qwen Models}
+
+
+
+\section*{References}
+\bibliographystyle{unsrtnat}  
+\bibliography{bib}  
+\medskip
+{
+\small
+
+
+\clearpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\renewcommand{\thefigure}{A.\arabic{figure}}
+\setcounter{figure}{0}
+
+\renewcommand{\thetable}{A.\arabic{table}}
+\setcounter{table}{0}
+
+\section{Clinical Task}
+\label{sec:clinical_data_preprocessing}
+
+\subsection{Data Preprocessing}
+To format the tabular eICU dataset for sequential modeling, we transformed relational EHR tables into temporally binned event sequences. Patient trajectories were partitioned into non-overlapping 12-hour windows (720 minutes) anchored to their admission time. 
+
+Within each 12-hour bin, events were grouped by modality (demographics, diagnosis, treatment, medication, lab, and acute physiology scores). Missing continuous features within a bin were ignored, while recorded values were aggregated into modality-specific vectors:
+\begin{itemize}
+    \item \textbf{Laboratory Measurements:} Multiple readings of the same lab test within a bin were averaged.
+    \item \textbf{Categorical/Event Modalities:} Binary indicators (e.g., diagnoses, medications) were clamped to a maximum value of $1.0$.
+\end{itemize}
+All aggregated vectors were subsequently normalized using a sign-preserved log-transformation, $f(x) = \text{sgn}(x) \log(1 + |x|)$. Sequences were appended with a learnable \texttt{[PREDICT]} token after every other temporal step to transparently model the decision update process. 
+
+
+
+\subsection{Sequence Modeling}
+Our architecture uses modality-specific encoders to map the precomputed vectors into a shared embedding space, which is then projected into the language model's hidden dimension. See \ref{fig:clinical sequence_modeling} for a visualization of the setup.
+
+\textbf{Modality Encoders:} Each modality is processed by an independent Multilayer Perceptron (MLP) parameterized by an input dimension dynamically inferred from the dataset. The encoder maps inputs to an embedding dimension of $D=256$ using the following sequence: Linear $\to$ LayerNorm $\to$ ReLU $\to$ Dropout($0.3$) $\to$ Linear $\to$ LayerNorm. 
+
+\textbf{LLM Integration and Projection:} The resulting embeddings (along with the \texttt{[PREDICT]} token embedding) are routed through an input projection module consisting of: Linear($256, D_{\text{hidden}}$) $\to$ GELU $\to$ Dropout($0.3$) $\to$ Linear($D_{\text{hidden}}, D_{\text{hidden}}$). This maps the features into the latent space of the frozen Large Language Model (LLM) backbone. 
+
+\textbf{Classification Head:} The final hidden state corresponding to the \texttt{[PREDICT]} token is extracted and passed through a classification head: Linear($D_{\text{hidden}}, 512$) $\to$ ReLU $\to$ Dropout($0.5$) $\to$ Linear($512, \text{num\_classes}$).
+
+\begin{figure*}
+	\centering
+	\includegraphics[width=0.85\linewidth]{assets/img/clinical_sequence_modeling.pdf}
+	\caption{Overview of clinical sequence modeling architecture. We pass the raw eICU patient data through modality-specific encoders, then auto-regressively input them to a causal decoder in temporal order.} 
+	\label{fig:clinical sequence_modeling}
+\end{figure*}
+
+\subsection{Training Details}
+We evaluated the six LLM backbones across pure transformer and hybrid architectures referenced in \ref{}. 
+
+To ensure memory-efficient training, all LLM backbones were quantized to 4-bit NormalFloat (NF4) with double quantization and bfloat16 compute precision using BitsAndBytes. We applied Low-Rank Adaptation (LoRA) across all linear target modules (\texttt{target\_modules="all-linear"}) , and LoRA hyperparameters were fixed at rank $r=16$, $\alpha=32$, and a dropout of $0.1$. Throughput was maximized using Flash Attention 2 and gradient checkpointing.
+
+Models were optimized using the 8-bit AdamW optimizer. For hyperparameter tuning, we executed a grid search sweeping learning rates across $\{1\times 10^{-5}, 3\times 10^{-5}, 5\times 10^{-5}\}$ and weight decay across $\{0.01, 0.05, 0.1\}$. Gradients were clipped to a maximum norm of $1.0$.
+For the in-hospital mortality task, we formulated it as a binary classification task. Models were trained using Binary Cross-Entropy with Logits loss (\texttt{BCEWithLogitsLoss}), applying a positive class weight of $10.76$ to counter class imbalance.
+   
+
+All configurations utilized a per-device batch size of 2 with 8 gradient accumulation steps (effective batch size of 16). Models were trained for a maximum of 40 epochs, with an early stopping patience of 5 epochs monitored against the validation AUROC. All models were trained on NVIDIA 3090 RTX GPUs.
+
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
