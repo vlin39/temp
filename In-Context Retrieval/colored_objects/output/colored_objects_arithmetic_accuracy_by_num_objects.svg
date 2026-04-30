@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>
+.title{font: 700 28px Arial, sans-serif; fill:#111;}
+.axis{font: 14px Arial, sans-serif; fill:#333;}
+.value{font: 12px Arial, sans-serif; fill:#111;}
+</style>
+<text x="600.0" y="46" text-anchor="middle" class="title">Colored Objects: Arithmetic Accuracy by Number of Objects</text>
+<rect x="870" y="95" width="280" height="58" rx="8" fill="#fafafa" stroke="#d9d9d9"/>
+<rect x="888" y="104" width="18" height="12" fill="#2ca02c"/>
+<text x="916" y="115" class="axis">Pure Transformer</text>
+<rect x="888" y="126" width="18" height="12" fill="#d96bc0"/>
+<text x="916" y="137" class="axis">Hybrid</text>
+<line x1="90" y1="530.0" x2="1170" y2="530.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="535.0" text-anchor="end" class="axis">0.000</text>
+<line x1="90" y1="446.0" x2="1170" y2="446.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="451.0" text-anchor="end" class="axis">0.200</text>
+<line x1="90" y1="362.0" x2="1170" y2="362.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="367.0" text-anchor="end" class="axis">0.400</text>
+<line x1="90" y1="278.0" x2="1170" y2="278.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="283.0" text-anchor="end" class="axis">0.600</text>
+<line x1="90" y1="194.0" x2="1170" y2="194.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="199.0" text-anchor="end" class="axis">0.800</text>
+<line x1="90" y1="110.0" x2="1170" y2="110.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="115.0" text-anchor="end" class="axis">1.0</text>
+<line x1="90" y1="110" x2="90" y2="530" stroke="#333" stroke-width="1.5"/>
+<line x1="90" y1="530" x2="1170" y2="530" stroke="#333" stroke-width="1.5"/>
+<text x="135.0" y="558" text-anchor="middle" class="axis">2</text>
+<rect x="105.4" y="250.0" width="26" height="280.0" fill="#2ca02c" opacity="0.97"/>
+<text x="118.4" y="244.0" text-anchor="middle" class="value">0.667</text>
+<rect x="138.60000000000002" y="110.0" width="26" height="420.0" fill="#d96bc0" opacity="0.97"/>
+<text x="151.60000000000002" y="104.0" text-anchor="middle" class="value">1.000</text>
+<text x="225.0" y="558" text-anchor="middle" class="axis">3</text>
+<rect x="195.4" y="250.0" width="26" height="280.0" fill="#2ca02c" opacity="0.97"/>
+<text x="208.4" y="244.0" text-anchor="middle" class="value">0.667</text>
+<rect x="228.60000000000002" y="110.0" width="26" height="420.0" fill="#d96bc0" opacity="0.97"/>
+<text x="241.60000000000002" y="104.0" text-anchor="middle" class="value">1.000</text>
+<text x="315.0" y="558" text-anchor="middle" class="axis">4</text>
+<rect x="285.4" y="250.0" width="26" height="280.0" fill="#2ca02c" opacity="0.97"/>
+<text x="298.4" y="244.0" text-anchor="middle" class="value">0.667</text>
+<rect x="318.59999999999997" y="390.0" width="26" height="140.0" fill="#d96bc0" opacity="0.97"/>
+<text x="331.59999999999997" y="384.0" text-anchor="middle" class="value">0.333</text>
+<text x="405.0" y="558" text-anchor="middle" class="axis">5</text>
+<rect x="375.4" y="390.0" width="26" height="140.0" fill="#2ca02c" opacity="0.97"/>
+<text x="388.4" y="384.0" text-anchor="middle" class="value">0.333</text>
+<rect x="408.59999999999997" y="390.0" width="26" height="140.0" fill="#d96bc0" opacity="0.97"/>
+<text x="421.59999999999997" y="384.0" text-anchor="middle" class="value">0.333</text>
+<text x="495.0" y="558" text-anchor="middle" class="axis">6</text>
+<rect x="465.4" y="390.0" width="26" height="140.0" fill="#2ca02c" opacity="0.97"/>
+<text x="478.4" y="384.0" text-anchor="middle" class="value">0.333</text>
+<rect x="498.59999999999997" y="530.0" width="26" height="0.0" fill="#d96bc0" opacity="0.97"/>
+<text x="511.59999999999997" y="524.0" text-anchor="middle" class="value">0.000</text>
+<text x="585.0" y="558" text-anchor="middle" class="axis">7</text>
+<rect x="555.4" y="250.0" width="26" height="280.0" fill="#2ca02c" opacity="0.97"/>
+<text x="568.4" y="244.0" text-anchor="middle" class="value">0.667</text>
+<rect x="588.6" y="390.0" width="26" height="140.0" fill="#d96bc0" opacity="0.97"/>
+<text x="601.6" y="384.0" text-anchor="middle" class="value">0.333</text>
+<text x="675.0" y="558" text-anchor="middle" class="axis">8</text>
+<rect x="645.4" y="110.0" width="26" height="420.0" fill="#2ca02c" opacity="0.97"/>
+<text x="658.4" y="104.0" text-anchor="middle" class="value">1.000</text>
+<rect x="678.6" y="390.0" width="26" height="140.0" fill="#d96bc0" opacity="0.97"/>
+<text x="691.6" y="384.0" text-anchor="middle" class="value">0.333</text>
+<text x="765.0" y="558" text-anchor="middle" class="axis">9</text>
+<rect x="735.4" y="390.0" width="26" height="140.0" fill="#2ca02c" opacity="0.97"/>
+<text x="748.4" y="384.0" text-anchor="middle" class="value">0.333</text>
+<rect x="768.6" y="390.0" width="26" height="140.0" fill="#d96bc0" opacity="0.97"/>
+<text x="781.6" y="384.0" text-anchor="middle" class="value">0.333</text>
+<text x="855.0" y="558" text-anchor="middle" class="axis">10</text>
+<rect x="825.4" y="530.0" width="26" height="0.0" fill="#2ca02c" opacity="0.97"/>
+<text x="838.4" y="524.0" text-anchor="middle" class="value">0.000</text>
+<rect x="858.6" y="530.0" width="26" height="0.0" fill="#d96bc0" opacity="0.97"/>
+<text x="871.6" y="524.0" text-anchor="middle" class="value">0.000</text>
+<text x="945.0" y="558" text-anchor="middle" class="axis">11</text>
+<rect x="915.4" y="530.0" width="26" height="0.0" fill="#2ca02c" opacity="0.97"/>
+<text x="928.4" y="524.0" text-anchor="middle" class="value">0.000</text>
+<rect x="948.6" y="530.0" width="26" height="0.0" fill="#d96bc0" opacity="0.97"/>
+<text x="961.6" y="524.0" text-anchor="middle" class="value">0.000</text>
+<text x="1035.0" y="558" text-anchor="middle" class="axis">12</text>
+<rect x="1005.4" y="530.0" width="26" height="0.0" fill="#2ca02c" opacity="0.97"/>
+<text x="1018.4" y="524.0" text-anchor="middle" class="value">0.000</text>
+<rect x="1038.6" y="530.0" width="26" height="0.0" fill="#d96bc0" opacity="0.97"/>
+<text x="1051.6" y="524.0" text-anchor="middle" class="value">0.000</text>
+<text x="1125.0" y="558" text-anchor="middle" class="axis">14</text>
+<rect x="1095.4" y="530.0" width="26" height="0.0" fill="#2ca02c" opacity="0.97"/>
+<text x="1108.4" y="524.0" text-anchor="middle" class="value">0.000</text>
+<rect x="1128.6000000000001" y="530.0" width="26" height="0.0" fill="#d96bc0" opacity="0.97"/>
+<text x="1141.6000000000001" y="524.0" text-anchor="middle" class="value">0.000</text>
+<text x="600.0" y="688" text-anchor="middle" class="axis">Number of objects</text>
+<text x="28" y="360.0" text-anchor="middle" transform="rotate(-90 28 360.0)" class="axis">Accuracy</text>
+</svg>

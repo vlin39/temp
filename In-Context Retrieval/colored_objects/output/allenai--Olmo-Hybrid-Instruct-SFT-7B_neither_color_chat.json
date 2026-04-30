@@ -1,0 +1,2158 @@
+{
+  "model_name": "allenai/Olmo-Hybrid-Instruct-SFT-7B",
+  "task_json": "/oscar/home/igemou/dol_interp/Tasks/In-Context Retrieval/colored_objects/task.json",
+  "num_test_set": 150,
+  "n_per_num_objects_bin": 30,
+  "seed": 0,
+  "max_new_tokens": 16,
+  "prompt_mode": "chat",
+  "subtype": "neither_color",
+  "available_num_objects_bins": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "pool_sizes_num_objects": {
+    "2": 30,
+    "3": 53,
+    "4": 38,
+    "5": 48,
+    "6": 31
+  },
+  "overall": {
+    "n": 150,
+    "accuracy": 0.35333333333333333
+  },
+  "by_num_objects": {
+    "2": {
+      "n": 30,
+      "accuracy": 0.36666666666666664
+    },
+    "3": {
+      "n": 30,
+      "accuracy": 0.4666666666666667
+    },
+    "4": {
+      "n": 30,
+      "accuracy": 0.06666666666666667
+    },
+    "5": {
+      "n": 30,
+      "accuracy": 0.4
+    },
+    "6": {
+      "n": 30,
+      "accuracy": 0.4666666666666667
+    }
+  },
+  "by_subtype": {
+    "neither_color": {
+      "n": 150,
+      "accuracy": 0.35333333333333333
+    }
+  },
+  "rows": [
+    {
+      "i": 523,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a blue booklet and a purple paperclip. How many things are neither blue nor black?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 465,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a red fidget spinner, a blue booklet, and a brown envelope. How many things are neither purple nor yellow?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 425,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a yellow jug, a brown pair of sunglasses, a red necklace, a purple bracelet, and a green booklet. How many things are neither black nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 484,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a red teddy bear and a yellow cup. How many things are neither red nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 467,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a blue plate and a purple cup. How many objects are neither purple nor yellow?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 462,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a red envelope, a black teddy bear, and a yellow pencil. How many things are neither yellow nor red?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 410,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a black puzzle, a blue booklet, a brown bracelet, and a red dog leash. How many objects are neither purple nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 470,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a green bracelet, a purple cat toy, a brown pair of sunglasses, a black fidget spinner, a red dog leash, and an orange pen. How many objects are neither black nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 478,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a yellow dog leash and an orange jug. How many things are neither green nor black?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": false
+    },
+    {
+      "i": 486,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a yellow pair of sunglasses, a red mug, an orange paperclip, and a blue pen. How many objects are neither purple nor black?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 580,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow paperclip, a green bracelet, a blue pen, a purple scrunchiephone charger, an orange necklace, and a black notebook. How many items are neither red nor brown?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 439,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a brown puzzle and a green cup. How many objects are neither brown nor green?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": true
+    },
+    {
+      "i": 428,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red booklet, an orange cat toy, and a green sheet of paper. How many things are neither red nor green?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 418,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a black puzzle, an orange crayon, a yellow pen, a green bracelet, and a red paperclip. How many items are neither green nor purple?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 458,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a blue stress ball, a red necklace, a yellow pen, a black cat toy, a purple mug, and a green puzzle. How many objects are neither brown nor orange?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 483,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, you see an orange dog leash, a yellow bracelet, a red cup, and a blue scrunchiephone charger. How many objects are neither purple nor brown?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": true
+    },
+    {
+      "i": 461,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a purple bracelet and a red scrunchiephone charger. How many things are neither red nor purple?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 493,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a blue mug, a brown fidget spinner, a yellow textbook, and a black necklace. How many objects are neither black nor brown?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 437,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a blue paperclip, a green jug, a purple stress ball, an orange crayon, and a yellow cup. How many things are neither black nor brown?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": true
+    },
+    {
+      "i": 443,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a yellow notebook, a blue jug, a red keychain, an orange pencil, and a purple fidget spinner. How many objects are neither purple nor blue?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 429,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a purple keychain and a red booklet. How many items are neither red nor blue?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 475,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a green paperclip, an orange textbook, a purple booklet, a blue necklace, a yellow bracelet, and a red stress ball. How many things are neither purple nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 408,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a red puzzle and a yellow cup. How many objects are neither orange nor blue?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "the",
+      "raw_suffix": "The objects are a red puzzle and a yellow cup. Neither is orange nor blue",
+      "correct": false
+    },
+    {
+      "i": 455,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a blue jug, a brown bracelet, and an orange dog leash. How many objects are neither orange nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 537,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown paperclip, a red textbook, a black keychain, a purple mug, an orange jug, and a blue pen. How many objects are neither yellow nor green?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 551,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a yellow jug, an orange teddy bear, and a purple crayon. How many things are neither black nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 490,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a brown necklace and a red crayon. How many items are neither red nor purple?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "Two",
+      "correct": false
+    },
+    {
+      "i": 499,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a purple teddy bear, a yellow notebook, and a black cat toy. How many items are neither purple nor yellow?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 468,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown mug, a green scrunchiephone charger, and a yellow teddy bear. How many items are neither purple nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 560,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a yellow booklet, a brown pair of sunglasses, a blue puzzle, a red dog leash, and an orange paperclip. How many items are neither purple nor green?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 501,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a yellow sheet of paper, a green plate, a purple notebook, a black envelope, and a red pen. How many items are neither brown nor red?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 492,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a black dog leash, a red crayon, a brown notebook, a green jug, and a purple envelope. How many items are neither yellow nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 562,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a purple necklace, a black plate, and a blue puzzle. How many objects are neither black nor purple?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 544,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a blue crayon and a green dog leash. How many objects are neither red nor purple?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 456,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a red mug, a yellow cup, and a purple bracelet. How many things are neither brown nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 411,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see an orange fidget spinner, a red necklace, a green booklet, and a black stress ball. How many things are neither green nor yellow?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 489,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a yellow paperclip, an orange cup, a purple fidget spinner, a blue mug, a red teddy bear, and a black cat toy. How many things are neither brown nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 422,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a brown fidget spinner, a red puzzle, a yellow plate, a blue sheet of paper, an orange cat toy, and a purple mug. How many objects are neither yellow nor orange?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 500,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a black puzzle, a yellow notebook, a purple pair of sunglasses, and a blue paperclip. How many items are neither orange nor brown?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": true
+    },
+    {
+      "i": 444,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a yellow crayon and a blue mug. How many items are neither green nor purple?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 598,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a green bracelet, a purple jug, a blue fidget spinner, and a yellow cat toy. How many items are neither yellow nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 485,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple pen, a green teddy bear, a black cup, a yellow pair of sunglasses, and a blue crayon. How many items are neither red nor orange?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 495,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a black teddy bear, a purple puzzle, a red plate, a blue jug, a green scrunchiephone charger, and a yellow crayon. How many items are neither brown nor purple?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 442,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a green envelope, an orange sheet of paper, a red pen, and a brown paperclip. How many objects are neither brown nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 596,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is an orange plate, a yellow cup, a green crayon, and a blue fidget spinner. How many items are neither black nor purple?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "all",
+      "raw_suffix": "All items listed (orange plate, yellow cup, green crayon, blue f",
+      "correct": false
+    },
+    {
+      "i": 533,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a green jug and a red plate. How many items are neither red nor green?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": true
+    },
+    {
+      "i": 577,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown crayon, a red sheet of paper, and a purple jug. How many things are neither yellow nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 471,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a yellow teddy bear, an orange plate, and a purple envelope. How many items are neither orange nor yellow?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 497,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a brown textbook and a blue mug. How many things are neither orange nor green?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 566,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a yellow stress ball, an orange pen, a blue cup, a green pair of sunglasses, a brown notebook, and a purple mug. How many items are neither blue nor brown?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 463,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a brown bracelet, a green notebook, a black pencil, an orange necklace, a blue scrunchiephone charger, and a red plate. How many things are neither brown nor red?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 532,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown puzzle, a black bracelet, and a blue booklet. How many things are neither black nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 453,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is an orange paperclip, a red notebook, a brown keychain, and a black puzzle. How many things are neither purple nor brown?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 522,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow cup, a black dog leash, and a blue keychain. How many things are neither orange nor red?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 469,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a black dog leash, a blue cat toy, a yellow scrunchiephone charger, a purple fidget spinner, an orange bracelet, and a green pair of sunglasses. How many objects are neither red nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 570,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a brown cup, a blue textbook, a yellow necklace, an orange booklet, a red scrunchiephone charger, and a purple keychain. How many things are neither brown nor red?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 564,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a yellow keychain, an orange puzzle, a purple fidget spinner, a red booklet, and a green pencil. How many things are neither red nor blue?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 400,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a yellow puzzle, a purple bracelet, a brown jug, and a black notebook. How many objects are neither purple nor orange?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 539,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a brown fidget spinner and a black booklet. How many items are neither purple nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 464,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see an orange mug, a yellow keychain, a red jug, a blue crayon, and a purple pencil. How many objects are neither blue nor black?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 449,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a green fidget spinner, an orange necklace, a yellow pen, and a purple envelope. How many items are neither green nor orange?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 515,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is an orange envelope, a black puzzle, a brown stress ball, and a red crayon. How many things are neither black nor red?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 578,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see an orange stress ball, a brown bracelet, a purple necklace, a yellow booklet, a green puzzle, and a blue pencil. How many objects are neither red nor brown?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 597,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a purple paperclip, an orange keychain, a blue scrunchiephone charger, a red pair of sunglasses, a brown envelope, and a yellow sheet of paper. How many items are neither red nor black?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 482,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a purple dog leash, a black teddy bear, and a yellow crayon. How many objects are neither red nor orange?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 512,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a brown necklace and a blue envelope. How many items are neither orange nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 541,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple sheet of paper, a blue textbook, an orange necklace, a yellow bracelet, and a black mug. How many things are neither red nor black?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 477,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a green booklet, a blue stress ball, an orange pair of sunglasses, and a red scrunchiephone charger. How many items are neither blue nor purple?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 552,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a yellow pencil, a black booklet, a green envelope, an orange bracelet, and a red cup. How many things are neither blue nor brown?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 494,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown cat toy, a yellow fidget spinner, and a blue envelope. How many items are neither blue nor red?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 480,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a black cup and an orange cat toy. How many objects are neither red nor black?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 536,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a black jug, an orange sheet of paper, a purple stress ball, a green booklet, and a yellow pencil. How many objects are neither yellow nor purple?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 427,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see an orange cat toy, a brown puzzle, a blue fidget spinner, a green pencil, and a yellow pen. How many objects are neither blue nor red?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 526,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a red bracelet and a purple pair of sunglasses. How many things are neither red nor green?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 519,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a red notebook, a black dog leash, and an orange puzzle. How many things are neither purple nor red?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 587,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a green stress ball, an orange crayon, a red notebook, a blue mug, and a black plate. How many things are neither orange nor purple?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 407,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a red notebook, a green scrunchiephone charger, and a purple plate. How many objects are neither black nor orange?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 547,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a green dog leash, an orange envelope, and a black textbook. How many objects are neither brown nor blue?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 558,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a red scrunchiephone charger, an orange teddy bear, a blue cup, and a brown pen. How many objects are neither red nor brown?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 549,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see an orange cat toy and a green stress ball. How many things are neither orange nor yellow?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 554,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a yellow cup, a black keychain, a red mug, a blue sheet of paper, a brown cat toy, and a purple notebook. How many things are neither orange nor brown?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 556,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a black teddy bear, a red fidget spinner, an orange keychain, a green mug, a brown cup, and a yellow pencil. How many items are neither green nor orange?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 528,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a blue puzzle, an orange stress ball, a purple fidget spinner, and a brown keychain. How many objects are neither purple nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 514,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is an orange crayon, a black teddy bear, a purple cat toy, a red sheet of paper, a blue pencil, and a yellow necklace. How many things are neither green nor brown?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 488,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a brown pair of sunglasses, an orange mug, and a green teddy bear. How many objects are neither green nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 409,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a green notebook and an orange pencil. How many things are neither green nor orange?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 508,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a purple envelope, a yellow bracelet, and a blue teddy bear. How many things are neither orange nor red?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 527,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a blue plate, a green bracelet, a red teddy bear, a yellow scrunchiephone charger, a purple jug, and a brown dog leash. How many items are neither orange nor black?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 426,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a green sheet of paper, a black envelope, a blue stress ball, an orange puzzle, a red fidget spinner, and a yellow necklace. How many things are neither brown nor purple?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 441,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red crayon, a black sheet of paper, a green fidget spinner, a blue plate, and an orange pen. How many things are neither green nor blue?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 546,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a purple teddy bear, a brown fidget spinner, a yellow puzzle, an orange keychain, and a green necklace. How many items are neither red nor blue?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 503,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a red puzzle and a yellow crayon. How many objects are neither red nor yellow?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 561,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a green fidget spinner, a red stress ball, a brown keychain, and a yellow pencil. How many items are neither blue nor red?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 571,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see an orange dog leash, a purple puzzle, a blue textbook, and a brown crayon. How many items are neither orange nor yellow?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 568,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a green crayon and a black teddy bear. How many items are neither green nor black?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "zero",
+      "raw_suffix": "zero",
+      "correct": true
+    },
+    {
+      "i": 459,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a green keychain, a yellow notebook, and an orange bracelet. How many things are neither red nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 520,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a yellow pencil, a red teddy bear, a green jug, a black puzzle, and an orange notebook. How many objects are neither purple nor brown?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 445,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a purple fidget spinner, a blue crayon, a black cup, a green teddy bear, and an orange jug. How many objects are neither yellow nor red?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 579,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a brown pair of sunglasses, a green jug, a purple textbook, a black booklet, a yellow envelope, and a red notebook. How many things are neither black nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 525,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see an orange crayon, a yellow puzzle, a black paperclip, a blue stress ball, and a purple pair of sunglasses. How many things are neither black nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 507,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a blue textbook, a purple keychain, and a yellow sheet of paper. How many objects are neither green nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 420,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown bracelet, an orange puzzle, a black keychain, and a green envelope. How many things are neither red nor brown?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 412,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown notebook, a purple puzzle, a red pair of sunglasses, a blue cup, an orange plate, and a yellow bracelet. How many items are neither green nor black?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 405,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a blue textbook, a yellow pair of sunglasses, a purple jug, a black stress ball, and a green fidget spinner. How many items are neither green nor blue?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 559,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a blue plate and a black dog leash. How many objects are neither green nor brown?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 415,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a green fidget spinner, a purple pencil, an orange necklace, a black notebook, and a blue envelope. How many things are neither blue nor red?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 404,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a black pair of sunglasses, a green keychain, a yellow cat toy, and a blue stress ball. How many things are neither green nor brown?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 510,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a yellow textbook, a green envelope, an orange cup, a red mug, a black necklace, and a purple puzzle. How many items are neither orange nor yellow?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 538,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a green fidget spinner, a red stress ball, and a yellow cat toy. How many objects are neither orange nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 599,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a purple paperclip, a red pencil, a green puzzle, and a black jug. How many items are neither purple nor green?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 401,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a blue booklet, a red envelope, a brown fidget spinner, a yellow plate, a green keychain, and an orange teddy bear. How many items are neither black nor purple?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 581,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see an orange paperclip and a blue pencil. How many items are neither blue nor orange?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 414,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a yellow crayon, a red pencil, a blue plate, a brown mug, and an orange jug. How many items are neither purple nor green?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 518,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a green crayon, a brown pencil, a purple puzzle, an orange keychain, and a blue dog leash. How many items are neither black nor yellow?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 543,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red booklet, a purple plate, a blue dog leash, a brown mug, a green crayon, and a black cat toy. How many objects are neither orange nor yellow?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 454,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow bracelet, an orange booklet, a brown pair of sunglasses, and a purple pen. How many objects are neither purple nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 423,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a brown plate and a purple booklet. How many items are neither green nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 473,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown pen, an orange fidget spinner, a purple bracelet, and a yellow stress ball. How many things are neither orange nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 516,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a green cat toy, a brown crayon, and a black stress ball. How many things are neither black nor brown?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 517,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a black keychain, a purple teddy bear, a brown notebook, an orange sheet of paper, and a green fidget spinner. How many objects are neither brown nor black?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 542,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a red teddy bear, a black paperclip, and a blue plate. How many things are neither red nor black?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    },
+    {
+      "i": 591,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a yellow teddy bear, an orange paperclip, a green pen, and a blue textbook. How many items are neither blue nor purple?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 553,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a green jug, an orange crayon, and a purple paperclip. How many objects are neither blue nor red?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 530,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a brown cat toy and a green bracelet. How many things are neither green nor brown?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": true
+    },
+    {
+      "i": 524,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a red notebook, a brown jug, an orange scrunchiephone charger, and a blue pencil. How many items are neither blue nor purple?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 491,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a yellow cup and an orange pair of sunglasses. How many objects are neither red nor blue?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 432,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a blue jug, a red paperclip, a brown scrunchiephone charger, a purple pen, a green dog leash, and an orange cat toy. How many objects are neither red nor purple?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 534,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a red mug, a black envelope, and a brown sheet of paper. How many things are neither yellow nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 567,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a blue dog leash, a green teddy bear, a brown pencil, and a black scrunchiephone charger. How many things are neither purple nor brown?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 535,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a red pen, a purple jug, a green cat toy, a brown cup, and a yellow dog leash. How many objects are neither blue nor brown?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 474,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a red dog leash, a yellow notebook, a green pencil, and an orange paperclip. How many objects are neither orange nor green?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 588,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a blue puzzle, an orange stress ball, a brown bracelet, a yellow fidget spinner, a purple necklace, and a red dog leash. How many objects are neither orange nor green?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 531,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a green sheet of paper, a blue puzzle, a red dog leash, a purple pencil, and an orange textbook. How many items are neither brown nor yellow?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": true
+    },
+    {
+      "i": 472,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown pencil, a yellow booklet, a purple necklace, a black notebook, a blue jug, and a green cat toy. How many items are neither red nor orange?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 435,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a purple textbook, a black booklet, a green stress ball, a yellow plate, a red puzzle, and an orange scrunchiephone charger. How many things are neither yellow nor purple?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": false
+    },
+    {
+      "i": 513,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a blue keychain and a black puzzle. How many objects are neither red nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "the",
+      "raw_suffix": "The objects are a blue keychain and a black puzzle. Neither is red or",
+      "correct": false
+    },
+    {
+      "i": 438,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see an orange dog leash, a yellow mug, a black pair of sunglasses, and a purple bracelet. How many items are neither brown nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 529,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown fidget spinner and a red cup. How many items are neither purple nor green?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 457,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a brown notebook, a yellow keychain, an orange fidget spinner, a purple pen, and a blue bracelet. How many items are neither red nor brown?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 585,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a red scrunchiephone charger, a yellow pen, and a blue stress ball. How many things are neither blue nor purple?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 502,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a black pencil, a green pen, a purple jug, a blue pair of sunglasses, a yellow fidget spinner, and a red bracelet. How many things are neither brown nor orange?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 416,
+      "subtype": "neither_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see an orange pencil, a blue sheet of paper, a yellow envelope, a purple crayon, a brown teddy bear, and a black textbook. How many objects are neither red nor green?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "six",
+      "raw_suffix": "six",
+      "correct": true
+    },
+    {
+      "i": 487,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a purple stress ball and a green teddy bear. How many things are neither green nor blue?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 550,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple bracelet, a brown puzzle, a black necklace, a blue sheet of paper, and a yellow pair of sunglasses. How many items are neither yellow nor green?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 505,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a yellow plate, a blue crayon, and a red necklace. How many things are neither purple nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": true
+    },
+    {
+      "i": 592,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red puzzle, a purple necklace, a brown stress ball, and a yellow notebook. How many items are neither yellow nor green?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 476,
+      "subtype": "neither_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple plate, a brown mug, and a yellow keychain. How many items are neither orange nor yellow?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "three",
+      "raw_suffix": "three",
+      "correct": false
+    },
+    {
+      "i": 582,
+      "subtype": "neither_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a yellow keychain, a brown dog leash, an orange necklace, a green bracelet, and a black notebook. How many items are neither yellow nor orange?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "five",
+      "raw_suffix": "five",
+      "correct": false
+    },
+    {
+      "i": 593,
+      "subtype": "neither_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a purple textbook, a blue mug, a red cup, and a yellow pen. How many objects are neither purple nor orange?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "four",
+      "raw_suffix": "four",
+      "correct": false
+    },
+    {
+      "i": 521,
+      "subtype": "neither_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a blue fidget spinner and a green bracelet. How many objects are neither purple nor blue?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "two",
+      "raw_suffix": "two",
+      "correct": false
+    }
+  ]
+}

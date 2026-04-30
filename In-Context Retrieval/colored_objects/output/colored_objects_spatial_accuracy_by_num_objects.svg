@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="720" viewBox="0 0 920 720">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>
+.title{font: 700 28px Arial, sans-serif; fill:#111;}
+.axis{font: 14px Arial, sans-serif; fill:#333;}
+.value{font: 12px Arial, sans-serif; fill:#111;}
+</style>
+<text x="460.0" y="46" text-anchor="middle" class="title">Colored Objects: Spatial Accuracy by Number of Objects</text>
+<rect x="670" y="95" width="220" height="58" rx="8" fill="#fafafa" stroke="#d9d9d9"/>
+<rect x="688" y="104" width="18" height="12" fill="#2ca02c"/>
+<text x="716" y="115" class="axis">Pure Transformer</text>
+<rect x="688" y="126" width="18" height="12" fill="#d96bc0"/>
+<text x="716" y="137" class="axis">Hybrid</text>
+<line x1="90" y1="530.0" x2="890" y2="530.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="535.0" text-anchor="end" class="axis">0.000</text>
+<line x1="90" y1="446.0" x2="890" y2="446.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="451.0" text-anchor="end" class="axis">0.200</text>
+<line x1="90" y1="362.0" x2="890" y2="362.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="367.0" text-anchor="end" class="axis">0.400</text>
+<line x1="90" y1="278.0" x2="890" y2="278.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="283.0" text-anchor="end" class="axis">0.600</text>
+<line x1="90" y1="194.0" x2="890" y2="194.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="199.0" text-anchor="end" class="axis">0.800</text>
+<line x1="90" y1="110.0" x2="890" y2="110.0" stroke="#e1e1e1" stroke-width="1"/>
+<text x="80" y="115.0" text-anchor="end" class="axis">1.0</text>
+<line x1="90" y1="110" x2="90" y2="530" stroke="#333" stroke-width="1.5"/>
+<line x1="90" y1="530" x2="890" y2="530" stroke="#333" stroke-width="1.5"/>
+<text x="190.0" y="558" text-anchor="middle" class="axis">3</text>
+<rect x="159.0" y="372.06611570247935" width="26" height="157.93388429752068" fill="#2ca02c" opacity="0.97"/>
+<text x="172.0" y="366.06611570247935" text-anchor="middle" class="value">0.376</text>
+<rect x="195.0" y="264.46280991735534" width="26" height="265.53719008264466" fill="#d96bc0" opacity="0.97"/>
+<text x="208.0" y="258.46280991735534" text-anchor="middle" class="value">0.632</text>
+<text x="390.0" y="558" text-anchor="middle" class="axis">4</text>
+<rect x="359.0" y="398.09917355371897" width="26" height="131.900826446281" fill="#2ca02c" opacity="0.97"/>
+<text x="372.0" y="392.09917355371897" text-anchor="middle" class="value">0.314</text>
+<rect x="395.0" y="335.6198347107438" width="26" height="194.3801652892562" fill="#d96bc0" opacity="0.97"/>
+<text x="408.0" y="329.6198347107438" text-anchor="middle" class="value">0.463</text>
+<text x="590.0" y="558" text-anchor="middle" class="axis">5</text>
+<rect x="559.0" y="405.0413223140496" width="26" height="124.95867768595042" fill="#2ca02c" opacity="0.97"/>
+<text x="572.0" y="399.0413223140496" text-anchor="middle" class="value">0.298</text>
+<rect x="595.0" y="358.18181818181813" width="26" height="171.81818181818184" fill="#d96bc0" opacity="0.97"/>
+<text x="608.0" y="352.18181818181813" text-anchor="middle" class="value">0.409</text>
+<text x="790.0" y="558" text-anchor="middle" class="axis">6</text>
+<rect x="759.0" y="424.1322314049587" width="26" height="105.86776859504133" fill="#2ca02c" opacity="0.97"/>
+<text x="772.0" y="418.1322314049587" text-anchor="middle" class="value">0.252</text>
+<rect x="795.0" y="358.18181818181813" width="26" height="171.81818181818184" fill="#d96bc0" opacity="0.97"/>
+<text x="808.0" y="352.18181818181813" text-anchor="middle" class="value">0.409</text>
+<text x="460.0" y="688" text-anchor="middle" class="axis">Number of objects</text>
+<text x="28" y="360.0" text-anchor="middle" transform="rotate(-90 28 360.0)" class="axis">Accuracy</text>
+</svg>

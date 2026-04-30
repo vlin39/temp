@@ -1,0 +1,2336 @@
+{
+  "model_name": "Qwen/Qwen3.5-9B",
+  "task_json": "/oscar/home/igemou/dol_interp/Tasks/In-Context Retrieval/colored_objects/task.json",
+  "num_test_set": 175,
+  "n_per_num_objects_bin": 35,
+  "seed": 0,
+  "max_new_tokens": 16,
+  "prompt_mode": "chat",
+  "subtype": "yes_no_color",
+  "ablate_group": "none",
+  "ablation_modules": [],
+  "allowed_num_objects": null,
+  "available_num_objects_bins": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "pool_sizes_num_objects": {
+    "2": 35,
+    "3": 46,
+    "4": 43,
+    "5": 39,
+    "6": 37
+  },
+  "overall": {
+    "n": 175,
+    "accuracy": 0.9828571428571429
+  },
+  "by_num_objects": {
+    "2": {
+      "n": 35,
+      "accuracy": 0.9714285714285714
+    },
+    "3": {
+      "n": 35,
+      "accuracy": 1.0
+    },
+    "4": {
+      "n": 35,
+      "accuracy": 0.9714285714285714
+    },
+    "5": {
+      "n": 35,
+      "accuracy": 1.0
+    },
+    "6": {
+      "n": 35,
+      "accuracy": 0.9714285714285714
+    }
+  },
+  "by_subtype": {
+    "yes_no_color": {
+      "n": 175,
+      "accuracy": 0.9828571428571429
+    }
+  },
+  "rows": [
+    {
+      "i": 270,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a pink paperclip, a turquoise scrunchiephone charger, a gold puzzle, and a blue pair of sunglasses. Is the paperclip pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 332,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a pink paperclip and a black fidget spinner. Is the paperclip pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 331,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a purple fidget spinner, a red pencil, a green crayon, a pink paperclip, and a teal scrunchiephone charger. Is the scrunchiephone charger grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 352,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is an orange sheet of paper, a yellow notebook, a magenta envelope, and a red pair of sunglasses. Is the sheet of paper black?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 238,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a yellow puzzle, a green envelope, a silver jug, a pink necklace, and a black pair of sunglasses. Is the puzzle turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 376,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a purple pencil, a brown booklet, a grey keychain, and a magenta pair of sunglasses. Is the pair of sunglasses pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": false
+    },
+    {
+      "i": 365,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a mauve notebook and a magenta mug. Is the mug black?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 247,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a yellow teddy bear, a grey pencil, a fuchsia envelope, a turquoise pair of sunglasses, a black cup, and a blue booklet. Is the envelope fuchsia?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 279,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a pink fidget spinner, a teal envelope, a gold bracelet, and a mauve teddy bear. Is the bracelet silver?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 390,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a turquoise booklet, a pink keychain, a black jug, a brown plate, a fuchsia mug, and a burgundy dog leash. Is the keychain pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 263,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a gold dog leash, a magenta puzzle, a pink bracelet, a black pen, a turquoise pair of sunglasses, and an orange plate. Is the dog leash burgundy?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 252,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a turquoise dog leash, a fuchsia mug, a mauve sheet of paper, and a teal pencil. Is the pencil red?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 202,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a red teddy bear and a pink keychain. Is the teddy bear red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 288,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a green jug, a blue plate, a silver fidget spinner, a teal puzzle, and a burgundy envelope. Is the envelope pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 246,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a brown fidget spinner, a black pencil, a magenta sheet of paper, and a pink booklet. Is the booklet pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 233,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a mauve envelope, a yellow keychain, and a black puzzle. Is the puzzle purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 207,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red bracelet, a grey necklace, an orange booklet, a blue teddy bear, and a burgundy plate. Is the necklace grey?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 303,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a blue pair of sunglasses and a silver keychain. Is the pair of sunglasses green?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 260,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a black pencil and a teal notebook. Is the pencil black?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 361,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a pink cat toy, a blue teddy bear, and a brown cup. Is the cat toy magenta?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 218,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a turquoise puzzle, a gold sheet of paper, and a magenta crayon. Is the sheet of paper gold?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 232,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a turquoise plate and a magenta textbook. Is the textbook magenta?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 214,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a gold pencil, a fuchsia booklet, a black sheet of paper, a green necklace, a mauve paperclip, and a turquoise envelope. Is the pencil gold?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 304,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a gold crayon, a silver stress ball, a black notebook, and a red teddy bear. Is the crayon gold?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 398,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a teal puzzle and an orange fidget spinner. Is the puzzle grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 371,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a teal pen, a turquoise puzzle, a yellow pair of sunglasses, a fuchsia teddy bear, a brown paperclip, and a magenta pencil. Is the puzzle turquoise?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 334,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a burgundy puzzle, an orange booklet, a yellow keychain, a silver textbook, a turquoise necklace, and a green pen. Is the puzzle burgundy?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 326,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a grey keychain, a green pencil, a blue cat toy, and a yellow notebook. Is the notebook orange?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 316,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a mauve keychain, a gold dog leash, a brown paperclip, a teal teddy bear, and a yellow cat toy. Is the cat toy yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 274,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a green pair of sunglasses, a brown bracelet, and a gold notebook. Is the pair of sunglasses green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 295,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a mauve crayon, a purple paperclip, a silver scrunchiephone charger, and a red cup. Is the crayon magenta?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 225,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a turquoise pencil, an orange textbook, and a red pair of sunglasses. Is the pair of sunglasses fuchsia?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 307,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a gold booklet and a pink scrunchiephone charger. Is the scrunchiephone charger pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 275,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a magenta pen and a mauve teddy bear. Is the pen magenta?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 281,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a silver pen, a teal pencil, a red booklet, a black puzzle, and an orange cat toy. Is the booklet red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 212,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a black crayon, a turquoise pencil, a grey textbook, and a fuchsia booklet. Is the textbook yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 217,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a gold textbook, a magenta fidget spinner, a grey stress ball, an orange pencil, a turquoise paperclip, and a purple booklet. Is the stress ball yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 244,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a burgundy fidget spinner, a teal paperclip, a gold pencil, a mauve crayon, a turquoise cat toy, and a brown bracelet. Is the pencil pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 311,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a mauve envelope, a blue crayon, a purple pencil, a red teddy bear, and a magenta pen. Is the crayon turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 391,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is an orange scrunchiephone charger, a turquoise bracelet, a gold sheet of paper, and a red envelope. Is the bracelet turquoise?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 358,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a purple notebook, a gold pair of sunglasses, a fuchsia puzzle, and a burgundy jug. Is the puzzle turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 231,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a yellow cup, a purple paperclip, a brown textbook, and a pink crayon. Is the textbook gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 368,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a grey pen, a brown puzzle, a burgundy jug, a green mug, a magenta cup, and a silver bracelet. Is the puzzle pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 366,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a fuchsia dog leash and a teal necklace. Is the dog leash turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 254,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a blue scrunchiephone charger, a pink textbook, and a black booklet. Is the scrunchiephone charger grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 309,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a red jug and a grey booklet. Is the jug purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 215,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a teal pen and a yellow textbook. Is the textbook yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 360,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a teal scrunchiephone charger, a turquoise paperclip, a burgundy booklet, a magenta stress ball, a fuchsia fidget spinner, and a brown pencil. Is the booklet silver?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 306,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a green crayon, a burgundy notebook, and a brown dog leash. Is the notebook black?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 221,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a blue bracelet, a turquoise necklace, and a green booklet. Is the bracelet blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 340,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see an orange jug, a purple cat toy, and a magenta textbook. Is the jug turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 399,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a green puzzle, a black cup, a grey envelope, and a turquoise scrunchiephone charger. Is the envelope grey?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 330,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a grey paperclip, a red cup, a gold bracelet, a blue necklace, a teal keychain, and a burgundy puzzle. Is the paperclip grey?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 363,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a turquoise stress ball, a yellow keychain, and a brown notebook. Is the stress ball turquoise?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 393,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a teal pencil, a green scrunchiephone charger, and a gold pen. Is the scrunchiephone charger green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 384,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a yellow cat toy and a fuchsia paperclip. Is the paperclip teal?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 251,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a pink dog leash, an orange keychain, a brown puzzle, a blue scrunchiephone charger, a turquoise bracelet, and a burgundy mug. Is the scrunchiephone charger blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 269,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a magenta fidget spinner, a burgundy paperclip, and a silver crayon. Is the paperclip yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 353,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a turquoise jug, a red stress ball, a purple puzzle, and a mauve textbook. Is the puzzle purple?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 280,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a pink teddy bear, a brown pencil, and a mauve envelope. Is the envelope mauve?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 351,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a green pair of sunglasses, a purple teddy bear, a fuchsia puzzle, a gold envelope, and a teal scrunchiephone charger. Is the teddy bear yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 327,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a yellow envelope and an orange cat toy. Is the envelope yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 229,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a green pencil, a yellow mug, a fuchsia booklet, and a pink pen. Is the booklet fuchsia?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 346,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a red notebook, a turquoise jug, a purple dog leash, a blue pen, and a teal paperclip. Is the notebook red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 226,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a yellow bracelet and a turquoise cat toy. Is the bracelet orange?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 239,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown crayon, an orange puzzle, a yellow pen, a silver cup, a blue bracelet, and a turquoise sheet of paper. Is the cup silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 378,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a blue scrunchiephone charger, a black necklace, and an orange paperclip. Is the scrunchiephone charger blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 249,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a purple pair of sunglasses, an orange necklace, a mauve envelope, a grey pen, and a pink scrunchiephone charger. Is the pair of sunglasses purple?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 253,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a yellow necklace, a brown pair of sunglasses, and a black cup. Is the cup black?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 385,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a mauve crayon, a gold plate, a black booklet, a brown keychain, and a pink envelope. Is the envelope pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 392,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a silver booklet, a pink teddy bear, a brown scrunchiephone charger, and a red bracelet. Is the teddy bear orange?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 396,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a turquoise plate, a blue mug, a red dog leash, and a brown stress ball. Is the stress ball green?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 271,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a turquoise stress ball, a yellow cat toy, a black scrunchiephone charger, and a blue pair of sunglasses. Is the pair of sunglasses blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 209,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a magenta necklace, a gold keychain, an orange jug, a fuchsia fidget spinner, a purple envelope, and a brown stress ball. Is the jug black?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 318,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a mauve puzzle, a pink necklace, a burgundy cat toy, and a magenta pencil. Is the necklace pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 337,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a red envelope and a turquoise pair of sunglasses. Is the envelope red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 388,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a silver dog leash and a grey cat toy. Is the cat toy grey?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 394,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a turquoise envelope, a blue paperclip, and a silver keychain. Is the keychain silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 364,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a burgundy fidget spinner, a purple teddy bear, a pink sheet of paper, and a gold scrunchiephone charger. Is the sheet of paper pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 257,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a fuchsia plate, a grey mug, a black textbook, a magenta cat toy, and a silver keychain. Is the keychain turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 211,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a brown textbook and a burgundy pen. Is the textbook pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 395,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a brown cup, a pink crayon, and a purple cat toy. Is the cat toy purple?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 216,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a blue jug, a red necklace, an orange cat toy, and a teal plate. Is the jug purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 286,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a pink sheet of paper and a gold pair of sunglasses. Is the sheet of paper pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 267,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a teal envelope and a green mug. Is the envelope yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 235,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a mauve bracelet, a silver pen, a purple mug, and a yellow stress ball. Is the bracelet grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 224,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a brown booklet, a green keychain, and a gold textbook. Is the textbook fuchsia?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 272,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a blue fidget spinner and an orange stress ball. Is the stress ball orange?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 379,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a fuchsia jug, an orange booklet, a black cat toy, a turquoise crayon, a yellow paperclip, and a mauve puzzle. Is the booklet orange?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 293,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a grey dog leash, a pink puzzle, a turquoise mug, an orange pen, a yellow keychain, and a gold notebook. Is the keychain blue?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 283,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a teal envelope, a gold dog leash, a mauve puzzle, a grey pair of sunglasses, a blue paperclip, and a burgundy stress ball. Is the dog leash gold?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 381,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a purple sheet of paper, a teal pencil, a magenta paperclip, a blue crayon, a turquoise envelope, and a yellow booklet. Is the booklet yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 265,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is an orange dog leash, a black cat toy, a blue pencil, a purple fidget spinner, a magenta puzzle, and a silver pen. Is the pencil blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 319,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a yellow dog leash, a magenta mug, and a gold necklace. Is the dog leash yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 343,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a grey necklace, a purple cat toy, a pink bracelet, a teal stress ball, a turquoise plate, and a burgundy puzzle. Is the puzzle burgundy?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 230,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a red textbook and a pink scrunchiephone charger. Is the scrunchiephone charger grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 205,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a teal fidget spinner, a pink booklet, and a grey necklace. Is the fidget spinner red?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 268,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a green pair of sunglasses, a blue necklace, a black dog leash, a mauve fidget spinner, and a grey keychain. Is the pair of sunglasses green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 355,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a fuchsia crayon, a brown notebook, and a teal paperclip. Is the paperclip magenta?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 312,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a purple pencil, a green cat toy, and a mauve booklet. Is the booklet mauve?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 292,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a brown notebook, a black fidget spinner, and a blue paperclip. Is the paperclip blue?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 357,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a magenta pair of sunglasses and an orange crayon. Is the pair of sunglasses magenta?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 308,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a purple paperclip, a blue sheet of paper, and an orange crayon. Is the crayon brown?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 276,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple necklace, a gold scrunchiephone charger, and a red stress ball. Is the stress ball red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 301,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a black necklace, a blue cup, a purple sheet of paper, and an orange jug. Is the jug orange?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 359,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow stress ball, a gold paperclip, a fuchsia plate, a purple bracelet, and a black teddy bear. Is the stress ball orange?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 397,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a grey puzzle, a blue scrunchiephone charger, a magenta pen, a brown booklet, a burgundy stress ball, and a yellow pencil. Is the stress ball teal?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 248,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a burgundy dog leash and a mauve envelope. Is the envelope gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 243,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a green crayon, a magenta pencil, a silver necklace, a pink pair of sunglasses, and a blue keychain. Is the necklace silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 335,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a blue keychain and a teal pair of sunglasses. Is the pair of sunglasses turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": false
+    },
+    {
+      "i": 354,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is an orange paperclip, a fuchsia envelope, a black crayon, a red pencil, and a brown necklace. Is the envelope fuchsia?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 336,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see an orange jug, a purple keychain, a teal pen, a silver paperclip, and a gold textbook. Is the textbook brown?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 320,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow sheet of paper, a pink notebook, and a blue pencil. Is the pencil purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 389,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a silver plate, a turquoise cat toy, a teal cup, a yellow dog leash, an orange crayon, and a fuchsia keychain. Is the plate silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 315,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a black keychain, a green crayon, an orange teddy bear, a magenta stress ball, and a grey notebook. Is the notebook mauve?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 250,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a brown bracelet, a yellow textbook, a silver jug, a turquoise fidget spinner, a burgundy sheet of paper, and a blue mug. Is the jug gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 240,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a silver bracelet, a brown stress ball, a turquoise jug, a fuchsia crayon, and a yellow envelope. Is the envelope yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 262,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a silver teddy bear, a turquoise mug, a mauve notebook, a blue necklace, and a purple plate. Is the notebook magenta?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 302,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a brown cat toy, a blue booklet, a silver crayon, and a gold bracelet. Is the booklet green?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 314,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a red notebook, a purple fidget spinner, a magenta pair of sunglasses, a grey jug, and a green dog leash. Is the dog leash green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 255,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a fuchsia paperclip and a silver stress ball. Is the paperclip fuchsia?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 266,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a silver pair of sunglasses and an orange puzzle. Is the puzzle orange?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 372,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a mauve pencil, a teal textbook, a grey plate, and a magenta teddy bear. Is the plate red?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 367,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a mauve necklace, a blue fidget spinner, a brown dog leash, a green keychain, an orange bracelet, and a purple teddy bear. Is the keychain green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 321,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a blue textbook, a yellow jug, a fuchsia sheet of paper, a gold booklet, a magenta scrunchiephone charger, and a purple plate. Is the jug burgundy?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 370,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a red notebook, a magenta pair of sunglasses, a turquoise scrunchiephone charger, a black stress ball, a fuchsia keychain, and a mauve sheet of paper. Is the pair of sunglasses pink?",
+      "gold": [
+        "no"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": false
+    },
+    {
+      "i": 374,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a green pair of sunglasses, a silver necklace, a burgundy dog leash, and a mauve jug. Is the jug mauve?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 289,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a grey pair of sunglasses, a green sheet of paper, a red scrunchiephone charger, and a silver dog leash. Is the scrunchiephone charger purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 200,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a mauve stress ball and a green cat toy. Is the cat toy green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 300,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a burgundy teddy bear and a yellow keychain. Is the keychain yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 241,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a mauve keychain, a fuchsia pencil, a silver jug, and a burgundy fidget spinner. Is the fidget spinner burgundy?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 258,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a green pencil, a magenta stress ball, a yellow paperclip, a red booklet, and a black necklace. Is the paperclip yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 264,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a yellow stress ball and a purple fidget spinner. Is the fidget spinner brown?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 324,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a silver dog leash, a purple necklace, and a blue puzzle. Is the puzzle teal?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 208,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a pink scrunchiephone charger, a fuchsia cat toy, a silver puzzle, a mauve keychain, a brown bracelet, and a teal pencil. Is the keychain mauve?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 329,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a grey necklace, an orange booklet, a yellow pen, and a gold fidget spinner. Is the pen red?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 344,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a pink bracelet, a mauve notebook, a purple cat toy, a blue scrunchiephone charger, and a red mug. Is the mug magenta?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 245,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a grey pencil, a green puzzle, a silver teddy bear, a magenta bracelet, a purple fidget spinner, and a mauve jug. Is the bracelet magenta?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 375,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see an orange pair of sunglasses, a fuchsia pen, and a yellow notebook. Is the notebook yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 345,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a silver teddy bear, a gold crayon, and an orange scrunchiephone charger. Is the teddy bear mauve?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 386,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a turquoise cup, a blue bracelet, and a burgundy jug. Is the cup turquoise?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 278,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a yellow cat toy, a silver pencil, a gold jug, a red textbook, and a brown dog leash. Is the cat toy yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 256,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a red pair of sunglasses, a magenta bracelet, an orange cat toy, a fuchsia paperclip, a burgundy puzzle, and a mauve crayon. Is the puzzle burgundy?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 237,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see an orange plate, a yellow fidget spinner, and a burgundy jug. Is the fidget spinner turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 333,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a blue booklet, a pink paperclip, and a green fidget spinner. Is the paperclip pink?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 287,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is an orange crayon, a magenta sheet of paper, a yellow cat toy, a gold textbook, and a purple fidget spinner. Is the textbook gold?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 325,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a grey plate, a fuchsia sheet of paper, a mauve keychain, a red fidget spinner, and a turquoise mug. Is the fidget spinner red?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 201,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a red pencil, a silver dog leash, a gold cat toy, a teal puzzle, and a purple pair of sunglasses. Is the dog leash silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 317,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a silver scrunchiephone charger, a magenta cup, a grey puzzle, a gold necklace, and a blue plate. Is the plate purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 290,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see a fuchsia puzzle and a purple dog leash. Is the puzzle grey?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 299,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a purple puzzle, a green keychain, a brown pencil, a pink pair of sunglasses, a black dog leash, and a magenta teddy bear. Is the dog leash silver?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 338,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a purple crayon, a gold necklace, a brown cup, a black dog leash, a green fidget spinner, and a pink pair of sunglasses. Is the pair of sunglasses teal?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 305,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the table, I see a purple keychain, a pink puzzle, and a burgundy necklace. Is the necklace gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 383,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a purple stress ball, an orange booklet, a magenta textbook, a teal scrunchiephone charger, and a fuchsia plate. Is the plate mauve?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 298,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a silver envelope, a yellow keychain, a grey booklet, and a teal textbook. Is the keychain yellow?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 228,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, you see a turquoise booklet and a fuchsia textbook. Is the booklet brown?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 277,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is a grey keychain, a fuchsia jug, a gold stress ball, a purple pen, a turquoise puzzle, and a brown envelope. Is the jug green?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 282,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see a turquoise stress ball, a silver scrunchiephone charger, a black cup, a purple envelope, and an orange pencil. Is the scrunchiephone charger silver?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 347,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there is a gold teddy bear, a turquoise dog leash, a fuchsia plate, and a red fidget spinner. Is the plate purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 322,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a teal pencil, a yellow textbook, a pink bracelet, a green necklace, a burgundy crayon, and a fuchsia scrunchiephone charger. Is the necklace black?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 210,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a red pen, a fuchsia keychain, a brown puzzle, a mauve notebook, a teal pair of sunglasses, and a yellow bracelet. Is the pen purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 342,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a burgundy sheet of paper, a red teddy bear, a grey necklace, a purple bracelet, and an orange envelope. Is the envelope blue?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 204,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see a red teddy bear, a gold pair of sunglasses, a green textbook, and a yellow crayon. Is the textbook green?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 382,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a black notebook, a pink pen, a burgundy pair of sunglasses, a gold crayon, and a green keychain. Is the crayon turquoise?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 291,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a pink puzzle, an orange stress ball, a blue dog leash, a magenta textbook, and a grey jug. Is the textbook purple?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 369,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a burgundy bracelet and a yellow mug. Is the bracelet fuchsia?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 328,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple sheet of paper, a burgundy necklace, a magenta pen, a green paperclip, and a brown notebook. Is the paperclip fuchsia?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 236,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see a fuchsia sheet of paper, a turquoise stress ball, and a grey mug. Is the mug yellow?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 294,
+      "subtype": "yes_no_color",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a purple paperclip, a teal pencil, and a gold textbook. Is the textbook red?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 234,
+      "subtype": "yes_no_color",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is a turquoise teddy bear, a brown envelope, a mauve necklace, a fuchsia pencil, and a red notebook. Is the necklace mauve?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 362,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, there is a turquoise stress ball, a brown textbook, a mauve pen, and a gold envelope. Is the textbook brown?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 273,
+      "subtype": "yes_no_color",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a silver paperclip, a teal keychain, a black fidget spinner, and a purple plate. Is the paperclip green?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 222,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see a mauve textbook and a burgundy necklace. Is the textbook gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    },
+    {
+      "i": 341,
+      "subtype": "yes_no_color",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see a magenta jug and a brown sheet of paper. Is the sheet of paper brown?",
+      "gold": [
+        "yes"
+      ],
+      "pred": "yes",
+      "raw_suffix": "yes\n",
+      "correct": true
+    },
+    {
+      "i": 296,
+      "subtype": "yes_no_color",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see an orange textbook, a burgundy paperclip, a yellow mug, a pink puzzle, a purple fidget spinner, and a black notebook. Is the mug gold?",
+      "gold": [
+        "no"
+      ],
+      "pred": "no",
+      "raw_suffix": "no\n",
+      "correct": true
+    }
+  ]
+}

@@ -1,0 +1,604 @@
+{
+  "model_name": "allenai/Olmo-3-7B-Instruct-SFT",
+  "task_json": "/oscar/home/igemou/dol_interp/Tasks/In-Context Retrieval/colored_objects/task.json",
+  "num_test_set": 36,
+  "n_per_num_objects_bin": 3,
+  "seed": 0,
+  "max_new_tokens": 16,
+  "prompt_mode": "chat",
+  "subtype": "arithmetic",
+  "available_num_objects_bins": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    14
+  ],
+  "pool_sizes_num_objects": {
+    "2": 33,
+    "3": 46,
+    "4": 58,
+    "5": 61,
+    "6": 56,
+    "7": 53,
+    "8": 32,
+    "9": 27,
+    "10": 14,
+    "11": 13,
+    "12": 4,
+    "14": 3
+  },
+  "overall": {
+    "n": 36,
+    "accuracy": 0.3888888888888889
+  },
+  "by_num_objects": {
+    "2": {
+      "n": 3,
+      "accuracy": 0.6666666666666666
+    },
+    "3": {
+      "n": 3,
+      "accuracy": 0.6666666666666666
+    },
+    "4": {
+      "n": 3,
+      "accuracy": 0.6666666666666666
+    },
+    "5": {
+      "n": 3,
+      "accuracy": 0.3333333333333333
+    },
+    "6": {
+      "n": 3,
+      "accuracy": 0.3333333333333333
+    },
+    "7": {
+      "n": 3,
+      "accuracy": 0.6666666666666666
+    },
+    "8": {
+      "n": 3,
+      "accuracy": 1.0
+    },
+    "9": {
+      "n": 3,
+      "accuracy": 0.3333333333333333
+    },
+    "10": {
+      "n": 3,
+      "accuracy": 0.0
+    },
+    "11": {
+      "n": 3,
+      "accuracy": 0.0
+    },
+    "12": {
+      "n": 3,
+      "accuracy": 0.0
+    },
+    "14": {
+      "n": 3,
+      "accuracy": 0.0
+    }
+  },
+  "by_subtype": {
+    "arithmetic": {
+      "n": 36,
+      "accuracy": 0.3888888888888889
+    }
+  },
+  "rows": [
+    {
+      "i": 904,
+      "subtype": "arithmetic",
+      "num_objects": 11,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see two turquoise puzzles, three turquoise pairs of sunglasses, three teal dog leashes, three fuchsia puzzles, one grey dog leash, two turquoise dog leashes, one fuchsia pair of sunglasses, one grey puzzle, one fuchsia jug, three grey pairs of sunglasses, and two teal pairs of sunglasses. If I remove all the teal items from the floor, how many pairs of sunglasses remain on it?",
+      "gold": [
+        "7",
+        "seven"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 813,
+      "subtype": "arithmetic",
+      "num_objects": 12,
+      "prompt_mode": "chat",
+      "input": "On the floor, you see three orange necklaces, three pink keychains, two pink booklets, three orange pencils, one teal necklace, two orange keychains, one pink necklace, two teal keychains, two pink pencils, one teal booklet, one teal pencil, and two orange booklets. If I remove all the necklaces from the floor, how many orange objects remain on it?",
+      "gold": [
+        "7",
+        "seven"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 807,
+      "subtype": "arithmetic",
+      "num_objects": 9,
+      "prompt_mode": "chat",
+      "input": "On the table, I see two yellow booklets, three burgundy fidget spinners, two burgundy cat toys, one yellow stress ball, one burgundy booklet, one fuchsia fidget spinner, three fuchsia stress balls, three burgundy stress balls, and one yellow cat toy. If I remove all the fuchsia items from the table, how many booklets remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": false
+    },
+    {
+      "i": 865,
+      "subtype": "arithmetic",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there are two red textbooks, three gold mugs, two gold textbooks, one red mug, and three gold paperclips. If I remove all the red things from the desk, how many paperclips remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 994,
+      "subtype": "arithmetic",
+      "num_objects": 10,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there are two green textbooks, two green dog leashes, three purple textbooks, two purple booklets, one blue booklet, three purple crayons, two blue textbooks, three blue crayons, three green crayons, and two fuchsia textbooks. If I remove all the blue items from the nightstand, how many crayons remain on it?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 619,
+      "subtype": "arithmetic",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see three green fidget spinners, two green mugs, and three turquoise mugs. If I remove all the fidget spinners from the desk, how many turquoise objects remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 969,
+      "subtype": "arithmetic",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there are two green sheets of paper, two mauve cat toys, two green cat toys, and three mauve sheets of paper. If I remove all the cat toys from the nightstand, how many mauve things remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": false
+    },
+    {
+      "i": 859,
+      "subtype": "arithmetic",
+      "num_objects": 14,
+      "prompt_mode": "chat",
+      "input": "On the table, I see three burgundy paperclips, three magenta paperclips, one pink cat toy, three magenta pairs of sunglasses, two pink paperclips, two pink notebooks, one brown notebook, one magenta cat toy, three brown cat toys, three brown paperclips, three burgundy pairs of sunglasses, three burgundy notebooks, two burgundy cat toys, and three magenta notebooks. If I remove all the notebooks from the table, how many burgundy things remain on it?",
+      "gold": [
+        "8",
+        "eight"
+      ],
+      "pred": "13",
+      "raw_suffix": "13",
+      "correct": false
+    },
+    {
+      "i": 628,
+      "subtype": "arithmetic",
+      "num_objects": 9,
+      "prompt_mode": "chat",
+      "input": "On the desk, there are three turquoise textbooks, one turquoise envelope, two yellow envelopes, three grey envelopes, two orange envelopes, one yellow pair of sunglasses, two grey textbooks, two yellow textbooks, and three turquoise pairs of sunglasses. If I remove all the pairs of sunglasses from the desk, how many turquoise things remain on it?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "13",
+      "raw_suffix": "13",
+      "correct": false
+    },
+    {
+      "i": 801,
+      "subtype": "arithmetic",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, I see three blue booklets, three grey booklets, two blue puzzles, and three grey puzzles. If I remove all the blue things from the table, how many booklets remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 875,
+      "subtype": "arithmetic",
+      "num_objects": 11,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see one gold plate, three orange puzzles, three turquoise pairs of sunglasses, three orange pairs of sunglasses, two gold pairs of sunglasses, two gold dog leashes, two orange dog leashes, one silver dog leash, one turquoise dog leash, one orange plate, and one turquoise plate. If I remove all the plates from the nightstand, how many gold objects remain on it?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 605,
+      "subtype": "arithmetic",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see two gold cat toys, one gold envelope, and one magenta envelope. If I remove all the cat toys from the nightstand, how many gold objects remain on it?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "1",
+      "raw_suffix": "1",
+      "correct": true
+    },
+    {
+      "i": 621,
+      "subtype": "arithmetic",
+      "num_objects": 8,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, you see three magenta crayons, three brown mugs, one brown jug, three red crayons, three brown crayons, two magenta jugs, two red mugs, and one brown dog leash. If I remove all the brown items from the nightstand, how many dog leashes remain on it?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": true
+    },
+    {
+      "i": 662,
+      "subtype": "arithmetic",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see three brown sheets of paper, three fuchsia sheets of paper, two blue sheets of paper, two fuchsia paperclips, three brown paperclips, and three blue paperclips. If I remove all the sheets of paper from the desk, how many fuchsia things remain on it?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": false
+    },
+    {
+      "i": 948,
+      "subtype": "arithmetic",
+      "num_objects": 8,
+      "prompt_mode": "chat",
+      "input": "On the floor, there are three mauve crayons, one turquoise fidget spinner, one mauve fidget spinner, one blue bracelet, three magenta bracelets, one mauve bracelet, two magenta fidget spinners, and one blue fidget spinner. If I remove all the magenta items from the floor, how many fidget spinners remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 833,
+      "subtype": "arithmetic",
+      "num_objects": 7,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see one green scrunchiephone charger, one silver scrunchiephone charger, three magenta scrunchiephone chargers, three brown scrunchiephone chargers, two brown dog leashes, three magenta jugs, and three green jugs. If I remove all the scrunchiephone chargers from the nightstand, how many magenta objects remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 790,
+      "subtype": "arithmetic",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the floor, there are three red pairs of sunglasses, two red booklets, two red bracelets, two brown keychains, and one brown booklet. If I remove all the bracelets from the floor, how many brown objects remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": false
+    },
+    {
+      "i": 906,
+      "subtype": "arithmetic",
+      "num_objects": 7,
+      "prompt_mode": "chat",
+      "input": "On the table, you see one burgundy textbook, three brown textbooks, two blue pens, three pink textbooks, three blue textbooks, three burgundy pens, and one blue plate. If I remove all the pink items from the table, how many textbooks remain on it?",
+      "gold": [
+        "7",
+        "seven"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": false
+    },
+    {
+      "i": 933,
+      "subtype": "arithmetic",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the table, I see three teal bracelets and two grey dog leashes. If I remove all the dog leashes from the table, how many teal items remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 853,
+      "subtype": "arithmetic",
+      "num_objects": 11,
+      "prompt_mode": "chat",
+      "input": "On the desk, I see three grey cups, three green puzzles, two green cups, one grey textbook, three green booklets, two yellow cups, three grey booklets, two black booklets, three black puzzles, two yellow booklets, and three black textbooks. If I remove all the cups from the desk, how many green things remain on it?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 752,
+      "subtype": "arithmetic",
+      "num_objects": 12,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is one green keychain, three green mugs, one green pen, three black sheets of paper, three black mugs, one blue mug, two blue sheets of paper, two blue keychains, two purple mugs, three black keychains, three purple pens, and two purple keychains. If I remove all the black things from the nightstand, how many pens remain on it?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": false
+    },
+    {
+      "i": 848,
+      "subtype": "arithmetic",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is one orange scrunchiephone charger, two silver keychains, two orange crayons, three silver dog leashes, two silver crayons, and three silver scrunchiephone chargers. If I remove all the silver objects from the desk, how many scrunchiephone chargers remain on it?",
+      "gold": [
+        "1",
+        "one"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 822,
+      "subtype": "arithmetic",
+      "num_objects": 5,
+      "prompt_mode": "chat",
+      "input": "On the desk, there are two magenta teddy bears, three brown sheets of paper, two magenta sheets of paper, one magenta cup, and one brown cup. If I remove all the teddy bears from the desk, how many magenta things remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 637,
+      "subtype": "arithmetic",
+      "num_objects": 7,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see three black booklets, three burgundy booklets, one burgundy scrunchiephone charger, two black pairs of sunglasses, one burgundy pair of sunglasses, one burgundy envelope, and three black envelopes. If I remove all the burgundy objects from the floor, how many pairs of sunglasses remain on it?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": true
+    },
+    {
+      "i": 913,
+      "subtype": "arithmetic",
+      "num_objects": 6,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see two magenta scrunchiephone chargers, one gold fidget spinner, three gold booklets, three silver scrunchiephone chargers, two silver booklets, and two magenta booklets. If I remove all the magenta items from the floor, how many scrunchiephone chargers remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 762,
+      "subtype": "arithmetic",
+      "num_objects": 10,
+      "prompt_mode": "chat",
+      "input": "On the floor, I see three burgundy cat toys, one red cat toy, two green pens, two burgundy pens, three red pens, two burgundy keychains, two burgundy bracelets, one green cat toy, one green bracelet, and two red bracelets. If I remove all the cat toys from the floor, how many red objects remain on it?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 674,
+      "subtype": "arithmetic",
+      "num_objects": 8,
+      "prompt_mode": "chat",
+      "input": "On the floor, there are two purple pairs of sunglasses, three green pairs of sunglasses, two turquoise pairs of sunglasses, three green plates, two brown notebooks, three turquoise dog leashes, two brown plates, and one brown pair of sunglasses. If I remove all the pairs of sunglasses from the floor, how many turquoise things remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 974,
+      "subtype": "arithmetic",
+      "num_objects": 14,
+      "prompt_mode": "chat",
+      "input": "On the desk, there are three orange puzzles, three orange dog leashes, one orange envelope, one silver puzzle, three silver fidget spinners, two green fidget spinners, three silver dog leashes, one red envelope, one red dog leash, one green dog leash, two silver envelopes, one green envelope, two green puzzles, and one red puzzle. If I remove all the silver items from the desk, how many dog leashes remain on it?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": false
+    },
+    {
+      "i": 600,
+      "subtype": "arithmetic",
+      "num_objects": 3,
+      "prompt_mode": "chat",
+      "input": "On the desk, you see two blue booklets, two purple booklets, and two yellow pairs of sunglasses. If I remove all the pairs of sunglasses from the desk, how many purple items remain on it?",
+      "gold": [
+        "2",
+        "two"
+      ],
+      "pred": "1",
+      "raw_suffix": "1",
+      "correct": false
+    },
+    {
+      "i": 789,
+      "subtype": "arithmetic",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see two orange stress balls and two orange pens. If I remove all the orange objects from the nightstand, how many stress balls remain on it?",
+      "gold": [
+        "0",
+        "zero"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": true
+    },
+    {
+      "i": 863,
+      "subtype": "arithmetic",
+      "num_objects": 12,
+      "prompt_mode": "chat",
+      "input": "On the desk, there is one turquoise sheet of paper, two red puzzles, two yellow pairs of sunglasses, three grey puzzles, two turquoise stress balls, two red pairs of sunglasses, three grey pairs of sunglasses, two yellow sheets of paper, two grey sheets of paper, one turquoise pair of sunglasses, three red sheets of paper, and three yellow puzzles. If I remove all the grey items from the desk, how many sheets of paper remain on it?",
+      "gold": [
+        "6",
+        "six"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": false
+    },
+    {
+      "i": 847,
+      "subtype": "arithmetic",
+      "num_objects": 14,
+      "prompt_mode": "chat",
+      "input": "On the table, I see three turquoise cat toys, one yellow cat toy, one red pencil, two turquoise pencils, one turquoise pair of sunglasses, one yellow pair of sunglasses, one red pair of sunglasses, one mauve pair of sunglasses, three yellow textbooks, one red textbook, three turquoise textbooks, one red cat toy, two mauve pencils, and three mauve textbooks. If I remove all the red objects from the table, how many pencils remain on it?",
+      "gold": [
+        "4",
+        "four"
+      ],
+      "pred": "5",
+      "raw_suffix": "5",
+      "correct": false
+    },
+    {
+      "i": 667,
+      "subtype": "arithmetic",
+      "num_objects": 10,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, there is one magenta textbook, two burgundy jugs, one teal notebook, one magenta jug, two turquoise jugs, two burgundy notebooks, three teal jugs, one teal fidget spinner, two burgundy textbooks, and three turquoise textbooks. If I remove all the teal items from the nightstand, how many jugs remain on it?",
+      "gold": [
+        "5",
+        "five"
+      ],
+      "pred": "2",
+      "raw_suffix": "2",
+      "correct": false
+    },
+    {
+      "i": 770,
+      "subtype": "arithmetic",
+      "num_objects": 9,
+      "prompt_mode": "chat",
+      "input": "On the table, I see three purple teddy bears, three orange sheets of paper, three green plates, three green textbooks, three orange teddy bears, two green teddy bears, one purple plate, one green sheet of paper, and one orange plate. If I remove all the orange objects from the table, how many textbooks remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    },
+    {
+      "i": 811,
+      "subtype": "arithmetic",
+      "num_objects": 2,
+      "prompt_mode": "chat",
+      "input": "On the nightstand, I see three magenta keychains and one mauve stress ball. If I remove all the mauve things from the nightstand, how many keychains remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "0",
+      "raw_suffix": "0",
+      "correct": false
+    },
+    {
+      "i": 846,
+      "subtype": "arithmetic",
+      "num_objects": 4,
+      "prompt_mode": "chat",
+      "input": "On the table, there are three turquoise envelopes, three turquoise necklaces, two green envelopes, and three green necklaces. If I remove all the green objects from the table, how many envelopes remain on it?",
+      "gold": [
+        "3",
+        "three"
+      ],
+      "pred": "3",
+      "raw_suffix": "3",
+      "correct": true
+    }
+  ]
+}
