@@ -1,0 +1,17 @@
+# Example for scripts/run_boxes_eval_pipeline.py
+# Use YAML lists on any field to sweep: product within `data`, product within `model`,
+# then every data combo runs with every model combo (full outer product).
+data:
+  num_boxes: [2, 3, 4, 5, 6]
+  expected_num_items_per_box: 2
+  max_items_per_box: 3
+  num_operations: 12
+  num_samples: 1000
+
+model:
+  model_name: ["Qwen/Qwen3-8B", "Qwen/Qwen3-32B"]
+  prompt_mode: chat
+  split: test
+  seed: 0
+  num_test_set_per_bin: 300
+  max_new_tokens: 64
