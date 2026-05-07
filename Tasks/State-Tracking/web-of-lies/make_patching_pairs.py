@@ -90,11 +90,11 @@ def derive_answer(text: str) -> str | None:
             speaker = rep.group("speaker").lower()
             subject = rep.group("subject").lower()
             claimed_truth = rep.group("verb").lower() == "tells the truth"
-            speaker_honest = truth_state.get(speaker)
-            if speaker_honest is None:
+            subject_actual = truth_state.get(subject)
+            if subject_actual is None:
                 return None
-            # If speaker lies, the claim is inverted.
-            truth_state[subject] = claimed_truth if speaker_honest else not claimed_truth
+            # The speaker's truth-state is whether their claim matches reality.
+            truth_state[speaker] = (claimed_truth == subject_actual)
             continue
         return None  # unrecognised statement form
 
