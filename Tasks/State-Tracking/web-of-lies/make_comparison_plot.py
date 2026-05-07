@@ -486,7 +486,7 @@ def _subplot_patching(
         )
         return
 
-    diffs = [r["mean_logit_diff"] for r in patching_rows]
+    diffs = [r["mean_normalized_logit_diff"] for r in patching_rows]
     max_abs = max(abs(d) for d in diffs) or 1.0
     # Symmetric y-axis: -max_abs to +max_abs
     y_range = max_abs * 1.15
@@ -509,7 +509,7 @@ def _subplot_patching(
     # Bars
     for i, row in enumerate(patching_rows):
         x = px(i)
-        val = row["mean_logit_diff"]
+        val = row["mean_normalized_logit_diff"]
         bar_h = abs(val / y_range) * (sh / 2)
         lt = row.get("layer_type", "self_attn")
         bar_color = LAYER_TYPE_COLORS.get(lt, "#888888")

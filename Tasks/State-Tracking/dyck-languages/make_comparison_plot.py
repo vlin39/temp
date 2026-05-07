@@ -449,7 +449,7 @@ def _subplot_patching(parts, patching_rows, model_label, sx, sy, sw, sh):
         parts.append(f'<text x="{sx+sw/2}" y="{sy+sh/2}" text-anchor="middle" class="ref">no data</text>')
         return
 
-    diffs   = [r["mean_logit_diff"] for r in patching_rows]
+    diffs   = [r["mean_normalized_logit_diff"] for r in patching_rows]
     max_abs = max(abs(d) for d in diffs) or 1.0
     y_range = max_abs * 1.15
     pb      = sy + sh
@@ -465,7 +465,7 @@ def _subplot_patching(parts, patching_rows, model_label, sx, sy, sw, sh):
 
     for i, row in enumerate(patching_rows):
         x       = px(i)
-        val     = row["mean_logit_diff"]
+        val     = row["mean_normalized_logit_diff"]
         bar_h   = abs(val / y_range) * (sh / 2)
         lt      = row.get("layer_type", "self_attn")
         bc      = LAYER_TYPE_COLORS.get(lt, "#888")

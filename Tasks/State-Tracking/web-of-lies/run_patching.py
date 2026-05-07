@@ -72,22 +72,64 @@ def build_prompt_input_ids(tokenizer, prompt: str, prompt_mode: str, device) -> 
     return inputs["input_ids"]
 
 
+def compute_patch_mapping(
+    clean_ids: torch.Tensor,
+    corrupt_ids: torch.Tensor,
+) -> dict[int, int]:
+    """Map corrupt token positions → clean token positions for suffix-aligned patching.
+
+    Clean and corrupt prompts differ only in one short span (e.g. "lies" vs
+    "tells the truth"). Everything before the divergence and everything after it is
+    tokenised identically. We patch the shared prefix and the shared suffix; the
+    divergent region in the corrupt prompt is left unpatched.
+
+    Returns a dict {corrupt_pos: clean_pos}.
+    """
+    c_ids = clean_ids[0].tolist()
+    r_ids = corrupt_ids[0].tolist()
+    c_len, r_len = len(c_ids), len(r_ids)
+
+    # Shared prefix length
+    prefix = 0
+    for i in range(min(c_len, r_len)):
+        if c_ids[i] != r_ids[i]:
+            break
+        prefix = i + 1
+
+    # Shared suffix length (from end, not overlapping prefix)
+    suffix = 0
+    for j in range(1, min(c_len, r_len) - prefix + 1):
+        if c_ids[-j] != r_ids[-j]:
+            break
+        suffix = j
+
+    mapping: dict[int, int] = {}
+    for k in range(prefix):
+        mapping[k] = k
+    for k in range(suffix):
+        mapping[r_len - suffix + k] = c_len - suffix + k
+    return mapping
+
+
+def _logit_diff(logits: torch.Tensor, correct_id: int, wrong_id: int) -> float:
+    return float(logits[correct_id] - logits[wrong_id])
+
+
 @torch.no_grad()
 def collect_layer_outputs(
     model,
     input_ids: torch.Tensor,
-) -> list[torch.Tensor]:
-    """Forward pass capturing the output hidden state of every decoder layer.
+) -> tuple[list[torch.Tensor], torch.Tensor]:
+    """Forward pass capturing hidden states of every decoder layer + final logits.
 
-    Returns a list of length num_decoder_layers where element i is a
-    (1, seq_len, hidden_dim) tensor (on CPU to save GPU memory).
+    Returns (layer_outputs, last_token_logits) where layer_outputs[i] is a
+    (1, seq_len, hidden_dim) CPU tensor and last_token_logits is (vocab_size,) CPU.
     """
     layer_outputs: list[torch.Tensor] = []
     hooks: list = []
 
     def make_hook(store: list[torch.Tensor]):
         def hook(_module, _input, output):
-            # Decoder layers may return a tuple; first element is hidden states.
             hs = output[0] if isinstance(output, tuple) else output
             store.append(hs.detach().cpu())
         return hook
@@ -97,12 +139,14 @@ def collect_layer_outputs(
         hooks.append(layer.register_forward_hook(make_hook(layer_outputs)))
 
     try:
-        model(input_ids)
+        out = model(input_ids)
     finally:
         for h in hooks:
             h.remove()
 
-    return layer_outputs
+    logits = out.logits if hasattr(out, "logits") else out[0]
+    last_logits = logits[0, -1, :].detach().cpu()
+    return layer_outputs, last_logits
 
 
 def _find_decoder_layers(model) -> list:
@@ -130,11 +174,13 @@ def patched_forward_logits(
     corrupt_input_ids: torch.Tensor,
     clean_layer_outputs: list[torch.Tensor],
     patch_layer_idx: int,
+    patch_mapping: dict[int, int],
 ) -> torch.Tensor:
-    """Run model on corrupt_input_ids, patching layer patch_layer_idx's output.
+    """Run model on corrupt_input_ids with suffix-aligned patching at one layer.
 
-    The clean residual is injected only for the sequence positions that exist in both
-    prompts (min of the two lengths).  Returns logits for the last token.
+    patch_mapping maps corrupt token positions to clean token positions.
+    Only those positions are overwritten; the divergent middle span is left intact.
+    Returns last-token logits (vocab_size,).
     """
     decoder_layers = _find_decoder_layers(model)
     if patch_layer_idx >= len(decoder_layers):
@@ -147,9 +193,10 @@ def patched_forward_logits(
 
     def patch_hook(_module, _input, output):
         hs = output[0] if isinstance(output, tuple) else output
-        patch_len = min(hs.shape[1], clean_hs.shape[1])
         hs = hs.clone()
-        hs[:, :patch_len, :] = clean_hs[:, :patch_len, :].to(hs.dtype)
+        for r_pos, c_pos in patch_mapping.items():
+            if r_pos < hs.shape[1] and c_pos < clean_hs.shape[1]:
+                hs[:, r_pos, :] = clean_hs[:, c_pos, :].to(hs.dtype)
         if isinstance(output, tuple):
             return (hs,) + output[1:]
         return hs
@@ -162,7 +209,7 @@ def patched_forward_logits(
             h.remove()
 
     logits = out.logits if hasattr(out, "logits") else out[0]
-    return logits[0, -1, :]  # (vocab_size,)
+    return logits[0, -1, :]
 
 
 def run_patching(
@@ -193,38 +240,46 @@ def run_patching(
         clean_ids = build_prompt_input_ids(tokenizer, pair["clean_prompt"], prompt_mode, device)
         corrupt_ids = build_prompt_input_ids(tokenizer, pair["corrupt_prompt"], prompt_mode, device)
 
-        # Collect clean activations once.
-        clean_outputs = collect_layer_outputs(model, clean_ids)
+        # Collect clean activations + clean logits in one forward pass.
+        clean_outputs, clean_logits = collect_layer_outputs(model, clean_ids)
+        clean_logits = clean_logits.to(device)
 
-        # Corrupt logits (no patch) for baseline.
-        corrupt_logits_base = torch.zeros(tokenizer.vocab_size)  # placeholder
+        # Corrupt baseline logits (no patching).
         with torch.no_grad():
             base_out = model(corrupt_ids)
             base_logits = (base_out.logits if hasattr(base_out, "logits") else base_out[0])[0, -1, :]
 
         clean_answer = pair["clean_answer"]
         clean_answer_id = yes_id if clean_answer == "yes" else no_id
+        wrong_answer_id = no_id if clean_answer == "yes" else yes_id
+
+        # Suffix-aligned position mapping (computed once per pair).
+        patch_mapping = compute_patch_mapping(clean_ids, corrupt_ids)
+
+        # Reference logit diffs for normalization.
+        clean_ld  = _logit_diff(clean_logits,  clean_answer_id, wrong_answer_id)
+        corrupt_ld = _logit_diff(base_logits,  clean_answer_id, wrong_answer_id)
+        denom = clean_ld - corrupt_ld
 
         for layer_idx in range(num_layers):
             if layer_idx >= len(clean_outputs):
                 break
             try:
                 patched_logits = patched_forward_logits(
-                    model, corrupt_ids, clean_outputs, layer_idx
+                    model, corrupt_ids, clean_outputs, layer_idx, patch_mapping
                 )
             except Exception as e:
                 print(f"  Pair {pair_idx}, layer {layer_idx}: patching error: {e}")
                 continue
 
-            # logit_diff: how much the clean answer logit recovered relative to corrupt baseline
-            logit_diff = float(
-                patched_logits[clean_answer_id] - base_logits[clean_answer_id]
-            )
-            patched_pred_id = int(patched_logits[[yes_id, no_id]].argmax())
-            patched_pred = "yes" if [yes_id, no_id][patched_pred_id] == yes_id else "no"
+            patched_ld = _logit_diff(patched_logits, clean_answer_id, wrong_answer_id)
+            # Normalized: 0 = no recovery, 1 = full recovery to clean behaviour.
+            normalized = (patched_ld - corrupt_ld) / denom if abs(denom) > 1e-6 else 0.0
+
+            patched_pred = "yes" if patched_logits[yes_id] > patched_logits[no_id] else "no"
             patched_correct = patched_pred == clean_answer
 
-            per_layer[layer_idx]["sum_logit_diff"] += logit_diff
+            per_layer[layer_idx]["sum_logit_diff"] += normalized
             per_layer[layer_idx]["sum_correct"] += float(patched_correct)
             per_layer[layer_idx]["n"] += 1
 
@@ -242,7 +297,7 @@ def run_patching(
                 "layer_idx": layer_idx,
                 "layer_type": layer_types.get(layer_idx, "unknown"),
                 "n_pairs": stats["n"],
-                "mean_logit_diff": stats["sum_logit_diff"] / n,
+                "mean_normalized_logit_diff": stats["sum_logit_diff"] / n,
                 "patched_accuracy": stats["sum_correct"] / n,
             }
         )
