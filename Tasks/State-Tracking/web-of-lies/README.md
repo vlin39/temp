@@ -103,17 +103,7 @@ Results are written to `output/<model_slug>_<prompt_mode>[_<ablate_group>].json`
 
 ## Visualization
 
-After running evaluations, render all comparison figures:
-
-```bash
-python make_comparison_plot.py --prompt_mode chat
-```
-
-To skip figures that require data not yet collected:
-
-```bash
-python make_comparison_plot.py --prompt_mode chat --skip_layerwise --skip_patching
-```
+TODO: (note: haven't run model on OSCAR yet)
 
 | Output file | Contents |
 |---|---|
@@ -123,10 +113,10 @@ python make_comparison_plot.py --prompt_mode chat --skip_layerwise --skip_patchi
 | `output/web_of_lies_patching_effect.svg` | Mean logit-diff from residual-stream activation patching, by layer |
 | `output/web_of_lies_summary.md` | Markdown table of all numbers in Figures 1–2 |
 
-SVGs are also copied to `Figs/State-Tracking/fig_web_of_lies_*.svg`.
+SVGs should be copied to `Figs/State-Tracking/fig_web_of_lies_*.svg`.
 
-Colors follow `colored_objects/make_comparison_plot.py` (`#2ca02c` pure, `#d96bc0` hybrid).
-Hybrid bars are diagonally hatched for readability under color-vision deficiency and in monochrome.
+Colors should follow `colored_objects/make_comparison_plot.py` (`#2ca02c` pure, `#d96bc0` hybrid).
+Hybrid bars should be diagonally hatched for readability under color-vision deficiency and in monochrome.
 
 ---
 
@@ -176,19 +166,8 @@ Each corrupt prompt is produced by flipping the first statement's truth value (e
 
 ## Saved Results
 
-*(Populated after first run. Expected to mirror the boxes pattern: the hybrid model's linear
-attention layers should carry iterative state-propagation, showing greater degradation under
-`linear_attn` ablation relative to `self_attn` ablation.)*
+TODO: haven't gotten these yet. expected to mirror pattern with boxes
 
----
-
-## Phase 2 (deferred) — Synthetic Depth Sweep
-
-BBH `web_of_lies` has fixed depth 5, which prevents a depth-vs-accuracy crossover plot
-analogous to the boxes `numops` sweep. A generator
-(`src/dataset_generation/generate_web_of_lies.py`) producing chains of configurable depth
-(3 / 5 / 7 / 9 / 11) would unlock that analysis. This is out of scope for the current phase
-and will be added once the Phase 1 pipeline is validated.
 
 ---
 
