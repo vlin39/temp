@@ -24,11 +24,11 @@ import numpy as np
 
 _ROOT = Path(__file__).resolve().parent
 
-# Regex matching the very first statement in a web_of_lies prompt.
-# The BBH dataset uses "X tells the truth." or "X lies." at the start.
+# Regex matching the first initialiser statement in a web_of_lies prompt.
+# BBH prompts begin with "Question: <Name> tells the truth. ..." (the
+# "Question:" prefix and any leading whitespace are skipped via re.search).
 _FIRST_STMT = re.compile(
-    r"^(?P<name>[A-Za-z]+) (?P<verb>tells the truth|lies)\.",
-    re.IGNORECASE,
+    r"\b(?P<name>[A-Z][a-z]+) (?P<verb>tells the truth|lies)\.",
 )
 
 # "tells the truth" ↔ "lies"
@@ -37,12 +37,11 @@ _FLIP = {"tells the truth": "lies", "lies": "tells the truth"}
 
 def flip_first_statement(text: str) -> str | None:
     """Flip the first statement's truth verb, return None if unrecognised."""
-    m = _FIRST_STMT.match(text)
+    m = _FIRST_STMT.search(text)
     if not m:
         return None
     original_verb = m.group("verb").lower()
     new_verb = _FLIP[original_verb]
-    # Preserve capitalisation: first letter of new_verb → capital as in original
     return text[: m.start("verb")] + new_verb + text[m.end("verb"):]
 
 
@@ -56,7 +55,10 @@ def derive_answer(text: str) -> str | None:
     #   "<name> tells the truth." (initialiser)
     #   "<name> says <prev> tells the truth." / "<name> says <prev> lies."
     # The question at the end is "Does <name> tell the truth?"
-    lines = [s.strip() for s in re.split(r"(?<=[.?])\s+", text.strip()) if s.strip()]
+    body = text.strip()
+    body = re.sub(r"^Question:\s*", "", body, flags=re.IGNORECASE)
+    body = re.sub(r"\s*Answer:\s*$", "", body, flags=re.IGNORECASE)
+    lines = [s.strip() for s in re.split(r"(?<=[.?])\s+", body) if s.strip()]
     if not lines:
         return None
 
