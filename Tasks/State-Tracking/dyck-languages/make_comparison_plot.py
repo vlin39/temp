@@ -3,7 +3,7 @@
 Render comparison figures for dyck_languages evaluation results.
 
 Figures produced:
-  1. dyck_languages_accuracy_by_answer.svg   — baseline accuracy, pure vs hybrid
+  1. dyck_languages_overall.svg              — exact-match + token recall, no ablation
   2. dyck_languages_ablation_comparison.svg  — accuracy under each ablation group
   3. dyck_languages_accuracy_by_depth.svg    — accuracy vs max nesting depth (no ablation)
   4. dyck_languages_layerwise_ablation.svg   — per-layer ablation, 2×2 subplots
@@ -153,12 +153,13 @@ def _svg_header(width, height, title):
 
 
 # ---------------------------------------------------------------------------
-# Figure 1 — accuracy by answer (baseline, no ablation)
+# Figure 1 — exact_accuracy and token_recall (overall, no ablation)
 # ---------------------------------------------------------------------------
 
-def build_accuracy_by_answer_svg(results: dict) -> str:
-    groups       = ["overall", "yes", "no"]
-    group_labels = {"overall": "Overall", "yes": "Answer = yes", "no": "Answer = no"}
+def build_overall_svg(results: dict) -> str:
+    """Two side-by-side groups: exact_accuracy and token_recall, per model."""
+    groups       = ["exact_accuracy", "token_recall"]
+    group_labels = {"exact_accuracy": "Exact-match accuracy", "token_recall": "Token recall"}
     width, height = 860, 560
     ml, mr_pad, mt = 80, 30, 100
     plot_h        = 320
@@ -169,7 +170,7 @@ def build_accuracy_by_answer_svg(results: dict) -> str:
     bar_w         = min(28, group_w / (n_models + 1))
     bar_gap       = 4
 
-    parts = _svg_header(width, height, "Dyck Languages — Accuracy by Answer (no ablation)")
+    parts = _svg_header(width, height, "Dyck Languages — Overall Performance (no ablation)")
 
     lx, ly = ml, 58
     for i, (_, label, color, is_hybrid) in enumerate(MODEL_ORDER):
@@ -182,19 +183,18 @@ def build_accuracy_by_answer_svg(results: dict) -> str:
     _gridlines(parts, ml, width - mr_pad, plot_bottom, plot_h)
     _axes(parts, ml, width - mr_pad, mt, plot_bottom)
 
-    for gi, grp in enumerate(groups):
+    for gi, metric in enumerate(groups):
         center_x   = ml + (gi + 0.5) * group_w
         cluster_w  = n_models * bar_w + (n_models - 1) * bar_gap
         x0         = center_x - cluster_w / 2
         parts.append(
-            f'<text x="{center_x}" y="{plot_bottom+26}" text-anchor="middle" class="axis">{escape(group_labels[grp])}</text>'
+            f'<text x="{center_x}" y="{plot_bottom+26}" text-anchor="middle" class="axis">{escape(group_labels[metric])}</text>'
         )
         for mi, (model_name, _, color, is_hybrid) in enumerate(MODEL_ORDER):
             key  = (model_name, "none")
             if key not in results:
                 continue
-            data = results[key]
-            acc  = data["overall"]["accuracy"] if grp == "overall" else data.get("by_answer", {}).get(grp, {}).get("accuracy")
+            acc = results[key]["overall"].get(metric)
             if acc is None:
                 continue
             bar_h = acc * plot_h
@@ -206,8 +206,8 @@ def build_accuracy_by_answer_svg(results: dict) -> str:
             parts.append(f'<text x="{x+bar_w/2:.1f}" y="{y-5:.1f}" text-anchor="middle" class="value">{fmt(acc)}</text>')
 
     parts.extend([
-        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">Answer label</text>',
-        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Accuracy</text>',
+        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">Metric</text>',
+        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Score</text>',
         '</svg>',
     ])
     return "\n".join(parts)
@@ -257,7 +257,7 @@ def build_ablation_svg(results: dict) -> str:
             key = (model_name, ag)
             if key not in results:
                 continue
-            acc   = results[key]["overall"]["accuracy"]
+            acc   = results[key]["overall"]["exact_accuracy"]
             bar_h = acc * plot_h
             x     = x0 + ai * (bar_w + bar_gap)
             y     = plot_bottom - bar_h
@@ -287,16 +287,22 @@ def build_ablation_svg(results: dict) -> str:
 # ---------------------------------------------------------------------------
 
 def build_depth_svg(results: dict) -> str:
-    # Collect all depth keys across models
-    all_depths: set[int] = set()
+    """Bar plot of exact_accuracy stratified by max nesting depth (or target_len fallback)."""
+    # Prefer by_depth; fall back to by_target_len if depth unavailable
+    use_key = "by_depth"
+    all_keys: set[int] = set()
     for model_name, _, _, _ in MODEL_ORDER:
-        key  = (model_name, "none")
-        data = results.get(key, {})
-        for k in data.get("by_depth", {}).keys():
-            all_depths.add(int(k))
-    depths = sorted(all_depths)
-    if not depths:
-        depths = [1, 2, 3, 4, 5]
+        data = results.get((model_name, "none"), {})
+        for k in data.get(use_key, {}).keys():
+            all_keys.add(int(k))
+    if not all_keys:
+        use_key = "by_target_len"
+        for model_name, _, _, _ in MODEL_ORDER:
+            data = results.get((model_name, "none"), {})
+            for k in data.get(use_key, {}).keys():
+                all_keys.add(int(k))
+    depths = sorted(all_keys) or [1, 2, 3, 4, 5]
+    x_label = "Max nesting depth" if use_key == "by_depth" else "Target length (closing bracket count)"
 
     width, height = 860, 560
     ml, mr_pad, mt = 80, 30, 100
@@ -332,7 +338,7 @@ def build_depth_svg(results: dict) -> str:
         for mi, (model_name, _, color, is_hybrid) in enumerate(MODEL_ORDER):
             key  = (model_name, "none")
             data = results.get(key, {})
-            acc  = data.get("by_depth", {}).get(str(depth), {}).get("accuracy")
+            acc  = data.get(use_key, {}).get(str(depth), {}).get("exact_accuracy")
             if acc is None:
                 continue
             bar_h = acc * plot_h
@@ -344,8 +350,8 @@ def build_depth_svg(results: dict) -> str:
             parts.append(f'<text x="{x+bar_w/2:.1f}" y="{y-5:.1f}" text-anchor="middle" class="value">{fmt(acc)}</text>')
 
     parts.extend([
-        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">Max nesting depth</text>',
-        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Accuracy</text>',
+        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">{escape(x_label)}</text>',
+        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Exact-match accuracy</text>',
         '</svg>',
     ])
     return "\n".join(parts)
@@ -395,7 +401,7 @@ def _subplot_layerwise(parts, layer_rows, group_results, model_name, model_label
         for lt, dash in [("self_attn", ""), ("linear_attn", "4,3")]:
             for row in [r for r in layer_rows if r.get("layer_type") == lt]:
                 x = lx(row["layer_idx"])
-                y = ly(row["overall"]["accuracy"])
+                y = ly(row["overall"]["exact_accuracy"])
                 if lt == "self_attn":
                     parts.append(f'<rect x="{x-4:.1f}" y="{y-4:.1f}" width="8" height="8" fill="{color}" stroke="#333" stroke-width="0.8"/>')
                 else:
@@ -404,7 +410,7 @@ def _subplot_layerwise(parts, layer_rows, group_results, model_name, model_label
     else:
         for row in layer_rows:
             x = lx(row["layer_idx"])
-            y = ly(row["overall"]["accuracy"])
+            y = ly(row["overall"]["exact_accuracy"])
             parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{color}" stroke="#333" stroke-width="0.8"/>')
 
     parts.append(f'<text x="{sx+sw/2}" y="{sy-6}" text-anchor="middle" class="subtitle">{escape(model_label)}</text>')
@@ -520,22 +526,21 @@ def build_summary(results: dict) -> str:
         vals = []
         for ag, _, _ in ABLATE_GROUPS:
             key = (model_name, ag)
-            v   = results[key]["overall"]["accuracy"] if key in results else None
+            v   = results[key]["overall"]["exact_accuracy"] if key in results else None
             vals.append(fmt(v) if v is not None else "—")
         lines.append(f"| {label} | {' | '.join(vals)} |")
 
-    lines += ["", "## Accuracy by answer (no ablation)", "",
-              "| Model | yes | no | overall |", "|-------|-----|----|---------|"]
+    lines += ["", "## Exact-match and token recall (no ablation)", "",
+              "| Model | exact | token recall |", "|-------|-------|--------------|"]
     for model_name, label, _, _ in MODEL_ORDER:
         key = (model_name, "none")
         if key not in results:
-            lines.append(f"| {label} | — | — | — |")
+            lines.append(f"| {label} | — | — |")
             continue
-        d   = results[key]
-        yes = fmt(d.get("by_answer", {}).get("yes", {}).get("accuracy", 0.0))
-        no  = fmt(d.get("by_answer", {}).get("no",  {}).get("accuracy", 0.0))
-        ov  = fmt(d["overall"]["accuracy"])
-        lines.append(f"| {label} | {yes} | {no} | {ov} |")
+        d  = results[key]
+        ex = fmt(d["overall"]["exact_accuracy"])
+        tr = fmt(d["overall"].get("token_recall", 0.0))
+        lines.append(f"| {label} | {ex} | {tr} |")
 
     return "\n".join(lines) + "\n"
 
@@ -564,11 +569,11 @@ def main() -> None:
 
     outputs: list[tuple[Path, Path]] = []
 
-    svg1 = build_accuracy_by_answer_svg(group_results)
-    out1 = _OUTPUT_DIR / "dyck_languages_accuracy_by_answer.svg"
+    svg1 = build_overall_svg(group_results)
+    out1 = _OUTPUT_DIR / "dyck_languages_overall.svg"
     out1.write_text(svg1, encoding="utf-8")
     print(f"Wrote {out1}")
-    outputs.append((out1, _FIGS_DIR / "fig_dyck_languages_accuracy.svg"))
+    outputs.append((out1, _FIGS_DIR / "fig_dyck_languages_overall.svg"))
 
     svg2 = build_ablation_svg(group_results)
     out2 = _OUTPUT_DIR / "dyck_languages_ablation_comparison.svg"

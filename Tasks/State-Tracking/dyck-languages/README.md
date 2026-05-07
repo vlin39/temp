@@ -1,32 +1,42 @@
 # Dyck Languages (BBH)
 
-Models are evaluated on their ability to recognise balanced bracket sequences — a
-canonical test of stack-like state tracking. Example:
+Models are evaluated on their ability to **complete** a Dyck-4 word: given an
+incomplete sequence of brackets, the model must produce the closing brackets
+that balance the prefix. Example:
 
-> "Is the following sequence valid? [ ( { < > } ) ]"
+> Input: `"[ ( { < ( ) > }"` → Target: `"} ]"`
 
-The model must answer **yes** (balanced) or **no** (unbalanced). Correct classification
-requires tracking an implicit stack: each opening bracket pushes a frame, each closing
-bracket pops and verifies the match. Errors anywhere in the chain produce an incorrect
-answer.
+Recognising a Dyck-n language for n>1 is provably equivalent to operating a
+typed stack: each opening bracket pushes a frame, each closing bracket pops
+and verifies the type. Pure SSMs cannot represent arbitrary stacks of
+unbounded depth ([Merrill & Sabharwal 2024](https://arxiv.org/abs/2404.08819)),
+which makes this task a sharp probe for where stack-tracking computation lives
+in hybrid models.
 
-This complements `web-of-lies` (boolean chain propagation) and `entity-tracking-lms`
-(set-update tracking) by probing a different state structure — a depth-indexed stack
-rather than a single boolean or entity set.
+This complements `web-of-lies` (boolean chain propagation) and
+`entity-tracking-lms` (set-update tracking) by probing a different state
+structure — a depth-indexed *stack* rather than a single boolean or entity set.
 
-Source: BIG-Bench Hard `dyck_languages` (Suzgun et al. 2022) via `lukaemon/bbh` on
-HuggingFace.
+Source: BIG-Bench Hard `dyck_languages` (Suzgun et al. 2022) via `lukaemon/bbh`.
 
 ---
 
-## Dataset
+## Task Format
 
-- **Source:** `datasets.load_dataset("lukaemon/bbh", "dyck_languages")`
-- **Labels:** binary `yes` / `no`
-- **Bracket types:** up to four — `()`, `[]`, `{}`, `<>`
-- **Difficulty metrics** stored per example:
-  - `seq_len` — total number of bracket tokens
-  - `max_depth` — maximum nesting depth reached
+- **Input:** a partial Dyck-4 word with the last few closing brackets stripped
+  (preceded by an instruction: *"Complete the rest of the sequence, making
+  sure that the parentheses are closed properly."*)
+- **Target:** the sequence of closing brackets needed to make the prefix valid
+- **Bracket types:** four — `()`, `[]`, `{}`, `<>`
+- **Metrics:**
+  - **`exact_accuracy`**: fraction of examples where the predicted bracket
+    sequence matches the gold token-for-token
+  - **`token_recall`**: average length of the longest matching prefix divided
+    by gold target length (partial credit; rewards getting the first few
+    closes right even when later ones are wrong)
+- **Difficulty axes** stored per example:
+  - `target_len` — number of closing brackets in the gold target
+  - `max_open_depth` — peak nesting depth in the input prefix
 
 ---
 
@@ -45,7 +55,6 @@ python run_evaluation.py \
 ## Ablation Sweep
 
 ```bash
-# All three ablation groups
 python run_evaluation.py \
     --model_name allenai/Olmo-Hybrid-Instruct-SFT-7B \
     --prompt_mode chat \
@@ -61,7 +70,8 @@ python run_evaluation.py \
 | `--model_name` | *(required)* | HuggingFace model ID or key from `Models.model_util.MODEL_IDS` |
 | `--prompt_mode` | `continuation` | `continuation`, `chat`, or `chat_continual` |
 | `--sweep_prompt_modes` | off | Run all three prompt modes |
-| `--num_test_set` | `200` | Total examples; must be even |
+| `--num_test_set` | `200` | Total examples sampled (random) |
+| `--max_new_tokens` | `16` | Generation budget; targets are short sequences |
 | `--ablate_group` | `none` | `none`, `self_attn`, or `linear_attn` |
 | `--sweep_ablate_groups` | off | Run all three ablation settings |
 | `--sweep_layer_indices` | off | Ablate one decoder layer at a time |
@@ -78,18 +88,23 @@ python run_evaluation.py \
   "task": "dyck_languages",
   "prompt_mode": "chat",
   "ablate_group": "none",
-  "overall": {"n": 200, "accuracy": 0.71},
-  "by_answer": {
-    "yes": {"n": 100, "accuracy": 0.80},
-    "no":  {"n": 100, "accuracy": 0.62}
+  "overall": {
+    "n": 200,
+    "exact_accuracy": 0.42,
+    "token_recall":   0.71
   },
-  "by_depth":   {"1": {...}, "2": {...}, "3": {...}},
-  "by_seq_len": {"4": {...}, "6": {...}, ...},
+  "by_target_len": {
+    "1": {"n": 30, "exact_accuracy": 0.83, "token_recall": 0.83},
+    "2": {"n": 80, "exact_accuracy": 0.51, "token_recall": 0.78},
+    "3": {"n": 60, "exact_accuracy": 0.30, "token_recall": 0.66},
+    "4": {"n": 30, "exact_accuracy": 0.13, "token_recall": 0.55}
+  },
+  "by_depth":   {"2": {...}, "3": {...}, "4": {...}, "5": {...}},
   "rows": [...]
 }
 ```
 
-Results are written to `output/<model_slug>_<prompt_mode>[_<ablate_group>].json`.
+Output path: `output/<model_slug>_<prompt_mode>[_<ablate_group>].json`.
 
 ---
 
@@ -101,7 +116,7 @@ After running evaluations, render all comparison figures:
 python make_comparison_plot.py --prompt_mode chat
 ```
 
-Skip figures that require data not yet collected:
+Skip figures whose data hasn't been collected:
 
 ```bash
 python make_comparison_plot.py --prompt_mode chat --skip_layerwise --skip_patching
@@ -109,12 +124,12 @@ python make_comparison_plot.py --prompt_mode chat --skip_layerwise --skip_patchi
 
 | Output file | Contents |
 |---|---|
-| `output/dyck_languages_accuracy_by_answer.svg` | Baseline accuracy, split by answer label |
-| `output/dyck_languages_ablation_comparison.svg` | Accuracy under each ablation group |
-| `output/dyck_languages_accuracy_by_depth.svg` | Accuracy vs max nesting depth (dyck-specific) |
+| `output/dyck_languages_overall.svg` | Exact-match + token recall, per model (no ablation) |
+| `output/dyck_languages_ablation_comparison.svg` | Exact-match accuracy under each ablation group |
+| `output/dyck_languages_accuracy_by_depth.svg` | Accuracy vs max nesting depth (dyck-specific stack-depth axis) |
 | `output/dyck_languages_layerwise_ablation.svg` | Per-layer ablation, 2×2 subplot grid |
 | `output/dyck_languages_patching_effect.svg` | Activation patching effect by layer |
-| `output/dyck_languages_summary.md` | Markdown table of all numbers |
+| `output/dyck_languages_summary.md` | Markdown summary table |
 
 SVGs are also copied to `Figs/State-Tracking/fig_dyck_languages_*.svg`.
 
@@ -137,32 +152,36 @@ python run_evaluation.py \
 ## Activation Patching
 
 ```bash
-# Step 1: corrupt a valid sequence by flipping one bracket
+# Step 1: corrupt one bracket in the prefix to require a different closing
 python make_patching_pairs.py --num_pairs 200 --seed 0
 
-# Step 2: sweep all layers for each model
+# Step 2: sweep all decoder layers per model
 python run_patching.py \
     --model_name allenai/Olmo-3-7B-Instruct-SFT \
     --prompt_mode chat \
     --pairs_file output/patching_pairs_200.json
-
-python run_patching.py \
-    --model_name allenai/Olmo-Hybrid-Instruct-SFT-7B \
-    --prompt_mode chat \
-    --pairs_file output/patching_pairs_200.json
 ```
 
-The corrupt prompt is produced by flipping one bracket near the middle of a valid
-sequence, changing a single character to make the sequence unbalanced. The patching
-script measures how much each layer's clean residual recovers the correct answer.
+Each clean/corrupt pair differs by exactly one bracket character in the input
+prefix, chosen so that the *required closing sequence* changes. Patching
+measures how much the model recovers the correct first-closing-bracket logit
+when the clean residual is injected at each layer L.
+
+The metric reported per layer is `mean_logit_diff = patched[clean_first_tok] −
+base_corrupt[clean_first_tok]`. Peaks identify which layers carry the
+stack-tracking computation.
 
 ---
 
-## Saved Results
+## Notes & Caveats
 
-*(Populated after first run. The hypothesis: hybrid models should show greater degradation
-under `linear_attn` ablation on deep sequences, since maintaining a stack across many
-tokens favours recurrent state.)*
+- BBH `dyck_languages` has only ~250 examples; 200-example samples are nearly
+  the full set. Multiple seeds will overlap heavily.
+- `target_len` distribution in BBH is concentrated around 2–4 closing
+  brackets. Higher difficulty bins are smaller.
+- The `parse_model_completion` parser tolerates whitespace and a leading
+  *"Answer:"* / *"The answer is"* prefix; it stops at the first non-bracket
+  non-space character to avoid contamination from chatty completions.
 
 ---
 
@@ -176,5 +195,12 @@ tokens favours recurrent state.)*
           and Chi, Ed H and Zhou, Denny and Wei, Jason},
   journal={arXiv preprint arXiv:2210.09261},
   year={2022}
+}
+
+@inproceedings{merrill2024illusion,
+  title={The Illusion of State in State-Space Models},
+  author={Merrill, William and Sabharwal, Ashish},
+  booktitle={ICML},
+  year={2024}
 }
 ```

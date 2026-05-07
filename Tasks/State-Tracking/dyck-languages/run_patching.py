@@ -37,14 +37,17 @@ def model_slug(model_name: str) -> str:
     return slug.strip("._-") or "model"
 
 
-def get_answer_token_ids(tokenizer, answer_tokens=("yes", "no", "Yes", "No")) -> dict[str, int]:
-    """Return first-token ids for 'yes' and 'no' (both cases)."""
-    ids: dict[str, int] = {}
-    for tok in answer_tokens:
-        enc = tokenizer.encode(tok, add_special_tokens=False)
+def first_target_token_id(tokenizer, target_text: str) -> int | None:
+    """First sub-token id of `target_text` after tokenisation.
+
+    Tries with and without a leading space (different tokenisers behave
+    differently). Returns None if encoding is empty.
+    """
+    for variant in (target_text, " " + target_text.lstrip()):
+        enc = tokenizer.encode(variant, add_special_tokens=False)
         if enc:
-            ids[tok.lower()] = enc[0]
-    return ids
+            return enc[0]
+    return None
 
 
 def build_prompt_input_ids(tokenizer, prompt: str, prompt_mode: str, device) -> torch.Tensor:
@@ -59,7 +62,7 @@ def build_prompt_input_ids(tokenizer, prompt: str, prompt_mode: str, device) -> 
     if prompt_mode == "continuation":
         inputs = prepare_model_inputs_raw(tokenizer, [prompt], device)
     elif prompt_mode == "chat":
-        conv = [{"role": "user", "content": f"{prompt}\n\nAnswer with exactly one word: yes or no.\nOne short answer only. No explanation."}]
+        conv = [{"role": "user", "content": prompt}]
         inputs = prepare_model_inputs_conversation(tokenizer, conv, device)
     elif prompt_mode == "chat_continual":
         conv = [
@@ -175,35 +178,33 @@ def run_patching(
 ) -> list[dict]:
     decoder_layers = _find_decoder_layers(model)
     num_layers = len(decoder_layers)
-    answer_ids = get_answer_token_ids(tokenizer)
-    yes_id = answer_ids.get("yes")
-    no_id = answer_ids.get("no")
-    if yes_id is None or no_id is None:
-        raise RuntimeError(f"Could not find token ids for yes/no. Got: {answer_ids}")
 
     print(f"Running patching: {len(pairs)} pairs × {num_layers} layers")
 
-    # Accumulate per-layer: (sum_logit_diff, sum_patched_correct, count)
+    # Accumulate per-layer:
+    #   sum_logit_diff:     (patched_logit[clean_first_tok] - base_corrupt_logit[clean_first_tok])
+    #   sum_correct:        argmax(patched_logits) == clean_first_tok
     per_layer: list[dict[str, float]] = [
         {"sum_logit_diff": 0.0, "sum_correct": 0.0, "n": 0}
         for _ in range(num_layers)
     ]
 
+    skipped = 0
     for pair_idx, pair in enumerate(pairs):
-        clean_ids = build_prompt_input_ids(tokenizer, pair["clean_prompt"], prompt_mode, device)
+        clean_first_id = first_target_token_id(tokenizer, pair["clean_closing"])
+        if clean_first_id is None:
+            skipped += 1
+            continue
+
+        clean_ids   = build_prompt_input_ids(tokenizer, pair["clean_prompt"], prompt_mode, device)
         corrupt_ids = build_prompt_input_ids(tokenizer, pair["corrupt_prompt"], prompt_mode, device)
 
         # Collect clean activations once.
         clean_outputs = collect_layer_outputs(model, clean_ids)
 
-        # Corrupt logits (no patch) for baseline.
-        corrupt_logits_base = torch.zeros(tokenizer.vocab_size)  # placeholder
         with torch.no_grad():
             base_out = model(corrupt_ids)
             base_logits = (base_out.logits if hasattr(base_out, "logits") else base_out[0])[0, -1, :]
-
-        clean_answer = pair["clean_answer"]
-        clean_answer_id = yes_id if clean_answer == "yes" else no_id
 
         for layer_idx in range(num_layers):
             if layer_idx >= len(clean_outputs):
@@ -216,13 +217,11 @@ def run_patching(
                 print(f"  Pair {pair_idx}, layer {layer_idx}: patching error: {e}")
                 continue
 
-            # logit_diff: how much the clean answer logit recovered relative to corrupt baseline
             logit_diff = float(
-                patched_logits[clean_answer_id] - base_logits[clean_answer_id]
+                patched_logits[clean_first_id] - base_logits[clean_first_id]
             )
-            patched_pred_id = int(patched_logits[[yes_id, no_id]].argmax())
-            patched_pred = "yes" if [yes_id, no_id][patched_pred_id] == yes_id else "no"
-            patched_correct = patched_pred == clean_answer
+            patched_pred_id = int(patched_logits.argmax())
+            patched_correct = patched_pred_id == clean_first_id
 
             per_layer[layer_idx]["sum_logit_diff"] += logit_diff
             per_layer[layer_idx]["sum_correct"] += float(patched_correct)
@@ -230,6 +229,9 @@ def run_patching(
 
         if (pair_idx + 1) % 10 == 0:
             print(f"  Processed {pair_idx + 1}/{len(pairs)} pairs")
+
+    if skipped:
+        print(f"  Skipped {skipped} pair(s) where the gold target could not be tokenised.")
 
     # Determine layer type using model's module names.
     layer_types = _get_layer_types(model, num_layers)

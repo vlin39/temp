@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """
-Evaluate a Causal LM on the BBH dyck_languages task.
+Evaluate a Causal LM on the BBH dyck_languages completion task.
 
-python run_evaluation.py --model_name allenai/Olmo-Hybrid-Instruct-SFT-7B \
-    --prompt_mode chat --num_test_set 200 --seed 0
+The model is given an incomplete Dyck-4 word and must produce the closing
+brackets that complete it. Reported metrics:
+  exact_accuracy — fraction of examples where pred tokens == gold tokens
+  token_recall   — average (longest matching prefix length / target length)
+
+Usage:
+  python run_evaluation.py --model_name allenai/Olmo-Hybrid-Instruct-SFT-7B \
+      --prompt_mode chat --num_test_set 200 --seed 0
 """
 from __future__ import annotations
 
@@ -21,12 +27,11 @@ if str(_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(_ROOT / "src"))
 
 from dyck_languages_eval import (  # noqa: E402
-    accuracy_by_answer,
     accuracy_by_depth,
-    accuracy_by_seq_len,
+    accuracy_by_target_len,
     evaluate_subset,
     load_task_examples,
-    stratified_indices_by_answer,
+    sample_indices,
 )
 
 _OUTPUT_DIR = _ROOT / "output"
@@ -80,20 +85,18 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model_name", type=str, required=True,
                    help="HuggingFace model ID or key from Models.model_util.MODEL_IDS.")
     p.add_argument("--num_test_set", type=int, default=200,
-                   help="Total examples evaluated. Must be even (split equally into yes/no bins).")
+                   help="Total examples evaluated (random sample).")
     p.add_argument("--prompt_mode", type=str, choices=PROMPT_MODES, default="continuation")
-    p.add_argument("--sweep_prompt_modes", action="store_true",
-                   help="Run all three prompt modes.")
+    p.add_argument("--sweep_prompt_modes", action="store_true")
     p.add_argument("--seed", type=int, default=0)
-    p.add_argument("--max_new_tokens", type=int, default=8)
+    p.add_argument("--max_new_tokens", type=int, default=16,
+                   help="Generation budget. Larger than web_of_lies because targets are sequences.")
     p.add_argument("--ablate_group", type=str, choices=ABLATE_GROUPS, default="none")
-    p.add_argument("--sweep_ablate_groups", action="store_true",
-                   help="Run none, self_attn, and linear_attn ablations.")
+    p.add_argument("--sweep_ablate_groups", action="store_true")
     p.add_argument("--sweep_layer_indices", action="store_true",
                    help="Ablate one decoder layer at a time; writes one JSON per layer.")
     p.add_argument("--cache_dir", type=str, default=str(_ROOT / "data"))
-    p.add_argument("--output_json", type=str, default=None,
-                   help="Override output path (single configuration only).")
+    p.add_argument("--output_json", type=str, default=None)
     return p.parse_args()
 
 
@@ -108,18 +111,17 @@ def run_single_config(
     prompt_mode: str,
     ablate_group: str,
 ) -> Path:
-    if args.num_test_set <= 0 or args.num_test_set % 2 != 0:
-        raise ValueError("--num_test_set must be a positive even number.")
-    n_per_bin = args.num_test_set // 2
+    if args.num_test_set <= 0:
+        raise ValueError("--num_test_set must be positive.")
 
     rng = np.random.default_rng(args.seed)
-    indices, pool_sizes = stratified_indices_by_answer(examples, rng, n_per_bin=n_per_bin)
+    indices, pool_sizes = sample_indices(examples, rng, n_total=args.num_test_set)
 
     print(f"Dataset: {len(examples)} examples total")
-    print(f"Pool sizes (by answer): {pool_sizes}")
+    print(f"Pool sizes (by target_len): {pool_sizes}")
     print(
-        f"Evaluating {len(indices)} examples ({n_per_bin} per answer bin), "
-        f"prompt_mode={prompt_mode!r}, ablate_group={ablate_group!r}, seed={args.seed}"
+        f"Evaluating {len(indices)} examples, prompt_mode={prompt_mode!r}, "
+        f"ablate_group={ablate_group!r}, seed={args.seed}"
     )
 
     patched = apply_ablation(ablate_group)
@@ -132,14 +134,15 @@ def run_single_config(
         prompt_mode=prompt_mode,
     )
 
-    by_ans   = accuracy_by_answer(results["rows"])
+    by_len   = accuracy_by_target_len(results["rows"])
     by_depth = accuracy_by_depth(results["rows"])
-    by_len   = accuracy_by_seq_len(results["rows"])
 
-    print(f"Overall: accuracy={results['accuracy']:.4f}")
-    for label in ("yes", "no"):
-        b = by_ans[label]
-        print(f"  answer={label}: n={b['n']} accuracy={b['accuracy']:.4f}")
+    print(f"Overall: exact_accuracy={results['exact_accuracy']:.4f}, "
+          f"token_recall={results['token_recall']:.4f}")
+    for tl in sorted(by_len.keys()):
+        b = by_len[tl]
+        print(f"  target_len={tl}: n={b['n']} exact={b['exact_accuracy']:.4f} "
+              f"recall={b['token_recall']:.4f}")
 
     out_path = (
         Path(args.output_json)
@@ -147,24 +150,23 @@ def run_single_config(
         else default_output_json_path(model_name, prompt_mode, ablate_group)
     )
     res_to_save = {
-        "model_name":        model_name,
-        "task":              "dyck_languages",
-        "num_test_set":      args.num_test_set,
-        "n_per_answer_bin":  n_per_bin,
-        "seed":              args.seed,
-        "max_new_tokens":    args.max_new_tokens,
-        "prompt_mode":       prompt_mode,
-        "ablate_group":      ablate_group,
-        "ablation_modules":  patched,
-        "pool_sizes_by_answer": pool_sizes,
+        "model_name":           model_name,
+        "task":                 "dyck_languages",
+        "num_test_set":         args.num_test_set,
+        "seed":                 args.seed,
+        "max_new_tokens":       args.max_new_tokens,
+        "prompt_mode":          prompt_mode,
+        "ablate_group":         ablate_group,
+        "ablation_modules":     patched,
+        "pool_sizes_by_target_len": pool_sizes,
         "overall": {
-            "n":        results["n"],
-            "accuracy": results["accuracy"],
+            "n":              results["n"],
+            "exact_accuracy": results["exact_accuracy"],
+            "token_recall":   results["token_recall"],
         },
-        "by_answer":  {k: v for k, v in by_ans.items()},
-        "by_depth":   {str(k): v for k, v in by_depth.items()},
-        "by_seq_len": {str(k): v for k, v in by_len.items()},
-        "rows":       results["rows"],
+        "by_target_len": {str(k): v for k, v in by_len.items()},
+        "by_depth":      {str(k): v for k, v in by_depth.items()},
+        "rows":          results["rows"],
     }
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
