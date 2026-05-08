@@ -5,18 +5,26 @@
 | Model | none | self_attn | linear_attn |
 |-------|------|-----------|-------------|
 | OLMo-3 (pure) | 0.500 | 0.000 | 0.475 |
-| Qwen3-8B (pure) | — | 0.000 | 0.515 |
+| Qwen3-8B (pure) | 0.515 | 0.000 | 0.515 |
 | OLMo-Hybrid | 0.490 | 0.000 | 0.000 |
-| Qwen3.5-9B | — | 0.000 | 0.000 |
+| Qwen3.5-9B | 0.485 | 0.000 | 0.000 |
 
 ## Accuracy by answer (no ablation)
 
 | Model | yes | no | overall |
 |-------|-----|----|---------|
 | OLMo-3 (pure) | 0.980 | 0.020 | 0.500 |
-| Qwen3-8B (pure) | — | — | — |
+| Qwen3-8B (pure) | 0.250 | 0.780 | 0.515 |
 | OLMo-Hybrid | 0.640 | 0.340 | 0.490 |
-| Qwen3.5-9B | — | — | — |
+| Qwen3.5-9B | 0.360 | 0.610 | 0.485 |
+
+## Accuracy by chain depth (no ablation)
+| Model | depth 5 |
+|-------|--------|
+| OLMo-3 (pure) | 0.500 |
+| Qwen3-8B (pure) | 0.515 |
+| OLMo-Hybrid | 0.490 |
+| Qwen3.5-9B | 0.485 |
 
 ## Layerwise ablation — top-3 most-impactful layers per model
 
@@ -32,12 +40,13 @@ baseline accuracy: 0.500
 | 12 | self_attn | 0.470 | 0.030 |
 
 ### Qwen3-8B (pure)
+baseline accuracy: 0.515
 
 | layer_idx | layer_type | accuracy | drop |
 |-----------|------------|----------|------|
-| 32 | self_attn | 0.475 | — |
-| 15 | self_attn | 0.495 | — |
-| 28 | self_attn | 0.495 | — |
+| 32 | self_attn | 0.475 | 0.040 |
+| 15 | self_attn | 0.495 | 0.020 |
+| 28 | self_attn | 0.495 | 0.020 |
 
 ### OLMo-Hybrid
 baseline accuracy: 0.490
@@ -49,12 +58,13 @@ baseline accuracy: 0.490
 | 22 | linear_attn | 0.460 | 0.030 |
 
 ### Qwen3.5-9B
+baseline accuracy: 0.485
 
 | layer_idx | layer_type | accuracy | drop |
 |-----------|------------|----------|------|
-| 0 | linear_attn | 0.000 | — |
-| 3 | self_attn | 0.000 | — |
-| 7 | self_attn | 0.155 | — |
+| 0 | linear_attn | 0.000 | 0.485 |
+| 3 | self_attn | 0.000 | 0.485 |
+| 7 | self_attn | 0.155 | 0.330 |
 
 ## Activation patching — top-3 layers by recovery
 
