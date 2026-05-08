@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-Render comparison figures for dyck_languages evaluation results.
+Render comparison figures for dyck_languages evaluation results (matplotlib).
 
-Figures produced:
-  1. dyck_languages_overall.svg              — exact-match + token recall, no ablation
-  2. dyck_languages_ablation_comparison.svg  — accuracy under each ablation group
-  3. dyck_languages_accuracy_by_depth.svg    — accuracy vs max nesting depth (no ablation)
-  4. dyck_languages_layerwise_ablation.svg   — per-layer ablation, 2×2 subplots
-  5. dyck_languages_patching_effect.svg      — activation patching effect, 2×2 subplots
+Figures produced (PNG + SVG):
+  1. dyck_languages_overall              — exact accuracy + token recall, per model (no ablation)
+  2. dyck_languages_ablation_comparison  — accuracy under each ablation group, per model
+  3. dyck_languages_accuracy_by_depth    — accuracy vs max nesting depth (or target_len fallback)
+  4. dyck_languages_layerwise_ablation   — accuracy when one layer ablated, by layer index
+  5. dyck_languages_patching_effect      — normalized patching effect by layer
 
 Usage:
     python make_comparison_plot.py --prompt_mode chat
-    python make_comparison_plot.py --prompt_mode chat --skip_layerwise --skip_patching
 """
 from __future__ import annotations
 
@@ -20,44 +19,29 @@ import json
 import re
 import shutil
 from pathlib import Path
-from xml.sax.saxutils import escape
 
-_ROOT       = Path(__file__).resolve().parent
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Patch
+
+_ROOT = Path(__file__).resolve().parent
 _OUTPUT_DIR = _ROOT / "output"
-_FIGS_DIR   = _ROOT.parents[2] / "Figs" / "State-Tracking"
+_FIGS_DIR = _ROOT.parents[2] / "Figs" / "State-Tracking"
 
 MODEL_ORDER = [
-    ("allenai/Olmo-3-7B-Instruct-SFT",       "OLMo-3 (pure)",   "#2ca02c", False),
-    ("Qwen/Qwen3-8B",                         "Qwen3-8B (pure)", "#1f7a1f", False),
-    ("allenai/Olmo-Hybrid-Instruct-SFT-7B",  "OLMo-Hybrid",     "#d96bc0", True),
-    ("Qwen/Qwen3.5-9B",                       "Qwen3.5-9B",      "#a83d8c", True),
+    ("allenai/Olmo-3-7B-Instruct-SFT",       "OLMo-3 (pure)",    "#2ca02c", False),
+    ("Qwen/Qwen3-8B",                         "Qwen3-8B (pure)",  "#1f7a1f", False),
+    ("allenai/Olmo-Hybrid-Instruct-SFT-7B",  "OLMo-Hybrid",      "#d96bc0", True),
+    ("Qwen/Qwen3.5-9B",                       "Qwen3.5-9B",       "#a83d8c", True),
 ]
 
 ABLATE_GROUPS = [
-    ("none",        1.00, "solid"),
-    ("self_attn",   0.65, "solid"),
-    ("linear_attn", 0.65, "dashed"),
+    ("none",        1.00, "-"),
+    ("self_attn",   0.65, "-"),
+    ("linear_attn", 0.65, "--"),
 ]
 
 LAYER_TYPE_COLORS = {"self_attn": "#4878d0", "linear_attn": "#ee854a"}
-
-_STYLE = (
-    '<style>'
-    '.title{font:700 22px Arial,sans-serif;fill:#111;}'
-    '.subtitle{font:700 14px Arial,sans-serif;fill:#222;}'
-    '.axis{font:13px Arial,sans-serif;fill:#333;}'
-    '.value{font:11px Arial,sans-serif;fill:#111;}'
-    '.ref{font:11px Arial,sans-serif;fill:#666;}'
-    '</style>'
-)
-
-_HATCH_DEFS = (
-    '<defs>'
-    '<pattern id="diagonalHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
-    '<line x1="0" y1="0" x2="0" y2="6" stroke="#ffffff" stroke-width="2"/>'
-    '</pattern>'
-    '</defs>'
-)
 
 
 def _model_slug(model_name: str) -> str:
@@ -84,8 +68,6 @@ def load_group_results(prompt_mode: str) -> dict[tuple[str, str], dict]:
                 data = json.load(f)
         except Exception:
             continue
-        if data.get("task") != "dyck_languages":
-            continue
         if data.get("prompt_mode") != prompt_mode:
             continue
         key = (data.get("model_name", ""), data.get("ablate_group", "none"))
@@ -94,7 +76,7 @@ def load_group_results(prompt_mode: str) -> dict[tuple[str, str], dict]:
 
 
 def load_layer_results(model_name: str, prompt_mode: str) -> list[dict]:
-    slug    = _model_slug(model_name)
+    slug = _model_slug(model_name)
     pattern = f"{slug}_{prompt_mode}_layer*.json"
     rows: list[dict] = []
     for path in sorted(_OUTPUT_DIR.glob(pattern)):
@@ -119,443 +101,333 @@ def load_patching_results(model_name: str, prompt_mode: str) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# SVG helpers
+# Figures
 # ---------------------------------------------------------------------------
 
-def _gridlines(parts, ml, mr, plot_bottom, plot_h, max_y=1.0, n=6):
-    for tick in range(n):
-        y_val = tick * (max_y / (n - 1))
-        y     = plot_bottom - (y_val / max_y) * plot_h
-        label = fmt(y_val) if y_val < max_y else (fmt(max_y) if max_y != 1.0 else "1.0")
-        parts.append(
-            f'<line x1="{ml}" y1="{y}" x2="{mr}" y2="{y}" stroke="#e1e1e1" stroke-width="1"/>'
-        )
-        parts.append(
-            f'<text x="{ml-10}" y="{y+5}" text-anchor="end" class="axis">{label}</text>'
-        )
+def build_overall_fig(results: dict[tuple[str, str], dict]):
+    metrics = [("exact_accuracy", "Exact accuracy"),
+               ("token_recall",   "Token recall")]
+    n_models = len(MODEL_ORDER)
+    width = 0.8 / n_models
+    x = np.arange(len(metrics))
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for i, (mname, label, color, is_hybrid) in enumerate(MODEL_ORDER):
+        key = (mname, "none")
+        if key not in results:
+            continue
+        d = results[key]["overall"]
+        vals = [d.get(m, 0.0) for m, _ in metrics]
+        positions = x + (i - n_models / 2 + 0.5) * width
+        hatch = "//" if is_hybrid else None
+        bars = ax.bar(positions, vals, width, color=color, hatch=hatch,
+                      edgecolor="black", linewidth=0.6, label=label)
+        for b, v in zip(bars, vals):
+            ax.text(b.get_x() + b.get_width() / 2, v + 0.01, fmt(v),
+                    ha="center", va="bottom", fontsize=8)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels([m[1] for m in metrics])
+    ax.set_ylabel("Score")
+    ax.set_ylim(0, 1.08)
+    ax.set_title("Dyck Languages — Overall metrics (no ablation)")
+    ax.grid(axis="y", alpha=0.3)
+    ax.legend(loc="upper right", fontsize=9)
+    fig.tight_layout()
+    return fig
 
 
-def _axes(parts, ml, mr, mt, plot_bottom):
-    parts.extend([
-        f'<line x1="{ml}" y1="{mt}" x2="{ml}" y2="{plot_bottom}" stroke="#333" stroke-width="1.5"/>',
-        f'<line x1="{ml}" y1="{plot_bottom}" x2="{mr}" y2="{plot_bottom}" stroke="#333" stroke-width="1.5"/>',
-    ])
+def build_ablation_fig(results: dict[tuple[str, str], dict]):
+    n_models = len(MODEL_ORDER)
+    n_groups = len(ABLATE_GROUPS)
+    width = 0.8 / n_groups
+    x = np.arange(n_models)
 
+    fig, ax = plt.subplots(figsize=(11, 6))
+    for i, (ag, opacity, ls) in enumerate(ABLATE_GROUPS):
+        for j, (mname, label, color, is_hybrid) in enumerate(MODEL_ORDER):
+            key = (mname, ag)
+            v = results.get(key, {}).get("overall", {}).get("exact_accuracy", 0.0)
+            pos = x[j] + (i - n_groups / 2 + 0.5) * width
+            hatch = "//" if is_hybrid else None
+            ax.bar(pos, v, width, color=color, alpha=opacity, hatch=hatch,
+                   edgecolor="black", linewidth=1.2, linestyle=ls)
+            if key in results:
+                ax.text(pos, v + 0.01, fmt(v), ha="center", va="bottom", fontsize=7)
 
-def _svg_header(width, height, title):
-    return [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
-        '<rect width="100%" height="100%" fill="#ffffff"/>',
-        _STYLE,
-        _HATCH_DEFS,
-        f'<text x="{width/2}" y="38" text-anchor="middle" class="title">{escape(title)}</text>',
+    ax.set_xticks(x)
+    ax.set_xticklabels([m[1] for m in MODEL_ORDER], rotation=15, ha="right")
+    ax.set_ylabel("Exact accuracy")
+    ax.set_ylim(0, 1.08)
+    ax.set_title("Dyck Languages — Exact-match accuracy under each ablation group")
+    ax.grid(axis="y", alpha=0.3)
+
+    ablation_handles = [
+        Patch(facecolor="#888888", alpha=op, edgecolor="black",
+              linestyle=ls, linewidth=1.2, label=ag)
+        for ag, op, ls in ABLATE_GROUPS
     ]
+    family_handles = [
+        Patch(facecolor=color, hatch=("//" if is_hybrid else None),
+              edgecolor="black", label=label)
+        for _, label, color, is_hybrid in MODEL_ORDER
+    ]
+    leg1 = ax.legend(handles=ablation_handles, loc="upper right", fontsize=8,
+                     title="Ablation group")
+    ax.add_artist(leg1)
+    ax.legend(handles=family_handles, loc="upper left", fontsize=8, title="Model")
+    fig.tight_layout()
+    return fig
 
 
-# ---------------------------------------------------------------------------
-# Figure 1 — exact_accuracy and token_recall (overall, no ablation)
-# ---------------------------------------------------------------------------
+def build_depth_fig(results: dict[tuple[str, str], dict]):
+    fig, ax = plt.subplots(figsize=(11, 6))
 
-def build_overall_svg(results: dict) -> str:
-    """Two side-by-side groups: exact_accuracy and token_recall, per model."""
-    groups       = ["exact_accuracy", "token_recall"]
-    group_labels = {"exact_accuracy": "Exact-match accuracy", "token_recall": "Token recall"}
-    width, height = 860, 560
-    ml, mr_pad, mt = 80, 30, 100
-    plot_h        = 320
-    plot_bottom   = mt + plot_h
-    plot_width    = width - ml - mr_pad
-    n_models      = len(MODEL_ORDER)
-    group_w       = plot_width / len(groups)
-    bar_w         = min(28, group_w / (n_models + 1))
-    bar_gap       = 4
+    use_depth = False
+    for (_, ag), d in results.items():
+        if ag == "none" and d.get("by_depth"):
+            use_depth = True
+            break
+    bin_key = "by_depth" if use_depth else "by_target_len"
+    x_label = "Max nesting depth" if use_depth else "Target length"
 
-    parts = _svg_header(width, height, "Dyck Languages — Overall Performance (no ablation)")
+    all_bins: set[int] = set()
+    for (_, ag), d in results.items():
+        if ag != "none":
+            continue
+        for k in d.get(bin_key, {}).keys():
+            try:
+                all_bins.add(int(k))
+            except Exception:
+                pass
+    if not all_bins:
+        ax.text(0.5, 0.5, f"no {bin_key} data", ha="center", va="center",
+                transform=ax.transAxes, fontsize=12)
+        return fig
+    bins = sorted(all_bins)
 
-    lx, ly = ml, 58
-    for i, (_, label, color, is_hybrid) in enumerate(MODEL_ORDER):
-        rx = lx + i * 200
-        parts.append(f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="{color}"/>')
+    n_models = len(MODEL_ORDER)
+    width = 0.8 / n_models
+    x = np.arange(len(bins))
+    for i, (mname, label, color, is_hybrid) in enumerate(MODEL_ORDER):
+        key = (mname, "none")
+        if key not in results:
+            continue
+        per_bin = results[key].get(bin_key, {})
+        vals = [per_bin.get(str(b), {}).get("exact_accuracy", 0.0) for b in bins]
+        positions = x + (i - n_models / 2 + 0.5) * width
+        hatch = "//" if is_hybrid else None
+        ax.bar(positions, vals, width, color=color, hatch=hatch,
+               edgecolor="black", linewidth=0.6, label=label)
+
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(b) for b in bins])
+    ax.set_xlabel(x_label)
+    ax.set_ylabel("Exact accuracy")
+    ax.set_ylim(0, 1.08)
+    ax.set_title(f"Dyck Languages — Accuracy by {x_label.lower()}")
+    ax.grid(axis="y", alpha=0.3)
+    ax.legend(loc="upper right", fontsize=9)
+    fig.tight_layout()
+    return fig
+
+
+def build_layerwise_fig(group_results, layer_by_model):
+    fig, axes = plt.subplots(2, 2, figsize=(14, 9), sharey=True)
+    for ax_idx, (mname, label, color, is_hybrid) in enumerate(MODEL_ORDER):
+        ax = axes.flat[ax_idx]
+        rows = layer_by_model.get(mname, [])
+        if not rows:
+            ax.text(0.5, 0.5, f"{label}\n(no data)", ha="center", va="center",
+                    transform=ax.transAxes, fontsize=11, color="#777")
+            ax.set_title(label)
+            ax.set_xlabel("Layer index")
+            if ax_idx % 2 == 0:
+                ax.set_ylabel("Exact accuracy")
+            continue
+
+        idxs  = [r["layer_idx"] for r in rows]
+        accs  = [r["overall"]["exact_accuracy"] for r in rows]
+        types = [r.get("layer_type", "unknown") for r in rows]
+
         if is_hybrid:
-            parts.append(f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="url(#diagonalHatch)" opacity="0.55"/>')
-        parts.append(f'<text x="{rx+22}" y="{ly+11}" class="axis">{escape(label)}</text>')
+            mha_x = [i for i, t in zip(idxs, types) if t == "self_attn"]
+            mha_y = [a for a, t in zip(accs, types) if t == "self_attn"]
+            ssm_x = [i for i, t in zip(idxs, types) if t == "linear_attn"]
+            ssm_y = [a for a, t in zip(accs, types) if t == "linear_attn"]
+            ax.plot(mha_x, mha_y, "s-",  color=LAYER_TYPE_COLORS["self_attn"],
+                    label="MHA layers", markersize=5)
+            ax.plot(ssm_x, ssm_y, "v--", color=LAYER_TYPE_COLORS["linear_attn"],
+                    label="SSM layers", markersize=5)
+        else:
+            ax.plot(idxs, accs, "o-", color=color, label="self_attn layers", markersize=5)
 
-    _gridlines(parts, ml, width - mr_pad, plot_bottom, plot_h)
-    _axes(parts, ml, width - mr_pad, mt, plot_bottom)
-
-    for gi, metric in enumerate(groups):
-        center_x   = ml + (gi + 0.5) * group_w
-        cluster_w  = n_models * bar_w + (n_models - 1) * bar_gap
-        x0         = center_x - cluster_w / 2
-        parts.append(
-            f'<text x="{center_x}" y="{plot_bottom+26}" text-anchor="middle" class="axis">{escape(group_labels[metric])}</text>'
-        )
-        for mi, (model_name, _, color, is_hybrid) in enumerate(MODEL_ORDER):
-            key  = (model_name, "none")
-            if key not in results:
-                continue
-            acc = results[key]["overall"].get(metric)
-            if acc is None:
-                continue
-            bar_h = acc * plot_h
-            x     = x0 + mi * (bar_w + bar_gap)
-            y     = plot_bottom - bar_h
-            parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="{color}" opacity="0.97"/>')
-            if is_hybrid:
-                parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="url(#diagonalHatch)" opacity="0.45"/>')
-            parts.append(f'<text x="{x+bar_w/2:.1f}" y="{y-5:.1f}" text-anchor="middle" class="value">{fmt(acc)}</text>')
-
-    parts.extend([
-        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">Metric</text>',
-        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Score</text>',
-        '</svg>',
-    ])
-    return "\n".join(parts)
-
-
-# ---------------------------------------------------------------------------
-# Figure 2 — group ablation
-# ---------------------------------------------------------------------------
-
-def build_ablation_svg(results: dict) -> str:
-    width, height = 920, 560
-    ml, mr_pad, mt = 80, 30, 100
-    plot_h        = 320
-    plot_bottom   = mt + plot_h
-    plot_width    = width - ml - mr_pad
-    n_models      = len(MODEL_ORDER)
-    n_abl         = len(ABLATE_GROUPS)
-    group_w       = plot_width / n_models
-    bar_w         = min(28, group_w / (n_abl + 1))
-    bar_gap       = 4
-
-    abl_labels  = {"none": "no ablation", "self_attn": "ablate MHA", "linear_attn": "ablate SSM"}
-    abl_dash    = {"none": "solid", "self_attn": "solid", "linear_attn": "4,3"}
-
-    parts = _svg_header(width, height, "Dyck Languages — Accuracy by Ablation Group")
-
-    lx, ly = ml, 58
-    for i, (ag, opacity, _) in enumerate(ABLATE_GROUPS):
-        rx = lx + i * 200
-        dash = abl_dash[ag]
-        sd   = f' stroke-dasharray="{dash}"' if dash != "solid" else ""
-        parts.extend([
-            f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="#888" opacity="{opacity}"/>',
-            f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="none" stroke="#333" stroke-width="1.5"{sd}/>',
-            f'<text x="{rx+22}" y="{ly+11}" class="axis">{escape(abl_labels[ag])}</text>',
-        ])
-
-    _gridlines(parts, ml, width - mr_pad, plot_bottom, plot_h)
-    _axes(parts, ml, width - mr_pad, mt, plot_bottom)
-
-    for mi, (model_name, model_label, color, is_hybrid) in enumerate(MODEL_ORDER):
-        center_x  = ml + (mi + 0.5) * group_w
-        cluster_w = n_abl * bar_w + (n_abl - 1) * bar_gap
-        x0        = center_x - cluster_w / 2
-        parts.append(f'<text x="{center_x}" y="{plot_bottom+26}" text-anchor="middle" class="axis">{escape(model_label)}</text>')
-        for ai, (ag, opacity, _) in enumerate(ABLATE_GROUPS):
-            key = (model_name, ag)
-            if key not in results:
-                continue
-            acc   = results[key]["overall"]["exact_accuracy"]
-            bar_h = acc * plot_h
-            x     = x0 + ai * (bar_w + bar_gap)
-            y     = plot_bottom - bar_h
-            dash  = abl_dash[ag]
-            sd    = f' stroke-dasharray="{dash}"' if dash != "solid" else ""
-            parts.extend([
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="{color}" opacity="{opacity}"/>',
-            ])
-            if is_hybrid:
-                parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="url(#diagonalHatch)" opacity="0.45"/>')
-            parts.extend([
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="none" stroke="#333" stroke-width="1.5"{sd}/>',
-                f'<text x="{x+bar_w/2:.1f}" y="{y-5:.1f}" text-anchor="middle" class="value">{fmt(acc)}</text>',
-            ])
-
-    parts.extend([
-        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">Model</text>',
-        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Accuracy</text>',
-        '</svg>',
-    ])
-    return "\n".join(parts)
-
-
-# ---------------------------------------------------------------------------
-# Figure 3 — accuracy by nesting depth (no ablation)
-# Dyck-specific: shows how accuracy degrades as bracket nesting deepens.
-# ---------------------------------------------------------------------------
-
-def build_depth_svg(results: dict) -> str:
-    """Bar plot of exact_accuracy stratified by max nesting depth (or target_len fallback)."""
-    # Prefer by_depth; fall back to by_target_len if depth unavailable
-    use_key = "by_depth"
-    all_keys: set[int] = set()
-    for model_name, _, _, _ in MODEL_ORDER:
-        data = results.get((model_name, "none"), {})
-        for k in data.get(use_key, {}).keys():
-            all_keys.add(int(k))
-    if not all_keys:
-        use_key = "by_target_len"
-        for model_name, _, _, _ in MODEL_ORDER:
-            data = results.get((model_name, "none"), {})
-            for k in data.get(use_key, {}).keys():
-                all_keys.add(int(k))
-    depths = sorted(all_keys) or [1, 2, 3, 4, 5]
-    x_label = "Max nesting depth" if use_key == "by_depth" else "Target length (closing bracket count)"
-
-    width, height = 860, 560
-    ml, mr_pad, mt = 80, 30, 100
-    plot_h        = 320
-    plot_bottom   = mt + plot_h
-    plot_width    = width - ml - mr_pad
-
-    parts = _svg_header(width, height, "Dyck Languages — Accuracy by Max Nesting Depth (no ablation)")
-
-    # Legend
-    lx, ly = ml, 58
-    for i, (_, label, color, is_hybrid) in enumerate(MODEL_ORDER):
-        rx = lx + i * 200
-        parts.append(f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="{color}"/>')
         if is_hybrid:
-            parts.append(f'<rect x="{rx}" y="{ly}" width="16" height="12" fill="url(#diagonalHatch)" opacity="0.55"/>')
-        parts.append(f'<text x="{rx+22}" y="{ly+11}" class="axis">{escape(label)}</text>')
+            mha_ref = group_results.get((mname, "self_attn"),   {}).get("overall", {}).get("exact_accuracy")
+            ssm_ref = group_results.get((mname, "linear_attn"), {}).get("overall", {}).get("exact_accuracy")
+            if mha_ref is not None:
+                ax.axhline(mha_ref, color=LAYER_TYPE_COLORS["self_attn"],   ls=":", alpha=0.6,
+                           label=f"all-MHA ablated = {mha_ref:.3f}")
+            if ssm_ref is not None:
+                ax.axhline(ssm_ref, color=LAYER_TYPE_COLORS["linear_attn"], ls=":", alpha=0.6,
+                           label=f"all-SSM ablated = {ssm_ref:.3f}")
+        else:
+            ref = group_results.get((mname, "self_attn"), {}).get("overall", {}).get("exact_accuracy")
+            if ref is not None:
+                ax.axhline(ref, color="#888", ls=":", alpha=0.6,
+                           label=f"all-MHA ablated = {ref:.3f}")
 
-    _gridlines(parts, ml, width - mr_pad, plot_bottom, plot_h)
-    _axes(parts, ml, width - mr_pad, mt, plot_bottom)
+        ax.set_title(label)
+        ax.set_xlabel("Layer index")
+        if ax_idx % 2 == 0:
+            ax.set_ylabel("Exact accuracy")
+        ax.set_ylim(0, 1.0)
+        ax.grid(alpha=0.3)
+        ax.legend(loc="best", fontsize=8)
 
-    n_depths  = len(depths)
-    group_w   = plot_width / n_depths
-    n_models  = len(MODEL_ORDER)
-    bar_w     = min(24, group_w / (n_models + 1))
-    bar_gap   = 3
-
-    for di, depth in enumerate(depths):
-        center_x  = ml + (di + 0.5) * group_w
-        cluster_w = n_models * bar_w + (n_models - 1) * bar_gap
-        x0        = center_x - cluster_w / 2
-        parts.append(f'<text x="{center_x}" y="{plot_bottom+26}" text-anchor="middle" class="axis">{depth}</text>')
-        for mi, (model_name, _, color, is_hybrid) in enumerate(MODEL_ORDER):
-            key  = (model_name, "none")
-            data = results.get(key, {})
-            acc  = data.get(use_key, {}).get(str(depth), {}).get("exact_accuracy")
-            if acc is None:
-                continue
-            bar_h = acc * plot_h
-            x     = x0 + mi * (bar_w + bar_gap)
-            y     = plot_bottom - bar_h
-            parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="{color}" opacity="0.97"/>')
-            if is_hybrid:
-                parts.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bar_w}" height="{bar_h:.1f}" fill="url(#diagonalHatch)" opacity="0.45"/>')
-            parts.append(f'<text x="{x+bar_w/2:.1f}" y="{y-5:.1f}" text-anchor="middle" class="value">{fmt(acc)}</text>')
-
-    parts.extend([
-        f'<text x="{width/2}" y="{height-18}" text-anchor="middle" class="axis">{escape(x_label)}</text>',
-        f'<text x="22" y="{mt+plot_h/2}" text-anchor="middle" transform="rotate(-90 22 {mt+plot_h/2})" class="axis">Exact-match accuracy</text>',
-        '</svg>',
-    ])
-    return "\n".join(parts)
+    fig.suptitle("Dyck Languages — Per-layer ablation accuracy", fontsize=14, y=1.02)
+    fig.tight_layout()
+    return fig
 
 
-# ---------------------------------------------------------------------------
-# Figure 4 — layerwise ablation (2×2 subplots)
-# ---------------------------------------------------------------------------
+def build_patching_fig(patching_by_model):
+    fig, axes = plt.subplots(2, 2, figsize=(14, 9), sharey=True)
+    for ax_idx, (mname, label, _, _) in enumerate(MODEL_ORDER):
+        ax = axes.flat[ax_idx]
+        rows = patching_by_model.get(mname, [])
+        if not rows:
+            ax.text(0.5, 0.5, f"{label}\n(no data)", ha="center", va="center",
+                    transform=ax.transAxes, fontsize=11, color="#777")
+            ax.set_title(label)
+            ax.set_xlabel("Layer index")
+            if ax_idx % 2 == 0:
+                ax.set_ylabel("Normalized logit diff")
+            continue
 
-def _subplot_layerwise(parts, layer_rows, group_results, model_name, model_label,
-                       color, is_hybrid, sx, sy, sw, sh):
-    if not layer_rows:
-        parts.append(f'<text x="{sx+sw/2}" y="{sy+sh/2}" text-anchor="middle" class="ref">no data</text>')
-        return
+        idxs  = [r["layer_idx"] for r in rows]
+        diffs = [r["mean_normalized_logit_diff"] for r in rows]
+        types = [r.get("layer_type", "unknown") for r in rows]
+        colors = [LAYER_TYPE_COLORS.get(t, "#999999") for t in types]
 
-    max_layer   = max(r["layer_idx"] for r in layer_rows)
-    plot_bottom = sy + sh
-    ml_i = sx + 10
-    mr_i = sx + sw - 5
+        ax.bar(idxs, diffs, color=colors, edgecolor="black", linewidth=0.5)
+        ax.axhline(0, color="black", ls="--", alpha=0.5)
+        ax.set_title(label)
+        ax.set_xlabel("Layer index")
+        if ax_idx % 2 == 0:
+            ax.set_ylabel("Normalized logit diff")
+        ax.grid(axis="y", alpha=0.3)
 
-    def lx(idx): return ml_i + (idx / max(max_layer, 1)) * (mr_i - ml_i)
-    def ly(acc): return plot_bottom - acc * sh
-
-    if is_hybrid:
-        for row in layer_rows:
-            bw    = (mr_i - ml_i) / max(max_layer, 1)
-            x0    = lx(row["layer_idx"]) - bw / 2
-            bg    = "#fff7e6" if row["layer_type"] == "self_attn" else "#e8f4ff"
-            parts.append(f'<rect x="{x0:.1f}" y="{sy}" width="{bw:.1f}" height="{sh}" fill="{bg}" opacity="0.7"/>')
-
-    for tick in range(6):
-        y = plot_bottom - tick * 0.2 * sh
-        parts.append(f'<line x1="{ml_i}" y1="{y:.1f}" x2="{mr_i}" y2="{y:.1f}" stroke="#e1e1e1" stroke-width="0.8"/>')
-
-    parts.extend([
-        f'<line x1="{ml_i}" y1="{sy}" x2="{ml_i}" y2="{plot_bottom}" stroke="#555" stroke-width="1"/>',
-        f'<line x1="{ml_i}" y1="{plot_bottom}" x2="{mr_i}" y2="{plot_bottom}" stroke="#555" stroke-width="1"/>',
-    ])
-
-    for ag, ref_color, ls in [("self_attn", "#2ca02c", "4,3"), ("linear_attn", "#d96bc0", "2,3")]:
-        ref_data = group_results.get((model_name, ag))
-        if ref_data:
-            y_ref = ly(ref_data["overall"]["accuracy"])
-            parts.append(f'<line x1="{ml_i}" y1="{y_ref:.1f}" x2="{mr_i}" y2="{y_ref:.1f}" stroke="{ref_color}" stroke-width="1" stroke-dasharray="{ls}" opacity="0.7"/>')
-
-    if is_hybrid:
-        for lt, dash in [("self_attn", ""), ("linear_attn", "4,3")]:
-            for row in [r for r in layer_rows if r.get("layer_type") == lt]:
-                x = lx(row["layer_idx"])
-                y = ly(row["overall"]["exact_accuracy"])
-                if lt == "self_attn":
-                    parts.append(f'<rect x="{x-4:.1f}" y="{y-4:.1f}" width="8" height="8" fill="{color}" stroke="#333" stroke-width="0.8"/>')
-                else:
-                    pts = f"{x},{y+4} {x-4},{y-4} {x+4},{y-4}"
-                    parts.append(f'<polygon points="{pts}" fill="{color}" opacity="0.75" stroke="#333" stroke-width="0.8"/>')
-    else:
-        for row in layer_rows:
-            x = lx(row["layer_idx"])
-            y = ly(row["overall"]["exact_accuracy"])
-            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{color}" stroke="#333" stroke-width="0.8"/>')
-
-    parts.append(f'<text x="{sx+sw/2}" y="{sy-6}" text-anchor="middle" class="subtitle">{escape(model_label)}</text>')
+    legend_elems = [
+        Patch(facecolor=LAYER_TYPE_COLORS["self_attn"],   edgecolor="black", label="MHA layer"),
+        Patch(facecolor=LAYER_TYPE_COLORS["linear_attn"], edgecolor="black", label="SSM/linear layer"),
+    ]
+    fig.legend(handles=legend_elems, loc="upper right", bbox_to_anchor=(0.98, 0.98), fontsize=9)
+    fig.suptitle("Dyck Languages — Activation patching effect by layer", fontsize=14, y=1.02)
+    fig.tight_layout()
+    return fig
 
 
-def build_layerwise_svg(group_results, layer_by_model) -> str:
-    width, height = 960, 640
-    ml, mt       = 55, 80
-    pad_x, pad_y = 40, 60
-    sub_w = (width - ml - 20 - pad_x) / 2
-    sub_h = (height - mt - 60 - pad_y) / 2
-
-    parts = _svg_header(width, height, "Dyck Languages — Layerwise Ablation")
-    parts.append(f'<text x="16" y="{mt+sub_h}" text-anchor="middle" transform="rotate(-90 16 {mt+sub_h})" class="axis">Accuracy</text>')
-
-    for i, (model_name, model_label, color, is_hybrid) in enumerate(MODEL_ORDER):
-        col, row = i % 2, i // 2
-        sx = ml + col * (sub_w + pad_x)
-        sy = mt + row * (sub_h + pad_y)
-        _subplot_layerwise(parts, layer_by_model.get(model_name, []), group_results,
-                           model_name, model_label, color, is_hybrid, sx, sy, sub_w, sub_h)
-
-    parts.extend([
-        f'<text x="{width/2}" y="{height-12}" text-anchor="middle" class="axis">Layer index</text>',
-        '</svg>',
-    ])
-    return "\n".join(parts)
-
-
-# ---------------------------------------------------------------------------
-# Figure 5 — activation patching (2×2 subplots)
-# ---------------------------------------------------------------------------
-
-def _subplot_patching(parts, patching_rows, model_label, sx, sy, sw, sh):
-    if not patching_rows:
-        parts.append(f'<text x="{sx+sw/2}" y="{sy+sh/2}" text-anchor="middle" class="ref">no data</text>')
-        return
-
-    diffs   = [r["mean_normalized_logit_diff"] for r in patching_rows]
-    max_abs = max(abs(d) for d in diffs) or 1.0
-    y_range = max_abs * 1.15
-    pb      = sy + sh
-    ml_i    = sx + 12
-    mr_i    = sx + sw - 5
-    bar_w   = max(3.0, (mr_i - ml_i) / max(len(patching_rows), 1) * 0.7)
-
-    def px(idx): return ml_i + (idx / max(len(patching_rows) - 1, 1)) * (mr_i - ml_i)
-    def py(val): return sy + sh / 2 - (val / y_range) * (sh / 2)
-
-    y_zero = sy + sh / 2
-    parts.append(f'<line x1="{ml_i}" y1="{y_zero:.1f}" x2="{mr_i}" y2="{y_zero:.1f}" stroke="#555" stroke-width="1" stroke-dasharray="4,3"/>')
-
-    for i, row in enumerate(patching_rows):
-        x       = px(i)
-        val     = row["mean_normalized_logit_diff"]
-        bar_h   = abs(val / y_range) * (sh / 2)
-        lt      = row.get("layer_type", "self_attn")
-        bc      = LAYER_TYPE_COLORS.get(lt, "#888")
-        opacity = "0.85" if val >= 0 else "0.5"
-        y_top   = y_zero - bar_h if val >= 0 else y_zero
-        parts.append(f'<rect x="{x-bar_w/2:.1f}" y="{y_top:.1f}" width="{bar_w:.1f}" height="{bar_h:.1f}" fill="{bc}" opacity="{opacity}"/>')
-
-    parts.extend([
-        f'<line x1="{ml_i}" y1="{sy}" x2="{ml_i}" y2="{pb}" stroke="#555" stroke-width="1"/>',
-        f'<line x1="{ml_i}" y1="{pb}" x2="{mr_i}" y2="{pb}" stroke="#555" stroke-width="1"/>',
-        f'<text x="{sx+sw/2}" y="{sy-6}" text-anchor="middle" class="subtitle">{escape(model_label)}</text>',
-    ])
-
-
-def build_patching_svg(patching_by_model) -> str:
-    width, height = 960, 640
-    ml, mt       = 55, 80
-    pad_x, pad_y = 40, 60
-    sub_w = (width - ml - 20 - pad_x) / 2
-    sub_h = (height - mt - 60 - pad_y) / 2
-
-    parts = _svg_header(width, height, "Dyck Languages — Activation Patching Effect by Layer")
-    parts.append(f'<text x="16" y="{mt+sub_h}" text-anchor="middle" transform="rotate(-90 16 {mt+sub_h})" class="axis">Mean logit diff</text>')
-
-    for i, (model_name, model_label, _, _) in enumerate(MODEL_ORDER):
-        col, row = i % 2, i // 2
-        sx = ml + col * (sub_w + pad_x)
-        sy = mt + row * (sub_h + pad_y)
-        _subplot_patching(parts, patching_by_model.get(model_name, []), model_label, sx, sy, sub_w, sub_h)
-
-    lx = ml
-    for lt_label, lt_color in [("MHA (self_attn)", "#4878d0"), ("SSM (linear_attn)", "#ee854a")]:
-        parts.extend([
-            f'<rect x="{lx}" y="{height-38}" width="14" height="10" fill="{lt_color}"/>',
-            f'<text x="{lx+18}" y="{height-29}" class="ref">{escape(lt_label)}</text>',
-        ])
-        lx += 180
-
-    parts.extend([
-        f'<text x="{width/2}" y="{height-12}" text-anchor="middle" class="axis">Layer index</text>',
-        '</svg>',
-    ])
-    return "\n".join(parts)
-
-
-# ---------------------------------------------------------------------------
-# Summary table
-# ---------------------------------------------------------------------------
-
-def build_summary(results: dict) -> str:
+def build_summary(results, layer_by_model=None, patching_by_model=None) -> str:
     lines = [
-        "# Dyck Languages Results Summary", "",
-        "## Overall accuracy by ablation group", "",
+        "# Dyck Languages Results Summary",
+        "",
+        "## Exact-match accuracy by ablation group",
+        "",
         "| Model | none | self_attn | linear_attn |",
         "|-------|------|-----------|-------------|",
     ]
     for model_name, label, _, _ in MODEL_ORDER:
-        vals = []
+        row = []
         for ag, _, _ in ABLATE_GROUPS:
             key = (model_name, ag)
-            v   = results[key]["overall"]["exact_accuracy"] if key in results else None
-            vals.append(fmt(v) if v is not None else "—")
-        lines.append(f"| {label} | {' | '.join(vals)} |")
+            v = results.get(key, {}).get("overall", {}).get("exact_accuracy")
+            row.append(fmt(v) if v is not None else "—")
+        lines.append(f"| {label} | {' | '.join(row)} |")
 
-    lines += ["", "## Exact-match and token recall (no ablation)", "",
-              "| Model | exact | token recall |", "|-------|-------|--------------|"]
+    lines += [
+        "",
+        "## Overall: exact / token recall (no ablation)",
+        "",
+        "| Model | exact | recall |",
+        "|-------|-------|--------|",
+    ]
     for model_name, label, _, _ in MODEL_ORDER:
         key = (model_name, "none")
         if key not in results:
             lines.append(f"| {label} | — | — |")
             continue
-        d  = results[key]
-        ex = fmt(d["overall"]["exact_accuracy"])
-        tr = fmt(d["overall"].get("token_recall", 0.0))
-        lines.append(f"| {label} | {ex} | {tr} |")
+        d = results[key]["overall"]
+        lines.append(f"| {label} | {fmt(d.get('exact_accuracy', 0))} | {fmt(d.get('token_recall', 0))} |")
+
+    if layer_by_model:
+        lines += [
+            "",
+            "## Layerwise ablation — top-3 most-impactful layers per model",
+            "",
+        ]
+        for model_name, label, _, _ in MODEL_ORDER:
+            rows = layer_by_model.get(model_name, [])
+            if not rows:
+                continue
+            base = results.get((model_name, "none"), {}).get("overall", {}).get("exact_accuracy")
+            ranked = sorted(rows, key=lambda r: r["overall"]["exact_accuracy"])[:3]
+            lines.append(f"### {label}")
+            if base is not None:
+                lines.append(f"baseline exact accuracy: {fmt(base)}")
+            lines.append("")
+            lines.append("| layer_idx | layer_type | exact | drop |")
+            lines.append("|-----------|------------|-------|------|")
+            for r in ranked:
+                acc = r["overall"]["exact_accuracy"]
+                drop = (base - acc) if base is not None else None
+                lines.append(
+                    f"| {r['layer_idx']} | {r.get('layer_type','?')} | {fmt(acc)} | "
+                    f"{fmt(drop) if drop is not None else '—'} |"
+                )
+            lines.append("")
+
+    if patching_by_model:
+        lines += [
+            "## Activation patching — top-3 layers by recovery",
+            "",
+        ]
+        for model_name, label, _, _ in MODEL_ORDER:
+            rows = patching_by_model.get(model_name, [])
+            if not rows:
+                continue
+            ranked = sorted(rows, key=lambda r: -r.get("mean_normalized_logit_diff", 0.0))[:3]
+            lines.append(f"### {label}")
+            lines.append("")
+            lines.append("| layer_idx | layer_type | norm. logit diff | patched accuracy |")
+            lines.append("|-----------|------------|------------------|------------------|")
+            for r in ranked:
+                lines.append(
+                    f"| {r['layer_idx']} | {r.get('layer_type','?')} | "
+                    f"{r.get('mean_normalized_logit_diff', 0):.3f} | "
+                    f"{r.get('patched_accuracy', 0):.3f} |"
+                )
+            lines.append("")
 
     return "\n".join(lines) + "\n"
 
 
-# ---------------------------------------------------------------------------
-# main
-# ---------------------------------------------------------------------------
+def save_fig(fig, base_path: Path, save_svg: bool = True) -> None:
+    base_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(base_path.with_suffix(".png"), dpi=150, bbox_inches="tight")
+    print(f"Wrote {base_path.with_suffix('.png')}")
+    if save_svg:
+        fig.savefig(base_path.with_suffix(".svg"), bbox_inches="tight")
+        print(f"Wrote {base_path.with_suffix('.svg')}")
+    plt.close(fig)
+
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--prompt_mode", default="chat",
                    choices=("continuation", "chat", "chat_continual"))
-    p.add_argument("--skip_depth",     action="store_true", help="Skip Figure 3 (by_depth).")
-    p.add_argument("--skip_layerwise", action="store_true", help="Skip Figure 4 (layerwise).")
-    p.add_argument("--skip_patching",  action="store_true", help="Skip Figure 5 (patching).")
+    p.add_argument("--skip_layerwise", action="store_true")
+    p.add_argument("--skip_patching", action="store_true")
+    p.add_argument("--no_svg", action="store_true")
     p.add_argument("--no_copy_to_figs", action="store_true")
     return p.parse_args()
 
@@ -563,57 +435,63 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    save_svg = not args.no_svg
 
     group_results = load_group_results(args.prompt_mode)
     print(f"Loaded {len(group_results)} group-ablation result(s) for prompt_mode={args.prompt_mode!r}.")
 
-    outputs: list[tuple[Path, Path]] = []
+    save_fig(build_overall_fig(group_results),
+             _OUTPUT_DIR / "dyck_languages_overall", save_svg)
+    save_fig(build_ablation_fig(group_results),
+             _OUTPUT_DIR / "dyck_languages_ablation_comparison", save_svg)
+    save_fig(build_depth_fig(group_results),
+             _OUTPUT_DIR / "dyck_languages_accuracy_by_depth", save_svg)
 
-    svg1 = build_overall_svg(group_results)
-    out1 = _OUTPUT_DIR / "dyck_languages_overall.svg"
-    out1.write_text(svg1, encoding="utf-8")
-    print(f"Wrote {out1}")
-    outputs.append((out1, _FIGS_DIR / "fig_dyck_languages_overall.svg"))
-
-    svg2 = build_ablation_svg(group_results)
-    out2 = _OUTPUT_DIR / "dyck_languages_ablation_comparison.svg"
-    out2.write_text(svg2, encoding="utf-8")
-    print(f"Wrote {out2}")
-    outputs.append((out2, _FIGS_DIR / "fig_dyck_languages_ablation.svg"))
-
-    if not args.skip_depth:
-        svg3 = build_depth_svg(group_results)
-        out3 = _OUTPUT_DIR / "dyck_languages_accuracy_by_depth.svg"
-        out3.write_text(svg3, encoding="utf-8")
-        print(f"Wrote {out3}")
-        outputs.append((out3, _FIGS_DIR / "fig_dyck_languages_depth.svg"))
-
+    layer_by_model: dict[str, list[dict]] = {}
     if not args.skip_layerwise:
-        layer_by_model = {m: load_layer_results(m, args.prompt_mode) for m, _, _, _ in MODEL_ORDER}
-        svg4 = build_layerwise_svg(group_results, layer_by_model)
-        out4 = _OUTPUT_DIR / "dyck_languages_layerwise_ablation.svg"
-        out4.write_text(svg4, encoding="utf-8")
-        print(f"Wrote {out4}")
-        outputs.append((out4, _FIGS_DIR / "fig_dyck_languages_layerwise.svg"))
+        layer_by_model = {
+            mname: load_layer_results(mname, args.prompt_mode)
+            for mname, _, _, _ in MODEL_ORDER
+        }
+        save_fig(build_layerwise_fig(group_results, layer_by_model),
+                 _OUTPUT_DIR / "dyck_languages_layerwise_ablation", save_svg)
 
+    patching_by_model: dict[str, list[dict]] = {}
     if not args.skip_patching:
-        patching_by_model = {m: load_patching_results(m, args.prompt_mode) for m, _, _, _ in MODEL_ORDER}
-        svg5 = build_patching_svg(patching_by_model)
-        out5 = _OUTPUT_DIR / "dyck_languages_patching_effect.svg"
-        out5.write_text(svg5, encoding="utf-8")
-        print(f"Wrote {out5}")
-        outputs.append((out5, _FIGS_DIR / "fig_dyck_languages_patching.svg"))
+        patching_by_model = {
+            mname: load_patching_results(mname, args.prompt_mode)
+            for mname, _, _, _ in MODEL_ORDER
+        }
+        save_fig(build_patching_fig(patching_by_model),
+                 _OUTPUT_DIR / "dyck_languages_patching_effect", save_svg)
 
-    summary = build_summary(group_results)
-    out_md  = _OUTPUT_DIR / "dyck_languages_summary.md"
-    out_md.write_text(summary, encoding="utf-8")
+    summary_md = build_summary(group_results, layer_by_model, patching_by_model)
+    out_md = _OUTPUT_DIR / "dyck_languages_summary.md"
+    out_md.write_text(summary_md, encoding="utf-8")
     print(f"Wrote {out_md}")
 
     if not args.no_copy_to_figs:
         _FIGS_DIR.mkdir(parents=True, exist_ok=True)
-        for src, dst in outputs:
-            shutil.copy2(src, dst)
-            print(f"Copied → {dst}")
+        figure_bases = [
+            (_OUTPUT_DIR / "dyck_languages_overall",              _FIGS_DIR / "fig_dyck_languages_overall"),
+            (_OUTPUT_DIR / "dyck_languages_ablation_comparison",  _FIGS_DIR / "fig_dyck_languages_ablation"),
+            (_OUTPUT_DIR / "dyck_languages_accuracy_by_depth",    _FIGS_DIR / "fig_dyck_languages_depth"),
+        ]
+        if not args.skip_layerwise:
+            figure_bases.append(
+                (_OUTPUT_DIR / "dyck_languages_layerwise_ablation",
+                 _FIGS_DIR / "fig_dyck_languages_layerwise"),
+            )
+        if not args.skip_patching:
+            figure_bases.append(
+                (_OUTPUT_DIR / "dyck_languages_patching_effect",
+                 _FIGS_DIR / "fig_dyck_languages_patching"),
+            )
+        for src_base, dst_base in figure_bases:
+            for ext in (".png", ".svg"):
+                src = src_base.with_suffix(ext)
+                if src.exists():
+                    shutil.copy2(src, dst_base.with_suffix(ext))
 
 
 if __name__ == "__main__":
