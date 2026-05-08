@@ -339,11 +339,11 @@ def _layerwise_panel(ax, *, label: str,
         ax.set_axis_off()
         return
 
-    # Reference bars: Unablated, then group ablations (only those with data).
+    # Reference bars: Unablated, then group ablations (hybrid only).
     ref_specs: list[tuple[str, float, str]] = []
     if baseline is not None:
         ref_specs.append(("Unablated", baseline, _UNABLATED_COLOR))
-    if group_self_attn is not None:
+    if is_hybrid and group_self_attn is not None:
         ref_specs.append(("Abl-SelfA", group_self_attn, _GROUP_ABL_COLORS["self_attn"]))
     if is_hybrid and group_linear_attn is not None:
         ref_specs.append(("Abl-LinA", group_linear_attn, _GROUP_ABL_COLORS["linear_attn"]))
@@ -397,12 +397,16 @@ def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
         return fig
 
     n = len(has_data)
-    fig, axes = plt.subplots(n, 1, figsize=(13, 5.5 * n), squeeze=False)
+    ncols = min(2, n)
+    nrows = (n + ncols - 1) // ncols
+    fig, axes = plt.subplots(nrows, ncols, figsize=(13 * ncols, 5.5 * nrows), squeeze=False)
+
     for i, (mname, label, _color, is_hybrid) in enumerate(has_data):
-        ax = axes[i, 0]
-        baseline   = group_results.get((mname, "none"),        {}).get("overall", {}).get("accuracy")
-        g_self     = group_results.get((mname, "self_attn"),   {}).get("overall", {}).get("accuracy")
-        g_linear   = group_results.get((mname, "linear_attn"), {}).get("overall", {}).get("accuracy")
+        row, col = divmod(i, ncols)
+        ax = axes[row, col]
+        baseline = group_results.get((mname, "none"),        {}).get("overall", {}).get("accuracy")
+        g_self   = group_results.get((mname, "self_attn"),   {}).get("overall", {}).get("accuracy")
+        g_linear = group_results.get((mname, "linear_attn"), {}).get("overall", {}).get("accuracy")
         _layerwise_panel(
             ax, label=label,
             baseline=baseline,
@@ -412,6 +416,11 @@ def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
             is_hybrid=is_hybrid,
         )
 
+    # Hide any unused cells in the grid.
+    for j in range(n, nrows * ncols):
+        row, col = divmod(j, ncols)
+        axes[row, col].set_axis_off()
+
     legend_elems = [
         Patch(facecolor=_UNABLATED_COLOR, edgecolor="black", label="Unablated"),
         Patch(facecolor=_GROUP_ABL_COLORS["self_attn"],   edgecolor="black",
@@ -420,9 +429,9 @@ def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
               label="Abl. Linear-Attn"),
     ]
     fig.legend(handles=legend_elems, loc="lower center", ncol=3,
-               bbox_to_anchor=(0.5, -0.02), fontsize=9, frameon=False)
-    fig.suptitle("Web of Lies — Per-layer ablation accuracy", fontsize=13, y=1.0)
-    fig.tight_layout(rect=(0, 0.02, 1, 0.98))
+               bbox_to_anchor=(0.5, 0.0), fontsize=9, frameon=False)
+    fig.suptitle("Web of Lies — Per-layer ablation accuracy", fontsize=13)
+    fig.tight_layout(rect=(0, 0.04, 1, 0.97))
     return fig
 
 
@@ -511,6 +520,44 @@ def build_summary(results: dict[tuple[str, str], dict],
         no_acc  = fmt(d.get("by_answer", {}).get("no",  {}).get("accuracy", 0.0))
         ov_acc  = fmt(d["overall"]["accuracy"])
         lines.append(f"| {label} | {yes_acc} | {no_acc} | {ov_acc} |")
+
+    lines += [
+        "",
+        "## Accuracy by chain depth (no ablation)",
+        "",
+        "| Model | " + " | ".join(["depth"] if True else []) + " |",
+    ]
+    # Collect all depths present across models.
+    all_depths: set[int] = set()
+    depth_by_model: dict[str, dict[int, dict]] = {}
+    for model_name, label, _, _ in MODEL_ORDER:
+        key = (model_name, "none")
+        if key not in results:
+            depth_by_model[model_name] = {}
+            continue
+        raw = results[key].get("by_chain_depth", {}) or {}
+        cleaned: dict[int, dict] = {}
+        for k, v in raw.items():
+            try:
+                cleaned[int(k)] = v
+            except (TypeError, ValueError):
+                pass
+        depth_by_model[model_name] = cleaned
+        all_depths.update(cleaned.keys())
+
+    depths_sorted = sorted(all_depths)
+    header = "| Model | " + " | ".join(f"depth {d}" for d in depths_sorted) + " |"
+    sep    = "|-------|" + "|".join("--------" for _ in depths_sorted) + "|"
+    # Replace the placeholder header rows.
+    lines[-2] = header
+    lines[-1] = sep
+    for model_name, label, _, _ in MODEL_ORDER:
+        per = depth_by_model.get(model_name, {})
+        if not per:
+            lines.append(f"| {label} | " + " | ".join("—" for _ in depths_sorted) + " |")
+        else:
+            cells = [fmt(per[d]["accuracy"]) if d in per else "—" for d in depths_sorted]
+            lines.append(f"| {label} | " + " | ".join(cells) + " |")
 
     if layer_by_model:
         lines += [
