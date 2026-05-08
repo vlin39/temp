@@ -4,9 +4,12 @@ Render comparison figures for web_of_lies evaluation results (matplotlib).
 
 Figures produced (PNG + SVG):
   1. web_of_lies_accuracy_by_answer  — baseline accuracy (no ablation), by answer
-  2. web_of_lies_ablation_comparison — accuracy under each ablation group, per model
-  3. web_of_lies_layerwise_ablation  — accuracy when one layer ablated, by layer index
-  4. web_of_lies_patching_effect     — normalized patching effect by layer
+  2. web_of_lies_accuracy_by_depth   — baseline accuracy (no ablation), by chain depth
+  3. web_of_lies_ablation_comparison — accuracy under each ablation group, per model
+  4. web_of_lies_layerwise_ablation  — accuracy when one layer ablated, by layer index
+                                       (bars per layer + Unablated/group-ablated reference bars,
+                                        matching the paper's entity-tracking figure style)
+  5. web_of_lies_patching_effect     — normalized patching effect by layer
 
 Usage:
     python make_comparison_plot.py --prompt_mode chat
@@ -195,82 +198,192 @@ def build_ablation_fig(results: dict[tuple[str, str], dict]):
     return fig
 
 
-def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
-                        layer_by_model: dict[str, list[dict]]):
-    """Figure 3: 2×2 subplots, accuracy vs layer_idx."""
-    fig, axes = plt.subplots(2, 2, figsize=(14, 9), sharey=True)
-    for ax_idx, (mname, label, color, is_hybrid) in enumerate(MODEL_ORDER):
-        ax = axes.flat[ax_idx]
-        rows = layer_by_model.get(mname, [])
-        if not rows:
-            ax.text(0.5, 0.5, f"{label}\n(no data)", ha="center", va="center",
-                    transform=ax.transAxes, fontsize=11, color="#777")
-            ax.set_title(label)
-            ax.set_xlabel("Layer index")
-            if ax_idx % 2 == 0:
-                ax.set_ylabel("Accuracy")
+def build_accuracy_by_depth_fig(results: dict[tuple[str, str], dict]):
+    """Behavioral figure analogous to entity_tracking_nbox6_comparison.
+
+    X-axis: chain depth (number of truth/lie statements).
+    Bars:   one per model (no-ablation baseline only).
+    """
+    by_model_depth: dict[str, dict[int, float]] = {}
+    all_depths: set[int] = set()
+    for mname, _, _, _ in MODEL_ORDER:
+        d = results.get((mname, "none"))
+        if not d:
             continue
+        per_depth = d.get("by_chain_depth", {}) or {}
+        cleaned: dict[int, float] = {}
+        for k, v in per_depth.items():
+            try:
+                depth_i = int(k)
+            except (TypeError, ValueError):
+                continue
+            cleaned[depth_i] = float(v.get("accuracy", 0.0))
+            all_depths.add(depth_i)
+        by_model_depth[mname] = cleaned
 
-        idxs  = [r["layer_idx"] for r in rows]
-        accs  = [r["overall"]["accuracy"] for r in rows]
-        types = [r.get("layer_type", "unknown") for r in rows]
+    if not all_depths:
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.text(0.5, 0.5, "No chain-depth data available",
+                ha="center", va="center", transform=ax.transAxes, color="#777")
+        ax.set_axis_off()
+        return fig
 
-        if is_hybrid:
-            mha_x = [i for i, t in zip(idxs, types) if t == "self_attn"]
-            mha_y = [a for a, t in zip(accs, types) if t == "self_attn"]
-            ssm_x = [i for i, t in zip(idxs, types) if t == "linear_attn"]
-            ssm_y = [a for a, t in zip(accs, types) if t == "linear_attn"]
-            ax.plot(mha_x, mha_y, "s-",  color=LAYER_TYPE_COLORS["self_attn"],
-                    label="MHA layers", markersize=5)
-            ax.plot(ssm_x, ssm_y, "v--", color=LAYER_TYPE_COLORS["linear_attn"],
-                    label="SSM layers", markersize=5)
-        else:
-            ax.plot(idxs, accs, "o-", color=color, label="self_attn layers", markersize=5)
+    depths = sorted(all_depths)
+    present_models = [m for m in MODEL_ORDER if by_model_depth.get(m[0])]
+    n_models = max(len(present_models), 1)
+    width = 0.8 / n_models
+    x = np.arange(len(depths))
 
-        # Reference lines from group ablation results
-        if is_hybrid:
-            mha_ref = group_results.get((mname, "self_attn"),   {}).get("overall", {}).get("accuracy")
-            ssm_ref = group_results.get((mname, "linear_attn"), {}).get("overall", {}).get("accuracy")
-            if mha_ref is not None:
-                ax.axhline(mha_ref, color=LAYER_TYPE_COLORS["self_attn"],   ls=":", alpha=0.6,
-                           label=f"all-MHA ablated = {mha_ref:.3f}")
-            if ssm_ref is not None:
-                ax.axhline(ssm_ref, color=LAYER_TYPE_COLORS["linear_attn"], ls=":", alpha=0.6,
-                           label=f"all-SSM ablated = {ssm_ref:.3f}")
-        else:
-            ref = group_results.get((mname, "self_attn"), {}).get("overall", {}).get("accuracy")
-            if ref is not None:
-                ax.axhline(ref, color="#888", ls=":", alpha=0.6,
-                           label=f"all-MHA ablated = {ref:.3f}")
+    fig, ax = plt.subplots(figsize=(11, 5))
+    for i, (mname, label, color, is_hybrid) in enumerate(present_models):
+        per = by_model_depth.get(mname, {})
+        vals = [per.get(d, 0.0) for d in depths]
+        positions = x + (i - n_models / 2 + 0.5) * width
+        hatch = "//" if is_hybrid else None
+        ax.bar(
+            positions, vals, width, color=color, hatch=hatch,
+            edgecolor="black", linewidth=0.6, label=label,
+        )
 
-        ax.set_title(label)
-        ax.set_xlabel("Layer index")
-        if ax_idx % 2 == 0:
-            ax.set_ylabel("Accuracy")
-        ax.set_ylim(0, 1.0)
-        ax.grid(alpha=0.3)
-        ax.legend(loc="best", fontsize=8)
-
-    fig.suptitle("Web of Lies — Per-layer ablation accuracy", fontsize=14, y=1.02)
+    ax.set_xticks(x)
+    ax.set_xticklabels([str(d) for d in depths])
+    ax.set_xlabel("Chain depth (number of truth/lie statements)")
+    ax.set_ylabel("Accuracy")
+    ax.set_ylim(0, 1.05)
+    ax.set_title("Web of Lies — Accuracy vs chain depth (no ablation)")
+    ax.grid(axis="y", alpha=0.3)
+    ax.legend(loc="best", fontsize=9)
     fig.tight_layout()
     return fig
 
 
-def build_patching_fig(patching_by_model: dict[str, list[dict]]):
-    """Figure 4: 2×2 subplots, normalized logit diff vs layer_idx."""
-    fig, axes = plt.subplots(2, 2, figsize=(14, 9), sharey=True)
-    for ax_idx, (mname, label, _, _) in enumerate(MODEL_ORDER):
-        ax = axes.flat[ax_idx]
-        rows = patching_by_model.get(mname, [])
-        if not rows:
-            ax.text(0.5, 0.5, f"{label}\n(no data)", ha="center", va="center",
-                    transform=ax.transAxes, fontsize=11, color="#777")
-            ax.set_title(label)
-            ax.set_xlabel("Layer index")
-            if ax_idx % 2 == 0:
-                ax.set_ylabel("Normalized logit diff")
-            continue
+# Reference-bar styling used in the paper's layerwise figures.
+_UNABLATED_COLOR = "#888888"   # gray
+_GROUP_ABL_COLORS = {
+    "self_attn":   LAYER_TYPE_COLORS["self_attn"],     # blue, matches paper
+    "linear_attn": LAYER_TYPE_COLORS["linear_attn"],   # orange
+}
 
+
+def _layerwise_panel(ax, *, label: str,
+                     baseline: float | None,
+                     group_self_attn: float | None,
+                     group_linear_attn: float | None,
+                     layer_rows: list[dict],
+                     is_hybrid: bool) -> None:
+    """Single subplot in the bar-style layerwise figure (paper layout)."""
+    if not layer_rows and baseline is None:
+        ax.text(0.5, 0.5, f"{label}\n(no data)", ha="center", va="center",
+                transform=ax.transAxes, fontsize=11, color="#777")
+        ax.set_title(label)
+        ax.set_axis_off()
+        return
+
+    # Reference bars: Unablated, then group ablations (only those with data).
+    ref_specs: list[tuple[str, float, str]] = []
+    if baseline is not None:
+        ref_specs.append(("Unablated", baseline, _UNABLATED_COLOR))
+    if group_self_attn is not None:
+        ref_specs.append(("Abl-SelfA", group_self_attn, _GROUP_ABL_COLORS["self_attn"]))
+    if is_hybrid and group_linear_attn is not None:
+        ref_specs.append(("Abl-LinA", group_linear_attn, _GROUP_ABL_COLORS["linear_attn"]))
+
+    layer_rows = sorted(layer_rows, key=lambda r: r["layer_idx"])
+    layer_labels = [f"L{r['layer_idx']}" for r in layer_rows]
+    layer_vals   = [r["overall"]["accuracy"] for r in layer_rows]
+    layer_colors = [_GROUP_ABL_COLORS.get(r.get("layer_type", "self_attn"),
+                                          _GROUP_ABL_COLORS["self_attn"])
+                    for r in layer_rows]
+
+    n_ref = len(ref_specs)
+    n_layers = len(layer_rows)
+    positions = np.arange(n_ref + n_layers)
+
+    # Reference bars
+    for i, (rl, rv, rc) in enumerate(ref_specs):
+        ax.bar(positions[i], rv, color=rc, edgecolor="black", linewidth=0.5)
+    # Per-layer bars
+    if n_layers:
+        ax.bar(positions[n_ref:], layer_vals, color=layer_colors,
+               edgecolor="black", linewidth=0.5)
+
+    ax.set_xticks(positions)
+    ax.set_xticklabels([rl for rl, _, _ in ref_specs] + layer_labels,
+                       rotation=90, fontsize=7)
+    ax.set_title(label)
+    ax.set_ylabel("Accuracy")
+    ax.set_ylim(0, 1.0)
+    ax.grid(axis="y", alpha=0.3)
+
+
+def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
+                        layer_by_model: dict[str, list[dict]]):
+    """Per-layer ablation, paper-style bars (Unablated + group bars + per-layer bars).
+
+    Mirrors qwen_small_layerwise_ablation_comparison.png from the paper.
+    Renders only models that have data; empty rows are dropped from the grid.
+    """
+    has_data: list[tuple[str, str, str, bool]] = []
+    for spec in MODEL_ORDER:
+        mname = spec[0]
+        if layer_by_model.get(mname) or group_results.get((mname, "none")):
+            has_data.append(spec)
+
+    if not has_data:
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.text(0.5, 0.5, "No layerwise data available",
+                ha="center", va="center", transform=ax.transAxes, color="#777")
+        ax.set_axis_off()
+        return fig
+
+    n = len(has_data)
+    fig, axes = plt.subplots(n, 1, figsize=(13, 2.6 * n), squeeze=False)
+    for i, (mname, label, _color, is_hybrid) in enumerate(has_data):
+        ax = axes[i, 0]
+        baseline   = group_results.get((mname, "none"),        {}).get("overall", {}).get("accuracy")
+        g_self     = group_results.get((mname, "self_attn"),   {}).get("overall", {}).get("accuracy")
+        g_linear   = group_results.get((mname, "linear_attn"), {}).get("overall", {}).get("accuracy")
+        _layerwise_panel(
+            ax, label=label,
+            baseline=baseline,
+            group_self_attn=g_self,
+            group_linear_attn=g_linear,
+            layer_rows=layer_by_model.get(mname, []),
+            is_hybrid=is_hybrid,
+        )
+
+    legend_elems = [
+        Patch(facecolor=_UNABLATED_COLOR, edgecolor="black", label="Unablated"),
+        Patch(facecolor=_GROUP_ABL_COLORS["self_attn"],   edgecolor="black",
+              label="Abl. Self-Attn"),
+        Patch(facecolor=_GROUP_ABL_COLORS["linear_attn"], edgecolor="black",
+              label="Abl. Linear-Attn"),
+    ]
+    fig.legend(handles=legend_elems, loc="lower center", ncol=3,
+               bbox_to_anchor=(0.5, -0.02), fontsize=9, frameon=False)
+    fig.suptitle("Web of Lies — Per-layer ablation accuracy", fontsize=13, y=1.0)
+    fig.tight_layout(rect=(0, 0.02, 1, 0.98))
+    return fig
+
+
+def build_patching_fig(patching_by_model: dict[str, list[dict]]):
+    """Normalized logit diff vs layer_idx; one subplot per model with data."""
+    has_data = [spec for spec in MODEL_ORDER if patching_by_model.get(spec[0])]
+    if not has_data:
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.text(0.5, 0.5, "No patching data available",
+                ha="center", va="center", transform=ax.transAxes, color="#777")
+        ax.set_axis_off()
+        return fig
+
+    n = len(has_data)
+    ncols = 2 if n > 1 else 1
+    nrows = (n + ncols - 1) // ncols
+    fig, axes = plt.subplots(nrows, ncols, figsize=(7 * ncols, 4 * nrows),
+                             sharey=True, squeeze=False)
+    for ax_idx, (mname, label, _, _) in enumerate(has_data):
+        ax = axes.flat[ax_idx]
+        rows = patching_by_model[mname]
         idxs  = [r["layer_idx"] for r in rows]
         diffs = [r["mean_normalized_logit_diff"] for r in rows]
         types = [r.get("layer_type", "unknown") for r in rows]
@@ -280,15 +393,19 @@ def build_patching_fig(patching_by_model: dict[str, list[dict]]):
         ax.axhline(0, color="black", ls="--", alpha=0.5)
         ax.set_title(label)
         ax.set_xlabel("Layer index")
-        if ax_idx % 2 == 0:
-            ax.set_ylabel("Normalized logit diff")
+        ax.set_ylabel("Normalized logit diff")
         ax.grid(axis="y", alpha=0.3)
+
+    # Hide any unused subplots in the grid.
+    for j in range(len(has_data), nrows * ncols):
+        axes.flat[j].set_axis_off()
 
     legend_elems = [
         Patch(facecolor=LAYER_TYPE_COLORS["self_attn"],   edgecolor="black", label="MHA layer"),
         Patch(facecolor=LAYER_TYPE_COLORS["linear_attn"], edgecolor="black", label="SSM/linear layer"),
     ]
-    fig.legend(handles=legend_elems, loc="upper right", bbox_to_anchor=(0.98, 0.98), fontsize=9)
+    fig.legend(handles=legend_elems, loc="upper right",
+               bbox_to_anchor=(0.98, 0.98), fontsize=9)
     fig.suptitle("Web of Lies — Activation patching effect by layer", fontsize=14, y=1.02)
     fig.tight_layout()
     return fig
@@ -428,6 +545,8 @@ def main() -> None:
 
     save_fig(build_accuracy_by_answer_fig(group_results),
              _OUTPUT_DIR / "web_of_lies_accuracy_by_answer", save_svg)
+    save_fig(build_accuracy_by_depth_fig(group_results),
+             _OUTPUT_DIR / "web_of_lies_accuracy_by_depth", save_svg)
     save_fig(build_ablation_fig(group_results),
              _OUTPUT_DIR / "web_of_lies_ablation_comparison", save_svg)
 
@@ -458,6 +577,7 @@ def main() -> None:
         _FIGS_DIR.mkdir(parents=True, exist_ok=True)
         figure_bases = [
             (_OUTPUT_DIR / "web_of_lies_accuracy_by_answer",   _FIGS_DIR / "fig_web_of_lies_accuracy"),
+            (_OUTPUT_DIR / "web_of_lies_accuracy_by_depth",    _FIGS_DIR / "fig_web_of_lies_depth"),
             (_OUTPUT_DIR / "web_of_lies_ablation_comparison",  _FIGS_DIR / "fig_web_of_lies_ablation"),
         ]
         if not args.skip_layerwise:
