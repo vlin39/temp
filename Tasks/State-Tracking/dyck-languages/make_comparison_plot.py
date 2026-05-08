@@ -411,7 +411,7 @@ def build_summary(results, layer_by_model=None, patching_by_model=None) -> str:
     return "\n".join(lines) + "\n"
 
 
-def save_fig(fig, base_path: Path, save_svg: bool = True) -> None:
+def save_fig(fig, base_path: Path, save_svg: bool = False) -> None:
     base_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(base_path.with_suffix(".png"), dpi=150, bbox_inches="tight")
     print(f"Wrote {base_path.with_suffix('.png')}")
@@ -427,7 +427,8 @@ def parse_args() -> argparse.Namespace:
                    choices=("continuation", "chat", "chat_continual"))
     p.add_argument("--skip_layerwise", action="store_true")
     p.add_argument("--skip_patching", action="store_true")
-    p.add_argument("--no_svg", action="store_true")
+    p.add_argument("--svg", action="store_true",
+                   help="Also save SVG alongside PNG.")
     p.add_argument("--no_copy_to_figs", action="store_true")
     return p.parse_args()
 
@@ -435,7 +436,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    save_svg = not args.no_svg
+    save_svg = args.svg
 
     group_results = load_group_results(args.prompt_mode)
     print(f"Loaded {len(group_results)} group-ablation result(s) for prompt_mode={args.prompt_mode!r}.")
