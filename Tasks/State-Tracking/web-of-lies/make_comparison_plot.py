@@ -257,6 +257,66 @@ def build_accuracy_by_depth_fig(results: dict[tuple[str, str], dict]):
     return fig
 
 
+def build_layerwise_multimodel_fig(group_results: dict[tuple[str, str], dict],
+                                   layer_by_model: dict[str, list[dict]]):
+    """Colored-objects-style layerwise figure.
+
+    Three panels side-by-side (Overall / yes-answer / no-answer).
+    Each panel shows one line per model; color encodes model identity.
+    Dashed horizontal lines show each model's unablated baseline.
+    Mirrors assets/colored_objects/ablations_top_row.pdf.
+    """
+    present = [spec for spec in MODEL_ORDER if layer_by_model.get(spec[0])]
+    if not present:
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.text(0.5, 0.5, "No layerwise data available",
+                ha="center", va="center", transform=ax.transAxes, color="#777")
+        ax.set_axis_off()
+        return fig
+
+    panels = [
+        ("overall",    "Overall"),
+        ("yes",        "Yes-answer"),
+        ("no",         "No-answer"),
+    ]
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4), sharey=True)
+
+    for ax, (slot, panel_title) in zip(axes, panels):
+        for mname, label, color, _ in present:
+            rows = sorted(layer_by_model[mname], key=lambda r: r["layer_idx"])
+            xs = [r["layer_idx"] for r in rows]
+            if slot == "overall":
+                ys = [r["overall"]["accuracy"] for r in rows]
+                baseline = (group_results.get((mname, "none"), {})
+                            .get("overall", {}).get("accuracy"))
+            else:
+                ys = [r.get("by_answer", {}).get(slot, {}).get("accuracy", float("nan"))
+                      for r in rows]
+                baseline = (group_results.get((mname, "none"), {})
+                            .get("by_answer", {}).get(slot, {}).get("accuracy"))
+
+            ax.plot(xs, ys, marker="o", markersize=3, linewidth=1.2,
+                    color=color, label=label)
+            if baseline is not None:
+                ax.axhline(baseline, color=color, linestyle="--",
+                           linewidth=0.9, alpha=0.7)
+
+        ax.set_title(panel_title)
+        ax.set_xlabel("Ablated layer index")
+        ax.set_ylim(-0.05, 1.05)
+        ax.grid(alpha=0.25)
+        if ax is axes[0]:
+            ax.set_ylabel("Accuracy")
+
+    handles = [plt.Line2D([0], [0], color=c, marker="o", markersize=5, label=lbl)
+               for _, lbl, c, _ in present]
+    fig.legend(handles=handles, loc="lower center", ncol=len(present),
+               bbox_to_anchor=(0.5, -0.08), fontsize=9, frameon=False)
+    fig.suptitle("Web of Lies — Per-layer ablation accuracy (all models)", fontsize=12)
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    return fig
+
+
 # Reference-bar styling used in the paper's layerwise figures.
 _UNABLATED_COLOR = "#888888"   # gray
 _GROUP_ABL_COLORS = {
@@ -337,7 +397,7 @@ def build_layerwise_fig(group_results: dict[tuple[str, str], dict],
         return fig
 
     n = len(has_data)
-    fig, axes = plt.subplots(n, 1, figsize=(13, 2.6 * n), squeeze=False)
+    fig, axes = plt.subplots(n, 1, figsize=(13, 5.5 * n), squeeze=False)
     for i, (mname, label, _color, is_hybrid) in enumerate(has_data):
         ax = axes[i, 0]
         baseline   = group_results.get((mname, "none"),        {}).get("overall", {}).get("accuracy")
@@ -512,7 +572,7 @@ def build_summary(results: dict[tuple[str, str], dict],
 # main
 # ---------------------------------------------------------------------------
 
-def save_fig(fig, base_path: Path, save_svg: bool = True) -> None:
+def save_fig(fig, base_path: Path, save_svg: bool = False) -> None:
     base_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(base_path.with_suffix(".png"), dpi=150, bbox_inches="tight")
     print(f"Wrote {base_path.with_suffix('.png')}")
@@ -528,17 +588,17 @@ def parse_args() -> argparse.Namespace:
                    choices=("continuation", "chat", "chat_continual"))
     p.add_argument("--skip_layerwise", action="store_true")
     p.add_argument("--skip_patching", action="store_true")
-    p.add_argument("--no_svg", action="store_true",
-                   help="Save only PNG, not SVG.")
+    p.add_argument("--svg", action="store_true",
+                   help="Also save SVG alongside PNG.")
     p.add_argument("--no_copy_to_figs", action="store_true",
-                   help="Do not copy PNGs/SVGs to Figs/State-Tracking/.")
+                   help="Do not copy PNGs to Figs/State-Tracking/.")
     return p.parse_args()
 
 
 def main() -> None:
     args = parse_args()
     _OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    save_svg = not args.no_svg
+    save_svg = args.svg
 
     group_results = load_group_results(args.prompt_mode)
     print(f"Loaded {len(group_results)} group-ablation result(s) for prompt_mode={args.prompt_mode!r}.")
@@ -558,6 +618,8 @@ def main() -> None:
         }
         save_fig(build_layerwise_fig(group_results, layer_by_model),
                  _OUTPUT_DIR / "web_of_lies_layerwise_ablation", save_svg)
+        save_fig(build_layerwise_multimodel_fig(group_results, layer_by_model),
+                 _OUTPUT_DIR / "web_of_lies_layerwise_multimodel", save_svg)
 
     patching_by_model: dict[str, list[dict]] = {}
     if not args.skip_patching:
@@ -584,6 +646,10 @@ def main() -> None:
             figure_bases.append(
                 (_OUTPUT_DIR / "web_of_lies_layerwise_ablation",
                  _FIGS_DIR / "fig_web_of_lies_layerwise"),
+            )
+            figure_bases.append(
+                (_OUTPUT_DIR / "web_of_lies_layerwise_multimodel",
+                 _FIGS_DIR / "fig_web_of_lies_layerwise_multimodel"),
             )
         if not args.skip_patching:
             figure_bases.append(
