@@ -285,8 +285,15 @@ def main() -> None:
                     patched_names = ablate_single_attn_module(model, layer_idx)
                     layer_type = "self_attn" if any("self_attn" in n for n in patched_names) else "linear_attn"
                     print(f"  Ablated layer {layer_idx} ({layer_type}): {patched_names}")
-                    result_path = run_single_config(
-                        args=args,
+                    # Write directly to the layer path so we never touch the
+                    # baseline _chat.json (ablate_group="none" would otherwise
+                    # clobber it on every iteration and delete it at the end).
+                    import copy as _copy
+                    args_layer = _copy.copy(args)
+                    args_layer.output_json = str(out_path)
+                    out_path.parent.mkdir(parents=True, exist_ok=True)
+                    run_single_config(
+                        args=args_layer,
                         examples=examples,
                         model_name=model_name,
                         model=model,
@@ -296,17 +303,15 @@ def main() -> None:
                         ablate_group="none",
                     )
                     restore_attention_ablation(model)
-                    # Rewrite the output to include layer metadata.
-                    with open(result_path, encoding="utf-8") as f:
+                    # Patch layer metadata into the file written above.
+                    with open(out_path, encoding="utf-8") as f:
                         saved = json.load(f)
                     saved["ablate_mode"] = "single_layer"
                     saved["layer_idx"] = layer_idx
                     saved["layer_type"] = layer_type
                     saved["ablation_modules"] = patched_names
-                    out_path.parent.mkdir(parents=True, exist_ok=True)
                     with open(out_path, "w", encoding="utf-8") as f:
                         json.dump(saved, f, indent=2, ensure_ascii=False)
-                    result_path.unlink(missing_ok=True)
                     print(f"Wrote {out_path}")
                 except (ValueError, RuntimeError) as e:
                     restore_attention_ablation(model)
