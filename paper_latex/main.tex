@@ -155,8 +155,6 @@ The state-tracking family consists of tasks that probe whether models can mainta
 {clinical sequence modeling} task \citep{wang2026handlinginterpretingmissingmodalities} that we formulate to identify the ability of decoder components to maintain and update internal representations of patient health states.
 
 \subsection{Evaluation Protocol and Metrics for the In Context Retrieval Task}\label{sec:eval}
-
-\paragraph{In-Context Retrieval Task}
 We evaluate in-context retrieval using the Colored Objects benchmark, which tests whether a model can extract object attributes and simple relations from a short textual context. Each example describes a set of colored objects and is followed by a query whose answer must be recovered directly from the prompt. 
 
 The benchmark contains multiple subtask types that probe different forms of retrieval. 
@@ -185,9 +183,9 @@ Performance is measured using accuracy, where a prediction is counted as correct
 The same evaluation procedure is used for both the baseline runs and the corresponding layerwise ablation experiments.
 
 
-\subsection{Evaluation Protocol and Metrics for the Entity Tracking Task}
+\subsection{Evaluation Protocol and Metrics for the State Tracking Task}
 
-\paragraph{Entity Tracking Task} We use the \emph{Boxes} task from~\cite{kim-schuster-2023-entity}. Each example consists of a short narrative describing an initial inventory of $N$ boxes, each containing at most $M$ objects, with an expected number of $K$ objects, followed by a sequence of operations drawn from $\{\texttt{move}, \texttt{remove}, \texttt{put}\}$. The model is then asked to predict the contents of a single queried box after all applied operations.
+\paragraph{Entity Tracking} We use the \emph{Boxes} task from~\cite{kim-schuster-2023-entity}. Each example consists of a short narrative describing an initial inventory of $N$ boxes, each containing at most $M$ objects, with an expected number of $K$ objects, followed by a sequence of operations drawn from $\{\texttt{move}, \texttt{remove}, \texttt{put}\}$. The model is then asked to predict the contents of a single queried box after all applied operations.
 
 A prototypical 5-box, 3-operation example is shown below:
 
@@ -223,7 +221,11 @@ Because all tested models are instruction-tuned, we adapt the task into a short 
 % \]
 % which measures the extent to which the patch restores the clean behavior relative to the corrupt baseline.
 
+\paragraph{Boolean TODO?} 
 
+\paragraph{Web of Lies}
+
+\paragraph{Dyck}
 
 \section{Results}
 \label{sec:results}
