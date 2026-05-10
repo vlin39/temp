@@ -89,8 +89,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--prompt_mode", type=str, choices=PROMPT_MODES, default="continuation")
     p.add_argument("--sweep_prompt_modes", action="store_true")
     p.add_argument("--seed", type=int, default=0)
-    p.add_argument("--max_new_tokens", type=int, default=16,
-                   help="Generation budget. Larger than web_of_lies because targets are sequences.")
+    p.add_argument("--max_new_tokens", type=int, default=64,
+                   help=("Generation budget. Larger than web_of_lies because targets are sequences "
+                         "and chat-tuned models often emit conversational preamble before the answer."))
     p.add_argument("--ablate_group", type=str, choices=ABLATE_GROUPS, default="none")
     p.add_argument("--sweep_ablate_groups", action="store_true")
     p.add_argument("--sweep_layer_indices", action="store_true",

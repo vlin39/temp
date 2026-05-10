@@ -117,24 +117,30 @@ def build_chat_conversation_continual(ex: dict) -> list[dict]:
 def parse_model_completion(raw_suffix: str) -> list[str]:
     """Extract the closing-bracket sequence from a model completion.
 
-    Strategy: strip any <think>…</think> reasoning, then take all bracket
-    characters in their order of appearance.  Stops at first non-bracket
-    non-whitespace character to avoid mixing brackets from later text
-    (e.g., a follow-up sentence).
+    Chat-tuned models often respond with prose ("Let's analyze...") and
+    sometimes echo the input in a code block before stating the answer.
+    Strategy:
+      1. Strip <think>…</think> reasoning.
+      2. If an "Answer:" / "the answer is" marker appears, restrict to text
+         after the last such marker.
+      3. Take the LAST contiguous bracket-run in the cleaned text (the
+         final answer is typically at the end of a chat response).
+    Falls back to the only bracket run for clean continuation outputs.
     """
     text = re.sub(r"(?is)<think>.*?</think>", " ", raw_suffix).strip()
     text = re.sub(r"(?is)^<think>\s*", "", text).strip()
-    text = re.sub(r"(?is)^(answer|the answer is)\s*:?\s*", "", text)
 
-    tokens: list[str] = []
-    for ch in text:
-        if ch in _OPEN or ch in _CLOSE:
-            tokens.append(ch)
-        elif ch.isspace():
-            continue
-        else:
-            break  # stop at first non-bracket non-space char
-    return tokens
+    # If an answer marker appears, keep only what comes after the LAST one.
+    marker = re.compile(r"(?is)\b(?:answer|the answer is|final answer)\s*[:\-]\s*")
+    matches = list(marker.finditer(text))
+    if matches:
+        text = text[matches[-1].end():]
+
+    bracket_class = r"[\(\)\[\]\{\}<>]"
+    runs = list(re.finditer(rf"{bracket_class}(?:[\s]*{bracket_class})*", text))
+    if not runs:
+        return []
+    return [ch for ch in runs[-1].group(0) if ch in _OPEN or ch in _CLOSE]
 
 
 def _exact_match(pred: list[str], gold: list[str]) -> bool:
