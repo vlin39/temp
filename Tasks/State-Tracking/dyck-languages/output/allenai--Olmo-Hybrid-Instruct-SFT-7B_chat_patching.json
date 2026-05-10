@@ -1,0 +1,233 @@
+{
+  "model_name": "allenai/Olmo-Hybrid-Instruct-SFT-7B",
+  "task": "dyck_languages",
+  "prompt_mode": "chat",
+  "pairs_file": "/oscar/home/vlin10/Downloads/dol_interp/Tasks/State-Tracking/dyck-languages/output/patching_pairs_250.json",
+  "num_pairs": 250,
+  "patching_results": [
+    {
+      "layer_idx": 0,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.026790263321272337,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 1,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.06648372242701438,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 2,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14837738078347326,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 3,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.13577019255945383,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 4,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14941002284804944,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 5,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.1541132094897484,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 6,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.1341594312610607,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 7,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14802445474643733,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 8,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.13181391089587258,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 9,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14450080794631232,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 10,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.16901881668557148,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 11,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14027400326548145,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 12,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.1512485657571907,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 13,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.13714941304042022,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 14,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.14720698782054395,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 15,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.17205254187301114,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 16,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.15585782095635828,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 17,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.15671079621565914,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 18,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.16538198661631157,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 19,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.17059715203820117,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 20,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.1815223519536114,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 21,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.20214790033278807,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 22,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.19849613163267724,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 23,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.3869477572615094,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 24,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.3935518706141653,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 25,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.37707218714922003,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 26,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.4064958453672059,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 27,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.5149373305084669,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 28,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.5236170339965036,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 29,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.5156164844383779,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 30,
+      "layer_type": "linear_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.5237562944234597,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 31,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.54,
+      "patched_accuracy": 0.0
+    }
+  ]
+}

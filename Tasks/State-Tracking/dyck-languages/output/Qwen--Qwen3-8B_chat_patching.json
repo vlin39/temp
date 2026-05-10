@@ -1,0 +1,261 @@
+{
+  "model_name": "Qwen/Qwen3-8B",
+  "task": "dyck_languages",
+  "prompt_mode": "chat",
+  "pairs_file": "/oscar/home/vlin10/Downloads/dol_interp/Tasks/State-Tracking/dyck-languages/output/patching_pairs_250.json",
+  "num_pairs": 250,
+  "patching_results": [
+    {
+      "layer_idx": 0,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.057929068888218485,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 1,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.032162642710089014,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 2,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.016437150525411164,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 3,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.021686391569517977,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 4,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.04415261675590595,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 5,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.04998640006699658,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 6,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.07006076948966762,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 7,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.12088796806206302,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 8,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.0983990525838794,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 9,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.07528438377594023,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 10,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.09571505820798863,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 11,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.12783199538634887,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 12,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.164531124690169,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 13,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.1532388173142617,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 14,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.10548557680279846,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 15,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.11676448998944819,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 16,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.11782435090426632,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 17,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.12508825866713805,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 18,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.112184507181021,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 19,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.15078980956980387,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 20,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.12463181380830292,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 21,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.13145093472796834,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 22,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.1251743816835766,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 23,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.09051520373466036,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 24,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.024340321979643132,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 25,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": -0.06412465005496366,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 26,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.007166320255028628,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 27,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.007588367202745497,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 28,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.01504775989375791,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 29,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.0378726536839179,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 30,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.04423377676521784,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 31,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.051542374001564695,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 32,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.10333317603158722,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 33,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.19417332925636074,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 34,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.5461430477739954,
+      "patched_accuracy": 0.0
+    },
+    {
+      "layer_idx": 35,
+      "layer_type": "self_attn",
+      "n_pairs": 250,
+      "mean_normalized_logit_diff": 0.568,
+      "patched_accuracy": 0.0
+    }
+  ]
+}
