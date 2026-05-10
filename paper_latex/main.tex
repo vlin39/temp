@@ -7,7 +7,7 @@
 % The authors should use one of these tracks.
 % Before accepting by the NeurIPS conference, select one of the options below.
 % 0. "default" for submission
-\usepackage{neurips_2026}
+% \usepackage{neurips_2026}
 % the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
 % 1. "main" option is used for the Main Track
 %  \usepackage[main]{neurips_2026}
@@ -28,7 +28,7 @@
 
 % After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
 % 1. Main Track
- % \usepackage[main, final]{neurips_2026}
+ \usepackage[main, final]{neurips_2026}
 % 2. Position Paper Track
 %  \usepackage[position, final]{neurips_2026}
 % 3. Evaluations & Datasets Track
@@ -64,7 +64,7 @@
 \usepackage{subcaption}
 
 % Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote. 
-\title{Division of Labor Between Attention and SSM Layers in Hybrid Language Models}
+\title{Localization of Labor In Transformers and Hybrid Language Models}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -77,36 +77,14 @@
 
 
 \author{%
-  David S.~Hippocampus\thanks{Use footnote for providing further information
-    about author (webpage, alternative address)---\emph{not} for acknowledging
-    funding agencies.} \\
-  Department of Computer Science\\
-  Cranberry-Lemon University\\
-  Pittsburgh, PA 15213 \\
-  \texttt{hippo@cs.cranberry-lemon.edu} \\
-  % examples of more authors
-  % \And
-  % Coauthor \\
-  % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \AND
-  % Coauthor \\
-  % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \And
-  % Coauthor \\
-  % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
-  % \And
-  % Coauthor \\
-  % Affiliation \\
-  % Address \\
-  % \texttt{email} \\
+  Ioanna Gemou \quad
+  Etha Hua \quad
+  Valentina Lin \quad
+  Manan Pancholy \quad
+  Andrew Wang \quad
+  Max Zuo \\
+  Brown University
 }
-
 
 \begin{document}
 
@@ -114,25 +92,25 @@
 \maketitle
     
 
-\begin{abstract}
-TBD
-\end{abstract}
+% \begin{abstract}
+% TBD we probably do not need an abstract here
+% \end{abstract}
 
 
 
 \section{Introduction}
 \label{sec:intro}
 
-Hybrid language models combine standard transformer attention with state-space or linear-attention modules. These models are designed to improve efficiency while preserving strong language-modeling performance, and they are becoming increasingly common \citep{merrill2026olmohybridtheorypractice, qwen35blog, chandiramani2026nemotron}. However, it is still unclear how the different parts of hybrid models contribute to different tasks. In particular, when a hybrid model performs well, we do not know whether that behavior depends mostly on attention layers, SSM-style layers, or both working together.
+Hybrid language models combine standard transformer attention with state-space or linear-attention modules. These models are designed to improve efficiency while preserving strong language-modeling performance, and they are becoming increasingly common \citep{merrill2026olmohybridtheorypractice, qwen35blog, chandiramani2026nemotron}. However, it is still unclear how the different parts of hybrid models contribute to different tasks. In particular, when a hybrid model performs well, we do not know whether that behavior depends mostly on full-attention layers, linear-attention layers, or both working together.
 
 This question matters because overall accuracy can hide how a model solves a task. A pure transformer and a hybrid model may reach similar accuracy while relying on different internal computations. A hybrid model may also perform better on some tasks while being more sensitive to the removal of specific layers. To understand hybrid models, we therefore need to look not only at whether they answer correctly, but also at which parts of the network are important for that behavior.
 
 We study pure transformer and hybrid language models from the OLMo and Qwen families. We evaluate them on two task families: in-context retrieval and state tracking. The retrieval tasks ask models to recover information from the prompt, such as object colors, spatial relations, or simple counting facts. The state-tracking tasks ask models to maintain and update information across a sequence of operations.
 
 We analyze these models using inference-time ablations. We first measure each model's normal task performance. Then, we remove individual layers or groups of module types during inference and measure how much performance changes. This gives a layer-wise sensitivity profile for each model and task, showing which parts of the network are most important for the model's behavior.
-Our results show that simple in-context retrieval is largely solved across the models we test. Harder retrieval tasks, such as filtering, spatial reasoning, and arithmetic over retrieved objects, reveal larger differences between models. On state-tracking tasks, hybrid models often improve relative to pure transformers as the number or complexity of updates increases. However, the ablation results do not support a clean split where attention handles retrieval and SSM-style layers handle state tracking. Instead, different tasks depend on different parts of the network, and attention and SSM-style layers appear to work together.
+Our results show that simple in-context retrieval is largely solved across the models we test. Harder retrieval tasks, such as filtering, spatial reasoning, and arithmetic over retrieved objects, reveal larger differences between models. On state-tracking tasks, hybrid models often improve relative to pure transformers as the number or complexity of updates increases. However, the ablation results do not support a clean split where attention handles retrieval and linear attention layers handle state tracking. Instead, different tasks depend on different parts of the network, and full attention and linear attention layers appear to work together.
 
-Overall, our study shows that hybrid language models should not be understood only through aggregate accuracy or through a simple division of labor between module types. Their behavior depends on the task, the layer being ablated, and the interaction between attention and SSM-style components. These results provide a functional view of how hybrid models support retrieval and state tracking.
+Overall, our study shows that hybrid language models should not be understood only through aggregate accuracy or through a sharp division of labor between module types. Their behavior depends on the task, the layer being ablated, and the interaction between full attention and linear attention components. These results provide a functional view of how hybrid models support retrieval and state tracking.
 
 \section{Related Work}
 \label{sec:rw}
@@ -142,13 +120,17 @@ Currently, most comparative evaluations of hybrids and pure transformers focus o
 
 Our work bridges the gap between these mechanistic insights and hybrid architecture analysis. We build directly upon recent ablation studies by \cite{borobia2026functionalcomponentablationreveals}, who establish that both attention and SSM components are critical to performance and that earlier layers exhibit higher sensitivity.
 
-\textbf{TODO:} Max adds in the in context retrieval paper.
+% \textbf{TODO:} Max adds in the in context retrieval paper.
 
 \section{Method}
 \label{sec:method}
 
 We study where task-relevant computation is localized in pure transformer and hybrid language models. Our approach uses inference-time functional ablations to measure how model behavior changes when specific components are removed.
 
+\subsection{Component Ablations}
+To understand macro-architectural dependencies, we perform component-level (or group) ablations. Rather than targeting individual layers, we simultaneously ablate all instances of a specific module class across the entire network. Specifically, we evaluate the removal of all standard multi-head self-attention modules (\texttt{self\_attn}) versus all state-space or linear attention modules (\texttt{linear\_attn}). 
+
+Similar to our layer-wise approach, this is achieved by substituting the targeted modules with identity mappings during the forward pass. For pure transformer baselines, ablating self-attention removes the sequence routing mechanism entirely. For hybrid models, however, this targeted intervention allows us to isolate the specific computational division of labor. 
 
 \subsection{Layer-wise Ablations}
 At inference time, we ablate a target module by replacing its forward pass with an identity mapping. 
@@ -156,15 +138,9 @@ This intervention removes the computation performed by that module while keeping
 In our experiments, we perform layerwise ablations: for a decoder layer indexed by $\ell$, we ablate exactly one attention module at that layer and evaluate the resulting change in accuracy. 
 In the pure transformer model, this always corresponds to removing one self-attention module. 
 In the hybrid models, it corresponds to removing whichever attention module is active at layer $\ell$. 
-By sweeping over all decoder layers, we obtain a layerwise sensitivity profile for each model and task.
+By sweeping over all layers, we obtain a layerwise sensitivity profile for each model and task.
 
-
-\subsection{Component Ablations}
-To understand macro-architectural dependencies, we perform component-level (or group) ablations. Rather than targeting individual layers, we simultaneously ablate all instances of a specific module class across the entire network. Specifically, we evaluate the removal of all standard multi-head self-attention modules (\texttt{self\_attn}) versus all state-space or linear attention modules (\texttt{linear\_attn}). 
-
-Similar to our layer-wise approach, this is achieved by substituting the targeted modules with identity mappings during the forward pass. For pure transformer baselines, ablating self-attention removes the sequence routing mechanism entirely. For hybrid models, however, this targeted intervention allows us to isolate the specific computational division of labor. 
-
-\subsection{Activation Patching}
+% \subsection{Activation Patching}
 
 \section{Experimental Setup}
 \label{sec:exp}
@@ -173,24 +149,32 @@ Similar to our layer-wise approach, this is achieved by substituting the targete
 \label{sec:models_and_tasks}
 We evaluate six instruction-tuned language models from two distinct model families. The first family comprises \texttt{Olmo-3-7B-Instruct-SFT} \citep{olmo2025olmo3} and \texttt{Olmo-Hybrid-Instruct-SFT-7B} \citep{merrill2026olmohybridtheorypractice}. The second family consists of the Qwen models \citep{yang2025qwen3technicalreport}: \texttt{Qwen3-8B}, \texttt{Qwen3.5-9B}, \texttt{Qwen3.5-27B}, and \texttt{Qwen3-32B}. In our setup, \texttt{Olmo-3-7B-Instruct-SFT}, \texttt{Qwen3-8B}, and the larger \texttt{Qwen3-32B} serve as our pure transformer baselines. Conversely, \texttt{Olmo-Hybrid-Instruct-SFT-7B}, \texttt{Qwen3.5-9B}, and the larger-scale \texttt{Qwen3.5-27B} are evaluated as our hybrid models. This selection allows us to isolate the functional differences between pure transformer and hybrid architectures across both different model families and parameter scales.
 
-We study these models on two broad task families: \textbf{in-context retrieval} and \textbf{state tracking}. The in-context retrieval family includes the \texttt{colored-objects} benchmark \citep{srivastava2023beyond} and \texttt{Needle-in-a-Haystack style} retrieval tasks \citep{needle-in-haystack}. The state-tracking family consists of tasks that probe whether models can maintain and update latent state across sequential operations, including the classical \texttt{entity tracking} task \citep{kim-schuster-2023-entity}, and a \texttt
-{clinical sequence modeling} task \citep{wang2026handlinginterpretingmissingmodalities} that we formulate to identify the ability of decoder components to maintain and update internal representations of patient health states..
+We study these models on two broad task families: \textbf{in-context retrieval} and \textbf{state tracking}. The in-context retrieval family includes the \texttt{colored-objects} benchmark \citep{srivastava2023beyond}.
+% and \texttt{Needle-in-a-Haystack style} retrieval tasks \citep{needle-in-haystack}. 
+The state-tracking family consists of tasks that probe whether models can maintain and update latent state across sequential operations, including the classical \texttt{entity tracking} task \citep{kim-schuster-2023-entity}, and a \texttt
+{clinical sequence modeling} task \citep{wang2026handlinginterpretingmissingmodalities} that we formulate to identify the ability of decoder components to maintain and update internal representations of patient health states.
 
 \subsection{Evaluation Protocol and Metrics for the In Context Retrieval Task}\label{sec:eval}
 
 \paragraph{In-Context Retrieval Task}
-% TODO Add examples
-% Add logit lens results?
 We evaluate in-context retrieval using the Colored Objects benchmark, which tests whether a model can extract object attributes and simple relations from a short textual context. Each example describes a set of colored objects and is followed by a query whose answer must be recovered directly from the prompt. 
-We report both baseline performance and layerwise ablation results.
 
 The benchmark contains multiple subtask types that probe different forms of retrieval. 
-In the \texttt{color} subtask, the model must identify the object associated with a queried color. 
 In the \texttt{what\_color} subtask, the model must identify the color associated with a queried object. 
 In the \texttt{yes\_no\_color} subtask, the model is given a candidate object-color pairing and must determine whether it is correct, 
-producing a binary yes/no response. In the \texttt{spatial} subtask, the model must answer a query about the relative arrangement or position of objects described in the prompt. 
+producing a binary yes/no response. 
+In the \texttt{neither\_color} task, the model must filter out objects with two excluded colors and count the remaining objects. For example:
+\begin{quote}
+\small
+\texttt{On the table, there is a yellow puzzle, a purple bracelet, a brown jug, and a black notebook. How many objects are neither purple nor orange?}
+\end{quote}
+In the \texttt{spatial} subtask, the model must answer a query about the relative arrangement or position of objects described in the prompt. 
 In the \texttt{arithmetic} subtask, the model must answer a retrieval query that additionally requires a small amount of compositional or counting-based reasoning over the objects in context. 
 These subtasks allow us to compare performance across closely related retrieval settings that vary in query form and response structure.
+
+
+
+
 
 To control for variation in prompt complexity, we balance evaluation by the number of objects mentioned in the prompt. Specifically, we group examples by object count and sample equally from each group. 
 For each subtask, we use the largest balanced subset permitted by the smallest object-count group, 
@@ -203,50 +187,59 @@ The same evaluation procedure is used for both the baseline runs and the corresp
 
 \subsection{Evaluation Protocol and Metrics for the Entity Tracking Task}
 
-\paragraph{Entity Tracking Task} We use the \emph{Boxes} task from~\citet{kim-schuster-2023-entity}. Each example consists of a short narrative describing an initial inventory of $N$ boxes, each containing at most $M$ objects, with an expected number of $K$ objects, followed by a sequence of operations drawn from $\{\texttt{move}, \texttt{remove}, \texttt{put}\}$. The model is then asked to predict the contents of a single queried box after all operations have been applied.
+\paragraph{Entity Tracking Task} We use the \emph{Boxes} task from~\cite{kim-schuster-2023-entity}. Each example consists of a short narrative describing an initial inventory of $N$ boxes, each containing at most $M$ objects, with an expected number of $K$ objects, followed by a sequence of operations drawn from $\{\texttt{move}, \texttt{remove}, \texttt{put}\}$. The model is then asked to predict the contents of a single queried box after all applied operations.
 
-A prototypical 6-box, 3-operation example is shown below:
+A prototypical 5-box, 3-operation example is shown below:
 
 \begin{quote}
 \small
-\texttt{Box 0 contains the tea, Box 1 contains the file, Box 2 contains the pot, Box 3 contains the flower, Box 4 contains the fan, Box 5 contains the tissue. Remove the flower from Box 3. Put the brain into Box 1. Move the fan from Box 4 to Box 2. \ldots\, Box 4 contains the}
+\texttt{Box 0 contains the tea, Box 1 contains the file, Box 2 contains the pot, Box 3 contains the flower, Box 4 contains the fan. Remove the flower from Box 3. Put the brain into Box 1. Move the fan from Box 4 to Box 2. \ldots\, Box 4 contains the}
 \end{quote}
 
 To study how model performance varies with the number of operations, we fix the task setting to $N=6$ boxes, with $M=3$ and $K=2$. We generate 200 instances for each number of operations applied to the queried box, with $n_{\mathrm{op}} \in \{0,1,2,3,4,5\}$. To study the effect of the number of boxes, we use the same instance-generation procedure while varying $N \in \{2,3,4,5,6\}$.
 
 Because all tested models are instruction-tuned, we adapt the task into a short one-turn conversation template. The initial inventory and sequence of operations are provided in the user turn, while the queried box is provided as a prefix in the assistant turn. We then allow the model to generate freely using greedy decoding until it reaches an EOS token. Since the outputs are free-form, we use a string-matching parser to extract the predicted set of items in the queried box. We compare the extracted set against the ground-truth set and report exact-match accuracy, assigning a score of 1 only when the entire predicted set matches the ground truth and 0 otherwise.
 
-\paragraph{Minimal Pair Generation for Activation Patching} 
-Activation patching requires \emph{paired} examples: a \emph{clean} input whose final-token representation supports the correct answer, and a \emph{corrupt} input that is structurally identical but has a different answer. Na\"ively pairing arbitrary examples is problematic because the resulting prompts may have different lengths, making position-level patching ill-defined. To avoid this issue, we first generate abstract \emph{skeletons} that fix the full causal structure of an example: the number of boxes ($N=6$), the sequence of operation types, the boxes involved in each operation, and the queried box. Each skeleton can then be instantiated with different object names while preserving the same underlying state-transition structure.
+% \paragraph{Minimal Pair Generation for Activation Patching} 
+% Activation patching requires \emph{paired} examples: a \emph{clean} input whose final-token representation supports the correct answer, and a \emph{corrupt} input that is structurally identical but has a different answer. Na\"ively pairing arbitrary examples is problematic because the resulting prompts may have different lengths, making position-level patching ill-defined. To avoid this issue, we first generate abstract \emph{skeletons} that fix the full causal structure of an example: the number of boxes ($N=6$), the sequence of operation types, the boxes involved in each operation, and the queried box. Each skeleton can then be instantiated with different object names while preserving the same underlying state-transition structure.
 
-Crucially, object positions in the skeleton are represented by symbolic slots (\texttt{slot\_0}, \texttt{slot\_1}, \ldots) rather than concrete object names. For each skeleton, we sample two independent \emph{object-name assignments} from a curated vocabulary. Each assignment maps slots to concrete object strings with matched token length. When a fast tokenizer is available, we enforce this constraint directly: any instantiated variant whose token count differs from the skeleton's canonical token count is discarded. This procedure yields clean/corrupt pairs with identical \texttt{input\_ids} structures, allowing activations to be patched at corresponding positions without sequence misalignment. See Figure~\ref{fig:skeleton_and_slots} for an example.
+% Crucially, object positions in the skeleton are represented by symbolic slots (\texttt{slot\_0}, \texttt{slot\_1}, \ldots) rather than concrete object names. For each skeleton, we sample two independent \emph{object-name assignments} from a curated vocabulary. Each assignment maps slots to concrete object strings with matched token length. When a fast tokenizer is available, we enforce this constraint directly: any instantiated variant whose token count differs from the skeleton's canonical token count is discarded. This procedure yields clean/corrupt pairs with identical \texttt{input\_ids} structures, allowing activations to be patched at corresponding positions without sequence misalignment. See Figure~\ref{fig:skeleton_and_slots} for an example.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{assets//img/skeleton_and_slots.pdf}
-    \caption{Example of two variants of the same skeleton (tokenized with Qwen tokenizer).}
-    \label{fig:skeleton_and_slots}
-\end{figure}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=1\linewidth]{assets//img/skeleton_and_slots.pdf}
+%     \caption{Example of two variants of the same skeleton (tokenized with Qwen tokenizer).}
+%     \label{fig:skeleton_and_slots}
+% \end{figure}
 
-For this set of experiments, we restrict the queried box to contain exactly one object, so that each example has a single clean answer token and a single corrupt answer token. Let $a_c$ denote the clean answer token and $a_{\tilde{c}}$ denote the corrupt answer token. For a model run with final-token logits $\ell$, we define the logit difference as
-\[
-\Delta(\ell) = \ell(a_c) - \ell(a_{\tilde{c}}).
-\]
-We compute this quantity for the clean run, the corrupt run, and each patched run, yielding $\Delta_{\mathrm{clean}}$, $\Delta_{\mathrm{corrupt}}$, and $\Delta_{\mathrm{patch}}$, respectively. We report the normalized patched logit difference as
-\[
-\frac{\Delta_{\mathrm{patch}} - \Delta_{\mathrm{corrupt}}}
-{\Delta_{\mathrm{clean}} - \Delta_{\mathrm{corrupt}}},
-\]
-which measures the extent to which the patch restores the clean behavior relative to the corrupt baseline.
+% For this set of experiments, we restrict the queried box to contain exactly one object, so that each example has a single clean answer token and a single corrupt answer token. Let $a_c$ denote the clean answer token and $a_{\tilde{c}}$ denote the corrupt answer token. For a model run with final-token logits $\ell$, we define the logit difference as
+% \[
+% \Delta(\ell) = \ell(a_c) - \ell(a_{\tilde{c}}).
+% \]
+% We compute this quantity for the clean run, the corrupt run, and each patched run, yielding $\Delta_{\mathrm{clean}}$, $\Delta_{\mathrm{corrupt}}$, and $\Delta_{\mathrm{patch}}$, respectively. We report the normalized patched logit difference as
+% \[
+% \frac{\Delta_{\mathrm{patch}} - \Delta_{\mathrm{corrupt}}}
+% {\Delta_{\mathrm{clean}} - \Delta_{\mathrm{corrupt}}},
+% \]
+% which measures the extent to which the patch restores the clean behavior relative to the corrupt baseline.
 
 
 
 \section{Results}
 \label{sec:results}
 
-\subsection{In-Context Retrieval}
+We organize the results around three questions.
+First, do hybrid and pure-attention models differ on direct in-context retrieval?
+Second, do these differences become larger when the task requires iterative state updates?
+Third, do the same architectural differences appear in clinical sequence modeling?
 
-\subsubsection{Behavioral Results}
+Across these settings, we find that direct retrieval is largely solved by all models, while filtering, composition, and state tracking reveal larger architectural differences. 
+Hybrid models are often stronger on update-heavy tasks, 
+but ablations show that this advantage does not come from a clean division of labor between self-attention and linear-attention modules. 
+Instead, both module types appear to interact, with task-specific sensitivity patterns across layers.
+
+\subsection{In-context retrieval is easy for direct lookup but harder under filtering and composition}
+\paragraph{Behavioral Performance.}
 Figure~\ref{fig:baselines1} shows that the three subtasks in the main text differ substantially in difficulty. Performance on \texttt{what\_color} is near ceiling for all four models, 
 and performance on \texttt{yes\_no\_color} is also uniformly high. 
 In contrast, \texttt{neither\_color} is much harder and shows the clearest separation between models, 
@@ -262,9 +255,9 @@ Figure~\ref{fig:baselines2} extends this comparison to the remaining two subtask
 \end{figure}
 
 
-\subsubsection{Layer-wise Ablation Results}
+\paragraph{Layer-wise Ablation Results.}
 
-Figure~\ref{fig:ablations1} shows that the three main-text subtasks also differ in their sensitivity to layer ablation. Ablations have relatively limited effect on \texttt{what\_color} and \texttt{yes\_no\_color}, especially for the stronger models, consistent with their high baseline accuracy. By contrast, \texttt{neither\_color} is much more sensitive to ablation, with larger performance drops concentrated at particular layers. Comparing the pure transformer and hybrid Olmo models specifically, the hybrid model is generally more robust on these subtasks: it matches the pure transformer on \texttt{what\_color}, outperforms it on \texttt{yes\_no\_color}, and substantially outperforms it on \texttt{neither\_color}, while also showing less severe degradation across many ablated layers. At the same time, the hybrid model often collapses when a single early layer is ablated, suggesting that although it is usually stronger overall, it can rely more heavily on specific early-layer computations. Figure~\ref{fig:ablations2} shows that \texttt{spatial} and \texttt{arithmetic} are likewise more ablation-sensitive than the easiest subtasks. Here again, the hybrid model is stronger than the pure transformer on \texttt{spatial}, though \texttt{arithmetic} is an exception where the pure transformer attains higher baseline accuracy. Overall, the ablation results suggest that the computations required for the harder retrieval subtasks are more fragile and more localized, and that the hybrid architecture is usually, though not uniformly, more robust than its pure-attention counterpart.
+Figure~\ref{fig:ablations1} shows that the three main-text subtasks also differ in their sensitivity to layer ablation. Ablations have relatively limited effect on \texttt{what\_color} and \texttt{yes\_no\_color}, especially for the stronger models, consistent with their high baseline accuracy. By contrast, \texttt{neither\_color} is much more sensitive to ablation, with larger performance drops concentrated at particular layers. Comparing the pure transformer and hybrid Olmo models specifically, the hybrid model is generally more robust on these subtasks: it matches the pure transformer on \texttt{what\_color}, outperforms it on \texttt{yes\_no\_color}, and substantially outperforms it on \texttt{neither\_color}, while also showing less severe degradation across many ablated layers. At the same time, the hybrid model often collapses when a single early layer is ablated, suggesting that although it is usually stronger overall, it can rely more heavily on specific early-layer computations. Figure~\ref{fig:ablations2} shows that \texttt{spatial} and \texttt{arithmetic} are likewise more ablation-sensitive than the easiest subtasks. Here again, the hybrid model is stronger than the pure transformer on \texttt{spatial}, though \texttt{arithmetic} is an exception where the pure transformer attains higher baseline accuracy. Overall, the ablation results suggest that the computations required for the harder retrieval subtasks are more fragile and more localized, and that the hybrid architecture is usually, though not uniformly, more robust than its pure-attention counterpart. 
 
 \begin{figure}[t]
     \centering
@@ -273,18 +266,17 @@ Figure~\ref{fig:ablations1} shows that the three main-text subtasks also differ 
     \label{fig:ablations1}
 \end{figure}
 
-\subsubsection{Logit Lens Analysis}
-We use logit lens to ask when, across depth, the correct answer becomes decodable from the model’s final-token representation.
-At each decoder layer, we project the hidden state at the final prompt position through the model’s final normalization and output head to obtain vocabulary logits.
-We then restrict scoring to the example’s candidate answer set and measure the log-probability assigned to the gold answer.
-Our main logit-lens metric is the mean gold log-probability by probe layer, and we additionally compute choice-restricted accuracy and mean gold rank. In the ablated setting, this analysis also identifies which layers are causally important for constructing or maintaining the representation that supports the correct answer.
+% \paragraph{Logit Lens Analysis}
+% We use logit lens to ask when, across depth, the correct answer becomes decodable from the model’s final-token representation.
+% At each decoder layer, we project the hidden state at the final prompt position through the model’s final normalization and output head to obtain vocabulary logits.
+% We then restrict scoring to the example’s candidate answer set and measure the log-probability assigned to the gold answer.
+% Our main logit-lens metric is the mean gold log-probability by probe layer, and we additionally compute choice-restricted accuracy and mean gold rank. In the ablated setting, this analysis also identifies which layers are causally important for constructing or maintaining the representation that supports the correct answer.
 
 
-\subsection{State Tracking}
+\subsection{Hybrid models gain advantage as state updates become more complex}
 
-\subsubsection{Behavioral Results}
-
-\paragraph{Entity Tracking} We first compare pure-attention transformer models with similarly sized hybrid models on the entity tracking task across different number of operations in this task. Figure~\ref{fig:entity_tracking_nbox6_comparison} reports model prediction set accuracy as a function of the number of operations applied to the queried box. Overall, hybrid models become relatively stronger as the number of queried-box operations increases. In the Qwen comparisons, hybrid models generally match or outperform their pure-attention counterparts at higher values of numops, consistent with the hypothesis that hybrid architectures may better support iterative state updates.  One notable observation appears in the OLMo comparison at numops = 0, where the OLMo hybrid model substantially underperforms the pure-attention OLMo model. This condition does not require tracking any state changes: because no operation has been applied to the queried box, the model only needs to retrieve the box’s initial state from context. The performance drop may therefore suggest that the OLMo hybrid model is weaker at pure in-context retrieval, a setting where full-attention transformers are theoretically better suited. We also investigate the effect of number of boxes to the comparative state-tracking advantages of hybrid models. 
+\paragraph{Behavioral Performance.}
+We compare pure-attention transformer models with similarly sized hybrid models on the entity tracking task across different number of operations in this task. Figure~\ref{fig:entity_tracking_nbox6_comparison} reports model prediction set accuracy as a function of the number of operations applied to the queried box. Overall, hybrid models become relatively stronger as the number of queried-box operations increases. In the Qwen comparisons, hybrid models generally match or outperform their pure-attention counterparts at higher values of numops, consistent with the hypothesis that hybrid architectures may better support iterative state updates.  One notable observation appears in the OLMo comparison at numops = 0, where the OLMo hybrid model substantially underperforms the pure-attention OLMo model. This condition does not require tracking any state changes: because no operation has been applied to the queried box, the model only needs to retrieve the box’s initial state from context. The performance drop may therefore suggest that the OLMo hybrid model is weaker at pure in-context retrieval, a setting where full-attention transformers are theoretically better suited. We also investigate the effect of number of boxes to the comparative state-tracking advantages of hybrid models. 
 
 Next, Figure~\ref{fig:entity_tracking_boxes_operations_comparison} compares pure-attention transformers and similarly sized hybrid models as the number of boxes and type of operations vary. Across all three model-family comparisons, hybrid models consistently outperform their pure-attention counterparts, and this advantage generally persists across all box counts. Performance decreases as the number of boxes increases, suggesting that the task becomes harder as the state space grows. However, the relative gap between hybrid and pure-attention models remains visible, especially when examples include \texttt{move} operations. Since \texttt{move} requires simultaneously removing an object from one box and adding it to another, this operation imposes a stronger state-update requirement than \texttt{put} or \texttt{remove}. The larger hybrid-model advantage in the ``Any ops'' condition therefore suggests that hybrid architectures may better support iterative state tracking when the task requires more complex state transitions.
 
@@ -304,80 +296,6 @@ Next, Figure~\ref{fig:entity_tracking_boxes_operations_comparison} compares pure
     \label{fig:entity_tracking_boxes_operations_comparison}
 \end{figure}
 
-\begin{figure*}[t]
-    \centering
-    % Row 1: Pure transformer Models (Top Row)
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-3-7B-Instruct-SFT_mortality_task_base_trajectory.pdf}
-        \caption{OLMo-3-7B}
-        \label{fig:seq_olmo_base}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-8B_mortality_task_base_trajectory.pdf}
-        \caption{Qwen3-8B}
-        \label{fig:seq_qwen_8b}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-32B_mortality_task_base_trajectory.pdf}
-        \caption{Qwen3-32B}
-        \label{fig:seq_qwen_32b}
-    \end{subfigure}
-    
-    \vspace{0.5em} % Reduced vertical space between rows
-    
-    % Row 2: Hybrid Models (Middle Row)
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-Hybrid-Instruct-SFT-7B_mortality_task_base_trajectory.pdf}
-        \caption{OLMo-Hybrid-7B}
-        \label{fig:seq_olmo_hybrid}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-9B_mortality_task_base_trajectory.pdf}
-        \caption{Qwen3.5-9B}
-        \label{fig:seq_qwen_9b}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-27B_mortality_task_base_trajectory.pdf}
-        \caption{Qwen3.5-27B}
-        \label{fig:seq_qwen_27b}
-    \end{subfigure}
-
-    \vspace{0.5em} % Reduced vertical space between rows
-
-    % Row 3: Event Distributions (Bottom Row)
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/events.pdf}
-        \label{fig:seq_events_1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/events.pdf}
-        \label{fig:seq_events_2}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.32\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/events.pdf}
-        \label{fig:seq_events_3}
-    \end{subfigure}
-    
-    \caption{Comparison of task performance between pure-attention transformer models (top row), hybrid models (middle row), and corresponding distribution of the number of events (bottom row). The x-axis indicates the number of clinical events, and the y-axis reports model prediction AUROC. We broadly observe similar performance trends across both sets of models, model sizes, and number of events, with strong performance on stays with a higher number of clinical events. This broadly suggests that both attention-only and hybrid language model decoders are well-suited to model patient stay trajectories across varying stay lengths.}
-    \label{fig:clinical-seq_performance}
-\end{figure*}
-
-\subsubsection{Layer-wise Ablation Results}
 
 
 \begin{figure}[t]
@@ -401,30 +319,176 @@ Next, Figure~\ref{fig:entity_tracking_boxes_operations_comparison} compares pure
     \label{fig:layerwise_ablation_comparison}
 \end{figure}
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\linewidth]{assets//img/olmo_layerwise_ablation_comparison.png}
-%     \caption{Enter Caption}    \label{fig:olmo_layerwise_ablation_comparison}
-% \end{figure}
+
+\paragraph{Layer-wise Ablation Results} Figure~\ref{fig:layerwise_ablation_comparison} shows that ablating individual attention layers has different effects across pure-attention and hybrid architectures. In the pure-attention models, performance is relatively robust to ablating most single layers, suggesting redundancy across self-attention modules. In contrast, the hybrid models show stronger layer-specific sensitivity, especially in earlier layers. For OLMo-Hybrid, ablating early linear-attention layers leads to particularly large performance drops, while for Qwen3.5-9B, ablating early self-attention layers leads to huge performance drops to an accuracy of near zero. These mixed patterns suggest that hybrid models do not rely on a single attention type in a cleanly separable way; rather, self-attention and linear-attention modules appear to interact in supporting state tracking.
+
+% \paragraph{Activation Patching Results}
+
+\subsection{Clinical sequence modeling shows weaker architectural separation}
+
+\paragraph{Performance across clinical-event count.}
+We next evaluate whether the same architectural differences appear in clinical sequence modeling.
+Figure~\ref{fig:clinical-seq_performance} compares pure-attention and hybrid models on patient-stay trajectory modeling, stratified by the number of clinical events in each sequence.
+Across model families, architectures, and model sizes, we observe broadly similar performance trends.
+Both pure-attention and hybrid decoders perform well across varying stay lengths, with stronger performance on stays containing more clinical events.
+
+This result contrasts with the synthetic entity-tracking setting.
+Whereas entity tracking reveals clearer differences between pure-attention and hybrid models as update complexity increases, the clinical sequence task produces weaker architectural separation.
+One possible explanation is that patient-stay trajectory modeling provides richer and more redundant evidence than the synthetic state-tracking task, making performance less dependent on a single architectural mechanism.
+
+\begin{figure*}[t]
+    \centering
+    % Row 1: Pure transformer Models (Top Row)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-3-7B-Instruct-SFT_mortality_task_base_trajectory.pdf}
+        \caption{OLMo-3-7B}
+        \label{fig:seq_olmo_base_perf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-8B_mortality_task_base_trajectory.pdf}
+        \caption{Qwen3-8B}
+        \label{fig:seq_qwen_8b_perf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-32B_mortality_task_base_trajectory.pdf}
+        \caption{Qwen3-32B}
+        \label{fig:seq_qwen_32b_perf}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 2: Hybrid Models (Middle Row)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-Hybrid-Instruct-SFT-7B_mortality_task_base_trajectory.pdf}
+        \caption{OLMo-Hybrid-7B}
+        \label{fig:seq_olmo_hybrid_perf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-9B_mortality_task_base_trajectory.pdf}
+        \caption{Qwen3.5-9B}
+        \label{fig:seq_qwen_9b_perf}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-27B_mortality_task_base_trajectory.pdf}
+        \caption{Qwen3.5-27B}
+        \label{fig:seq_qwen_27b_perf}
+    \end{subfigure}
+
+    \vspace{0.5em}
+
+    % Row 3: Event Distributions (Bottom Row)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/events.pdf}
+        \label{fig:seq_events_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/events.pdf}
+        \label{fig:seq_events_2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/events.pdf}
+        \label{fig:seq_events_3}
+    \end{subfigure}
+    
+    \caption{Clinical sequence modeling performance for pure-attention transformer models (top row), hybrid models (middle row), and the corresponding distribution of clinical-event counts (bottom row). The x-axis indicates the number of clinical events, and the y-axis reports prediction AUROC. Both attention-only and hybrid decoders show broadly similar performance trends across varying stay lengths.}
+    \label{fig:clinical-seq_performance}
+\end{figure*}
 
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width=1\linewidth]{assets//img/qwen_small_comparison_layerwise_ablation.png}
-%     \caption{Enter Caption} \label{fig:qwen_small_comparison_layerwise_ablation}
-% \end{figure}
+\paragraph{Component and layer-wise ablations.}
+Figure~\ref{fig:component_ablations_1} evaluates whether component ablations reveal stronger architectural differences in the clinical setting. 
+Unlike the synthetic retrieval and state-tracking tasks, clinical sequence modeling is relatively resistant to mechanical intervention: although we observe some sensitivity to linear-attention ablations in hybrid models, the resulting performance changes are generally smaller than the drops observed in the synthetic tasks. 
+The group-ablation results nevertheless reveal a difference between architecture families: pure-attention transformers are more fragile when all attention components are ablated, whereas hybrid models show greater resilience to attention-component ablation. 
+This suggests that hybrid models may distribute clinical sequence information across multiple component types, making them more robust to removing any single component class. 
+However, because these effects are smaller than in the synthetic state-tracking experiments, the clinical task provides weaker evidence for a sharp architectural separation between pure-attention and hybrid models. 
+Figure~\ref{fig:component_ablations} shows the corresponding component-ablation results per layer, and Figure~\ref{fig:sequential_ablations} shows the analogous experiments stratified by the number of clinical events in each sequence.
 
-\paragraph{Entity Tracking} Figure~\ref{fig:layerwise_ablation_comparison} shows that ablating individual attention layers has different effects across pure-attention and hybrid architectures. In the pure-attention models, performance is relatively robust to ablating most single layers, suggesting redundancy across self-attention modules. In contrast, the hybrid models show stronger layer-specific sensitivity, especially in earlier layers. For OLMo-Hybrid, ablating early linear-attention layers leads to particularly large performance drops, while for Qwen3.5-9B, ablating early self-attention layers leads to huge performance drops to an accuracy of near zero. These mixed patterns suggest that hybrid models do not rely on a single attention type in a cleanly separable way; rather, self-attention and linear-attention modules appear to interact in supporting state tracking.
+\begin{figure*}[t]
+    \centering
+    % Row 1: OLMo Models
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-3-7B-Instruct-SFT_mortality_task_group_ablations.pdf}
+        \caption{OLMo-3-7B (Transformer)}
+        \label{fig:seq_olmo_base_ablation}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-Hybrid-Instruct-SFT-7B_mortality_task_group_ablations.pdf}
+        \caption{OLMo-Hybrid-7B}
+        \label{fig:seq_olmo_hybrid_ablation}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 2: Qwen 8B/9B Models
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-8B_mortality_task_group_ablations.pdf}
+        \caption{Qwen3-8B (Transformer)}
+        \label{fig:seq_qwen_8b_ablation}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-9B_mortality_task_group_ablations.pdf}
+        \caption{Qwen3.5-9B (Hybrid)}
+        \label{fig:seq_qwen_9b_ablation}
+    \end{subfigure}
+    
+    \vspace{1em}
+    
+    % Row 3: Qwen 27B/32B Models
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-32B_mortality_task_group_ablations.pdf}
+        \caption{Qwen3-32B (Transformer)}
+        \label{fig:seq_qwen_32b_ablation}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-27B_mortality_task_group_ablations.pdf}
+        \caption{Qwen3.5-27B (Hybrid)}
+        \label{fig:seq_qwen_27b_ablation}
+    \end{subfigure}
+    
+    \caption{Clinical sequence modeling performance under component ablation. Green indicates unablated baseline performance, and red indicates performance after zero-ablating attention components. Pure-attention transformer models show greater fragility when their attention components are ablated, whereas hybrid models are more resilient to attention-component ablation.}
+    \label{fig:component_ablations_1}
+\end{figure*}
 
-\subsubsection{Entity-Tracking: Activation Patching Results}
-
+\paragraph{Summary.}
+Overall, these results suggest that direct in-context retrieval is not sufficient to distinguish pure-attention and hybrid models.
+Larger differences emerge when retrieval requires filtering, composition, or iterative state updates.
+Hybrid models often improve on these harder settings, especially when state updates become more complex.
+However, ablation results show that this improvement is not explained by a clean separation between self-attention and linear-attention modules.
+Instead, task performance depends on layer- and component-specific interactions that vary across architectures and tasks.
 \section{Conclusion}
 
 
-\bibliographystyle{unsrtnat}  
-\bibliography{bib}  
-\medskip
+
+
 {
+\small
+\bibliography{bib}
+\bibliographystyle{plain}
+}
 \small
 
 
@@ -531,62 +595,7 @@ All configurations utilized a per-device batch size of 2 with 8 gradient accumul
 \clearpage
 
 \subsection{Clinical Sequence Modeling Ablation Studies}
-\begin{figure*}[t]
-    \centering
-    % Row 1: OLMo Models
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-3-7B-Instruct-SFT_mortality_task_group_ablations.pdf}
-        \caption{OLMo-3-7B (Transformer)}
-        \label{fig:seq_olmo_base}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/allenai_Olmo-Hybrid-Instruct-SFT-7B_mortality_task_group_ablations.pdf}
-        \caption{OLMo-Hybrid-7B}
-        \label{fig:seq_olmo_hybrid}
-    \end{subfigure}
-    
-    \vspace{1em} % Add some vertical space between rows
-    
-    % Row 2: Qwen 8B/9B Models
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-8B_mortality_task_group_ablations.pdf}
-        \caption{Qwen3-8B (Transformer)}
-        \label{fig:seq_qwen_8b}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-9B_mortality_task_group_ablations.pdf}
-        \caption{Qwen3.5-9B (Hybrid)}
-        \label{fig:seq_qwen_9b}
-    \end{subfigure}
-    
-    \vspace{1em}
-    
-    % Row 3: Qwen 27B/32B Models
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3-32B_mortality_task_group_ablations.pdf}
-        \caption{Qwen3-32B (Transformer)}
-        \label{fig:seq_qwen_32b}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{assets/img/Qwen_Qwen3.5-27B_mortality_task_group_ablations.pdf}
-        \caption{Qwen3.5-27B (Hybrid)}
-        \label{fig:seq_qwen_27b}
-    \end{subfigure}
-    
-    \caption{Mechanistic Ablation Study results for the In-Hospital Mortality task.}
-    \label{fig:component_ablations}
-\end{figure*}
 
-\clearpage
 \begin{figure*}[t]
     \centering
     % Row 1: OLMo Models
@@ -620,25 +629,9 @@ All configurations utilized a per-device batch size of 2 with 8 gradient accumul
         \caption{Qwen3.5-9B (Hybrid)}
         \label{fig:seq_qwen_9b}
     \end{subfigure}
+
     
-    \vspace{1em}
-    
-    % Row 3: Qwen 27B/32B Models
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{}
-        \caption{Qwen3-32B (Transformer) \textbf{TODO}}
-        \label{fig:seq_qwen_32b}
-    \end{subfigure}
-        \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{}
-        \caption{Qwen3.5-27B (Hybrid) \textbf{TODO}}
-        \label{fig:seq_qwen_27b}
-    \end{subfigure}
-    
-    \caption{Mechanistic Ablation Study results for the In-Hospital Mortality task.}
+    \caption{Layerwise ablation study: we experimentally zero ablate the models' attention component at each layer to localize any causal performance changes. We observe that none of the models display significant performance change when only ablating one layer at a time, suggesting that the other components in the models are capable of recapitulating the information lost.}
     \label{fig:component_ablations}
 \end{figure*}
 
@@ -677,26 +670,14 @@ All configurations utilized a per-device batch size of 2 with 8 gradient accumul
         \label{fig:seq_qwen_9b}
     \end{subfigure}
     
-    \vspace{1em}
-    
-    % Row 3: Qwen 27B/32B Models
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{}
-        \caption{Qwen3-32B (Transformer) \textbf{TODO}}
-        \label{fig:seq_qwen_32b}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{}
-        \caption{Qwen3.5-27B (Hybrid) \textbf{TODO}}
-        \label{fig:seq_qwen_27b}
-    \end{subfigure}
-    
-    \caption{Mechanistic Ablation Study results for the In-Hospital Mortality task.}
+ 
+    \caption{Sequential Performance of the models with ablated components. Green represents the baseline unablated performance,  blue representes the performance of the model with self-attention modules zero ablated, and red represents the performance of the model with lienar attention zero ablated.Transformer only models (\textbf{(a) and (c)}) show much higher fragility to all of its attention components being zero ablated. Conversely, the hybrid models (\textbf{(b) and (d)}) show much greater resilience to its attention components being zero ablated.}
     \label{fig:sequential_ablations}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Contributions}
+Ioanna: writing and framing the project, working on the in-context retrieval tasks, and creating relevant figures.\\
+Andrew: writing and framing the project, working on the clinical sequence modeling task, and creating relevant figures.
 
 \end{document}
