@@ -221,11 +221,30 @@ Because all tested models are instruction-tuned, we adapt the task into a short 
 % \]
 % which measures the extent to which the patch restores the clean behavior relative to the corrupt baseline.
 
-\paragraph{Boolean TODO?} 
+% \paragraph{Boolean TODO?} 
 
 \paragraph{Web of Lies}
+We use the \emph{Web of Lies} task from BBH~\citep{srivastava2023beyond} to test multi-step boolean composition. Each example presents a chain of five assertions of the form ``A says B [does/does not] tell the truth,'' followed by a query asking whether a named person tells the truth. The correct answer (\texttt{yes} or \texttt{no}) depends on whether an even or odd number of negations compose across the chain.
 
-\paragraph{Dyck}
+A prototypical example is shown below:
+\begin{quote}
+\small
+\texttt{Question: Sherrie tells the truth. Vernell says Sherrie tells the truth. Alexis says Vernell lies. Michaela says Alexis tells the truth. Elanor says Michaela tells the truth. Does Elanor tell the truth?}
+\end{quote}
+
+We evaluate 200 of the 250 examples, with 100 labeled \texttt{yes} and 100 labeled \texttt{no}; this balance ensures that a model achieving 0.50 accuracy cannot claim to be doing better than chance simply by favoring one label. We use a chat-style prompting format, generate up to 8~tokens greedily, and parse the first occurrence of \texttt{yes} or \texttt{no} in the completion as the prediction. We report overall accuracy and per-label accuracy separately, because near-chance overall accuracy under chat prompting often reflects a systematic label prior rather than a uniformly random response. The same evaluation procedure is used for the baseline, group-ablation, layerwise-ablation, and activation-patching runs.
+
+% \paragraph{Dyck Languages}
+% We use the \emph{Dyck Languages} task from BBH~\citep{srivastava2023beyond} to test structured-sequence completion. Each example presents an incomplete Dyck-4 word over the bracket types \texttt{()}, \texttt{[]}, \texttt{\{\}}, and \texttt{<>}, and the model must produce the minimal closing sequence that completes it into a valid Dyck word. In contrast to entity tracking and Web of Lies, the output is a variable-length token sequence rather than a single label, so the task probes whether the model can maintain a precise representation of the open-bracket stack across the prefix and unwind it in order.
+
+% A prototypical example is shown below:
+% \begin{quote}
+% \small
+% \texttt{Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ \{ ( < > ) [ ]}
+% \end{quote}
+% with correct completion being \texttt{\} ]}.
+
+% We evaluate 250 examples sampled uniformly across the dataset. Outputs are generated greedily with a maximum length of 64~tokens; we use a larger budget here than in the other state-tracking tasks because chat-tuned models frequently emit a natural-language preamble (\textit{e.g.,} ``Let me trace the stack\ldots'') before producing the bracket answer. We parse the completion by stripping any \texttt{<think>} reasoning blocks, restricting to text following the final ``Answer:'' marker when one is present, and extracting the last contiguous run of bracket characters from the remaining text. We report two metrics: \emph{exact accuracy}, the fraction of examples whose predicted bracket sequence matches the reference answer sequence exactly, and \emph{token recall}, the average fraction of the reference answer sequence correctly predicted as a leading prefix. The latter credits partial completions that get the first few closing brackets right before diverging.
 
 \section{Results}
 \label{sec:results}
