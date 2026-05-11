@@ -224,7 +224,7 @@ Because all tested models are instruction-tuned, we adapt the task into a short 
 % \paragraph{Boolean TODO?} 
 
 \paragraph{Web of Lies}
-We use the \emph{Web of Lies} task from BBH~\citep{srivastava2023beyond} to test multi-step boolean composition. Each example presents a chain of five assertions of the form ``A says B [does/does not] tell the truth,'' followed by a query asking whether a named person tells the truth. The correct answer (\texttt{yes} or \texttt{no}) depends on whether an even or odd number of negations compose across the chain.
+We use the \emph{Web of Lies} task from BBH~\citep{srivastava2023beyond} to test multi-step boolean composition. Each example presents a five-person truth chain in which each person's truthfulness is determined by what the previous person says about them, followed by a query asking whether the final person tells the truth. The correct answer (\texttt{yes} or \texttt{no}) depends on whether an even or odd number of negations compose across the chain.
 
 A prototypical example is shown below:
 \begin{quote}
@@ -493,6 +493,45 @@ Figure~\ref{fig:component_ablations} shows the corresponding component-ablation 
     \caption{Clinical sequence modeling performance under component ablation. Green indicates unablated baseline performance, and red indicates performance after zero-ablating attention components. Pure-attention transformer models show greater fragility when their attention components are ablated, whereas hybrid models are more resilient to attention-component ablation.}
     \label{fig:component_ablations_1}
 \end{figure*}
+
+\subsection{Web of Lies reveals systematic label bias masking active computation}
+
+\paragraph{Behavioral Performance.}
+Figure~\ref{fig:wol_accuracy_by_answer} shows that all evaluated models achieve near-chance overall accuracy on the Web of Lies task under chat prompting. However, this aggregate figure conceals consistent and opposing label biases across model families. OLMo-3 answers \texttt{yes} on nearly every example regardless of the correct answer, while Qwen3-8B shows the reverse pattern, strongly favoring \texttt{no}. The hybrid variants exhibit intermediate but still systematic biases. Because the evaluation set is balanced across answer labels, near-chance overall accuracy here reflects a dominant label prior rather than random or reasoning-based responding. These results suggest that chat-tuned models, when prompted without explicit chain-of-thought scaffolding, default to a characteristic response heuristic rather than consistently resolving the five-step negation chain.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{assets/img/web_of_lies_accuracy_by_answer.png}
+    \caption{Web of Lies accuracy broken down by reference answer label (\texttt{yes} vs.\ \texttt{no}) for OLMo-3 and OLMo-Hybrid under the no-ablation baseline. All models achieve near-chance overall accuracy but show opposing systematic label biases: OLMo-3 is strongly \texttt{yes}-biased and OLMo-Hybrid shows a weaker \texttt{yes} preference.}
+    \label{fig:wol_accuracy_by_answer}
+\end{figure}
+
+\paragraph{Group Ablation Results.}
+Despite near-chance behavioral performance, the group ablation results reveal that attention modules are actively engaged. Figure~\ref{fig:wol_ablation} shows that ablating all self-attention modules simultaneously collapses accuracy to zero across every model, including those already performing at chance without ablation. This indicates that self-attention is necessary even for the biased label-prior response: without it, the model cannot produce a coherent prediction at all. For the hybrid models, ablating all linear-attention modules likewise reduces accuracy to zero, while the pure-transformer models are largely unaffected by linear-attention ablation. This asymmetry mirrors the pattern seen in entity tracking: hybrid models depend jointly on both component types, and removing either breaks the computation entirely.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{assets/img/web_of_lies_ablation_comparison.png}
+    \caption{Web of Lies accuracy under group ablations. Ablating all self-attention modules collapses accuracy to zero for every model. Ablating linear-attention collapses hybrid models but leaves pure transformers largely unchanged.}
+    \label{fig:wol_ablation}
+\end{figure}
+
+\paragraph{Layer-wise Ablation and Activation Patching.}
+Figure~\ref{fig:wol_layerwise} shows that layerwise sensitivity is concentrated in the final few layers: ablating individual layers in early and middle depth produces little change, while the top four to five layers are consistently the most sensitive. Activation patching (Figure~\ref{fig:wol_patching}) sharpens this localization further. Substituting clean residuals into the corrupt forward pass at each layer produces near-zero recovery across most of the network and a sharp increase only at the final layers. For OLMo-3, OLMo-Hybrid, and Qwen3-8B, peak recovery occurs at self-attention layers near the output. For Qwen3.5-9B, the peak falls on a linear-attention layer, consistent with hybrid models routing final computation through both module types. Together, these results suggest that negation-chain composition is resolved very late in the network. The presence of this late-layer signal even when overall accuracy is at chance points to the failure as an output-side artifact: the models appear to build a representation of the truth chain but override it with a label prior at the final prediction step.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{assets/img/web_of_lies_layerwise_ablation.png}
+    \caption{Web of Lies accuracy after ablating one decoder layer at a time. Sensitivity is concentrated in the final four to five layers across all models, with earlier layers having minimal individual impact.}
+    \label{fig:wol_layerwise}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{assets/img/web_of_lies_patching_effect.png}
+    \caption{Activation patching results for Web of Lies. Each bar shows recovery of the correct-answer preference when clean residuals are patched at a given layer. Recovery is minimal across most of the network and peaks sharply in the final four to six layers. The peak falls on a self-attention layer for pure-transformer models and on a linear-attention layer for Qwen3.5-9B.}
+    \label{fig:wol_patching}
+\end{figure}
 
 \paragraph{Summary.}
 Overall, these results suggest that direct in-context retrieval is not sufficient to distinguish pure-attention and hybrid models.
