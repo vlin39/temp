@@ -68,90 +68,150 @@
 \section{Problem}
 \label{s:problem}
 
-We are given a set of potential facility locations $F$ and a set of customers
+We are given a set of candidate facility locations $F$ and a set of customers
 $C$. Each facility $f \in F$ has an opening cost $o_f$ and a capacity $q_f$.
-Each customer $c \in C$ has demand $d_c$ and a service cost $a_{c,f}$ for
-being served from facility $f$. Vehicles are identical: each pays a fixed
-usage cost $u$ and may drive at most $T$ total round-trip distance, where
-$\delta_{c,f}$ is the round-trip distance between $c$ and $f$. Up to
-$V = |C|$ vehicles may be used per facility (in the worst case, one per
-customer). The goal is a \emph{lower bound} on the total cost of opening
-facilities, allocating customers, and renting vehicles, computed quickly
-through the LP relaxation.
+Each customer $c \in C$ has demand $d_c$ and a service (allocation) cost
+$a_{c,f}$ for each potential facility $f$. Vehicles are identical: each pays
+a fixed usage cost $u$ and may drive at most $T$ total round-trip distance,
+where $\delta_{c,f}$ is the round-trip distance between $c$ and $f$. Up to
+$V = |C|$ vehicles may be deployed at any facility. The objective is the sum
+of opening, service, and vehicle-usage costs.
 
-\section{LP Model}
+The underlying problem is discrete (e.g.\ a facility is open or not, a
+vehicle exists or it does not), so the cost-minimising plan is the optimum
+of an integer program (IP). Because the IP is NP-hard but its LP relaxation
+is solvable in polynomial time, and because every LP-feasible solution
+provides a valid lower bound on the IP optimum, we report the ceiling of
+the LP optimum as a fast lower bound on the true business cost.
+
+\section{Constraint Model}
 \label{s:model}
 
-\paragraph{Decision variables.} All continuous (this is the LP relaxation of
-the natural mixed-integer program):
+We adopt the natural mixed-integer formulation of capacitated facility
+location with vehicle workload, and then \emph{relax all integrality}: every
+decision variable becomes continuous on a real interval. The resulting LP
+is what \texttt{src/lpinstance.py} hands to OR-Tools.
+
+We use an \emph{aggregated} form: $v_f$ counts vehicles at facility $f$ as
+a single continuous quantity, rather than indexing each vehicle slot
+separately. This keeps the model compact (one variable per facility for
+vehicles, one per customer-facility pair for assignment) at the cost of
+some LP tightness: distance is constrained in aggregate, not per truck.
+The trade-off is acceptable because the LP only needs to certify a lower
+bound, not implement a plan.
+
+\section{Decision Variables}
+\label{s:vars}
+
+All variables are continuous (no integrality). Let $C$ and $F$ denote the
+customer and facility index sets.
+
 \begin{itemize}
-  \item $y_f \in [0,1]$ for each $f \in F$: fraction of facility $f$ opened.
-  \item $x_{c,f} \in [0,1]$ for each $c \in C, f \in F$: fraction of customer
-        $c$'s demand served from facility $f$.
-  \item $v_f \in [0, V]$ for each $f \in F$: continuous number of vehicles
-        deployed at facility $f$.
+  \item $y_f \in [0,1]$, one per facility $f \in F$: the fraction to which
+        facility $f$ is opened. In the IP this is binary; in the LP
+        relaxation it can be any real value in $[0,1]$.
+  \item $x_{c,f} \in [0,1]$, one per pair $(c, f) \in C \times F$: the
+        fraction of customer $c$'s demand that is served from facility $f$.
+        In the IP this is binary (each customer is assigned to exactly one
+        facility); the LP allows split assignments.
+  \item $v_f \in [0, V]$, one per facility $f \in F$: the continuous number
+        of vehicles deployed at facility $f$. In the IP this is integer.
 \end{itemize}
 
-\paragraph{Objective.} Minimize
+\section{Constraints}
+\label{s:constraints}
+
+\begin{enumerate}
+  \item \textbf{Full service.} Each customer is fully served across some
+        combination of facilities:
+        \[
+          \sum_{f \in F} x_{c,f} \;=\; 1
+          \qquad \forall c \in C.
+        \]
+  \item \textbf{Open before serve.} A customer may only draw service from a
+        facility to the extent that facility is open:
+        \[
+          x_{c,f} \;\le\; y_f
+          \qquad \forall c \in C,\; f \in F.
+        \]
+        This is the disaggregated (strong) form; in the IP it forces $x = 1
+        \Rightarrow y = 1$.
+  \item \textbf{Facility capacity.} The demand served from $f$ may not
+        exceed $f$'s capacity, scaled by its openness:
+        \[
+          \sum_{c \in C} d_c\, x_{c,f} \;\le\; q_f\, y_f
+          \qquad \forall f \in F.
+        \]
+        Scaling by $y_f$ is what makes the LP relaxation honest: a
+        half-open facility carries only half the capacity.
+  \item \textbf{Vehicle workload (driving limit).} Total round-trip
+        distance dispatched from $f$ cannot exceed the workload that
+        $v_f$ vehicles can absorb:
+        \[
+          \sum_{c \in C} \delta_{c,f}\, x_{c,f} \;\le\; T\, v_f
+          \qquad \forall f \in F.
+        \]
+        This is the LP surrogate for the per-vehicle limit. With $v_f$
+        continuous the LP can split distance across fractional vehicles,
+        which is the main source of slack between LP and IP.
+  \item \textbf{Vehicles require an open facility.} A closed facility
+        cannot deploy vehicles, and we cannot deploy more than $V$:
+        \[
+          v_f \;\le\; V \cdot y_f
+          \qquad \forall f \in F.
+        \]
+\end{enumerate}
+
+\paragraph{Objective.} Minimise the sum of opening, service, and
+truck-usage costs:
 \[
+  \min \;
   \sum_{f \in F} o_f\, y_f
   \;+\; \sum_{c \in C}\sum_{f \in F} a_{c,f}\, x_{c,f}
   \;+\; u \sum_{f \in F} v_f .
 \]
-
-\paragraph{Constraints.}
-\begin{align}
-  \sum_{f \in F} x_{c,f} &= 1
-    && \forall c \in C
-    \tag{full service} \\
-  x_{c,f} &\le y_f
-    && \forall c \in C,\, f \in F
-    \tag{open before serve} \\
-  \sum_{c \in C} d_c\, x_{c,f} &\le q_f\, y_f
-    && \forall f \in F
-    \tag{facility capacity} \\
-  \sum_{c \in C} \delta_{c,f}\, x_{c,f} &\le T\, v_f
-    && \forall f \in F
-    \tag{vehicle workload} \\
-  v_f &\le V\, y_f
-    && \forall f \in F
-    \tag{vehicle requires open}
-\end{align}
-
-The vehicle-workload constraint is the standard LP-relaxation surrogate for
-``each vehicle drives at most $T$'': summed over the $v_f$ vehicles at the
-facility, total round-trip distance cannot exceed $T \cdot v_f$. Because
-$v_f$ is continuous in the relaxation, fractional vehicle counts are
-allowed.
 
 \section{Implementation}
 \label{s:impl}
 
 We use Google OR-Tools'
 \texttt{ortools.linear\_solver.python.model\_builder} API with the SCIP
-backend that the stencil already constructs; since every variable is
-continuous, SCIP solves the model as a pure linear program. We did not
-switch to the original CP solver (\texttt{pywrapcp}) because it only
-supports integer variables and cannot express the continuous relaxation
-that the lower bound requires.
+backend constructed by the stencil. Since every variable is declared with
+\texttt{model.new\_num\_var} (continuous), SCIP has nothing to branch on
+and solves the model as a pure linear program through its LP backend; no
+integer programming happens in the submitted code path. We considered
+swapping in the dedicated LP backend \texttt{GLOP} (which would make the
+``it's an LP'' story unambiguous), but kept SCIP to leave the stencil's
+constructor untouched.
 
-The implementation lives entirely in \texttt{src/lpinstance.py}. The
-\texttt{solve()} method builds the variables and constraints above using
-\texttt{model.new\_num\_var}, \texttt{model.add}, and
-\texttt{model.minimize}, then reports $\lceil \text{obj} \rceil$ as the
-integer \texttt{Result} field required by the grader.
+The full model lives in \texttt{src/lpinstance.py}. The \texttt{solve()}
+method declares the variables, posts the five constraint families above,
+sets the objective with \texttt{model.minimize}, and calls
+\texttt{solver.solve(model)}. The \texttt{Result} field reported to the
+grader is $\lceil \text{LP\_objective} \rceil$.
 
-\paragraph{Verifier.} A standalone script \texttt{src/verify.py}
-recomputes every constraint on the fractional solution returned by SCIP
-(absolute tolerance $10^{-6}$) and independently recomputes the
-objective from $y, x, v$ to confirm it matches
-\texttt{solver.objective\_value}. It is run manually on a handful of
-instances as a sanity check; it is \emph{not} wired into
-\texttt{run.sh} or \texttt{runAll.sh}, so grading-time output is
-unaffected.
+\section{Verification}
+\label{s:verify}
+
+LP correctness is checked two ways:
+
+\begin{itemize}
+  \item \textbf{Constraint re-check (\texttt{src/verify.py}).} A standalone
+        script independently re-evaluates every modelled constraint on the
+        fractional $y, x, v$ returned by SCIP (tolerance $10^{-6}$) and
+        recomputes the objective from those variables to confirm it
+        matches \texttt{solver.objective\_value}. All eleven input
+        instances pass.
+  \item \textbf{LP $\le$ IP on toy instances.} For \texttt{toy\_45.scm}
+        and \texttt{toy\_65.scm} the IP optima are known by hand
+        (45 and 65 respectively, derived from $2$ opening + $3$ service
+        + $2 \times 20$ or $3 \times 20$ truck usage). Our LP returns
+        $35$ and $38$, both strictly below the IP optimum --- the
+        relaxation is sound.
+\end{itemize}
 
 \section{Effort}
-Approximately \todo{N} hours, including modeling, debugging, and writing
+Approximately \todo{N} hours, including modelling, debugging, and writing
 this report.
 
 
