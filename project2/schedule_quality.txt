@@ -1,0 +1,437 @@
+========================================================================
+14_14.sched
+  time=0.02  result=4413
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 0.69
+    zero-backup shift-days     : 26
+    days with some zero backup : 14
+    min daily-op slack         : 0
+    avg daily-op slack         : 4.0
+  hours:
+    employee hours min/max     : 40 / 68
+    employee hours mean        : 44.0
+    employee hours stdev       : 7.407
+    weekly hours below 40      : 27
+    weekly hours >= 40         : 1
+    short-shift fraction       : 0.8593
+  fairness:
+    undesirable shifts min/max : 3 / 10
+    undesirable shifts stdev   : 1.907
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.258
+  pattern quality:
+    evening->night transitions : 9
+    rest gaps under 12h        : 10
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+14_15.sched
+  time=21.45  result=12956949
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 0.524
+    zero-backup shift-days     : 29
+    days with some zero backup : 14
+    min daily-op slack         : 0
+    avg daily-op slack         : 12.286
+  hours:
+    employee hours min/max     : 40 / 80
+    employee hours mean        : 48.8
+    employee hours stdev       : 9.375
+    weekly hours below 40      : 28
+    weekly hours >= 40         : 2
+    short-shift fraction       : 0.9042
+  fairness:
+    undesirable shifts min/max : 3 / 7
+    undesirable shifts stdev   : 1.289
+    night shifts min/max       : 2 / 2
+    night shifts stdev         : 0.0
+  pattern quality:
+    evening->night transitions : 7
+    rest gaps under 12h        : 9
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+14_17.sched
+  time=6.98  result=3573551
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 1.714
+    zero-backup shift-days     : 23
+    days with some zero backup : 13
+    min daily-op slack         : 31
+    avg daily-op slack         : 49.286
+  hours:
+    employee hours min/max     : 64 / 80
+    employee hours mean        : 77.647
+    employee hours stdev       : 4.563
+    weekly hours below 40      : 4
+    weekly hours >= 40         : 30
+    short-shift fraction       : 0.3249
+  fairness:
+    undesirable shifts min/max : 4 / 12
+    undesirable shifts stdev   : 2.252
+    night shifts min/max       : 2 / 2
+    night shifts stdev         : 0.0
+  pattern quality:
+    evening->night transitions : 11
+    rest gaps under 12h        : 38
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+14_18.sched
+  time=0.01  result=1531
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 2.381
+    zero-backup shift-days     : 21
+    days with some zero backup : 13
+    min daily-op slack         : 2
+    avg daily-op slack         : 37.429
+  hours:
+    employee hours min/max     : 64 / 80
+    employee hours mean        : 77.333
+    employee hours stdev       : 4.619
+    weekly hours below 40      : 6
+    weekly hours >= 40         : 30
+    short-shift fraction       : 0.2424
+  fairness:
+    undesirable shifts min/max : 4 / 11
+    undesirable shifts stdev   : 1.976
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.448
+  pattern quality:
+    evening->night transitions : 6
+    rest gaps under 12h        : 33
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+21_30.sched
+  time=0.03  result=8412
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 2.841
+    zero-backup shift-days     : 18
+    days with some zero backup : 14
+    min daily-op slack         : 0
+    avg daily-op slack         : 27.81
+  hours:
+    employee hours min/max     : 60 / 76
+    employee hours mean        : 61.467
+    employee hours stdev       : 3.344
+    weekly hours below 40      : 90
+    weekly hours >= 40         : 0
+    short-shift fraction       : 0.6239
+  fairness:
+    undesirable shifts min/max : 3 / 12
+    undesirable shifts stdev   : 2.688
+    night shifts min/max       : 2 / 2
+    night shifts stdev         : 0.0
+  pattern quality:
+    evening->night transitions : 5
+    rest gaps under 12h        : 7
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+21_40.sched
+  time=30.38  result=11932951
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 7.714
+    zero-backup shift-days     : 22
+    days with some zero backup : 16
+    min daily-op slack         : 118
+    avg daily-op slack         : 169.048
+  hours:
+    employee hours min/max     : 96 / 120
+    employee hours mean        : 115.0
+    employee hours stdev       : 7.733
+    weekly hours below 40      : 18
+    weekly hours >= 40         : 102
+    short-shift fraction       : 0.2496
+  fairness:
+    undesirable shifts min/max : 5 / 19
+    undesirable shifts stdev   : 4.554
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.156
+  pattern quality:
+    evening->night transitions : 30
+    rest gaps under 12h        : 85
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+21_50.sched
+  time=0.53  result=210570
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 10.111
+    zero-backup shift-days     : 21
+    days with some zero backup : 16
+    min daily-op slack         : 104
+    avg daily-op slack         : 158.095
+  hours:
+    employee hours min/max     : 96 / 120
+    employee hours mean        : 116.8
+    employee hours stdev       : 6.4
+    weekly hours below 40      : 15
+    weekly hours >= 40         : 135
+    short-shift fraction       : 0.2944
+  fairness:
+    undesirable shifts min/max : 6 / 19
+    undesirable shifts stdev   : 3.927
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.5
+  pattern quality:
+    evening->night transitions : 21
+    rest gaps under 12h        : 98
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+28_27.sched
+  not solved: No solution present.
+========================================================================
+28_30.sched
+  time=12.23  result=4847414
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 5.548
+    zero-backup shift-days     : 45
+    days with some zero backup : 24
+    min daily-op slack         : 30
+    avg daily-op slack         : 78.286
+  hours:
+    employee hours min/max     : 128 / 160
+    employee hours mean        : 157.067
+    employee hours stdev       : 7.585
+    weekly hours below 40      : 7
+    weekly hours >= 40         : 113
+    short-shift fraction       : 0.247
+  fairness:
+    undesirable shifts min/max : 8 / 24
+    undesirable shifts stdev   : 4.683
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.34
+  pattern quality:
+    evening->night transitions : 22
+    rest gaps under 12h        : 73
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+28_40.sched
+  time=250.68  result=88377647
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 6.929
+    zero-backup shift-days     : 38
+    days with some zero backup : 24
+    min daily-op slack         : 78
+    avg daily-op slack         : 130.286
+  hours:
+    employee hours min/max     : 120 / 160
+    employee hours mean        : 154.2
+    employee hours stdev       : 10.117
+    weekly hours below 40      : 22
+    weekly hours >= 40         : 138
+    short-shift fraction       : 0.2235
+  fairness:
+    undesirable shifts min/max : 6 / 23
+    undesirable shifts stdev   : 5.356
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.156
+  pattern quality:
+    evening->night transitions : 30
+    rest gaps under 12h        : 109
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+28_50.sched
+  time=0.1  result=19247
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 11.155
+    zero-backup shift-days     : 45
+    days with some zero backup : 24
+    min daily-op slack         : 12
+    avg daily-op slack         : 78.286
+  hours:
+    employee hours min/max     : 128 / 160
+    employee hours mean        : 158.08
+    employee hours stdev       : 6.105
+    weekly hours below 40      : 10
+    weekly hours >= 40         : 190
+    short-shift fraction       : 0.2712
+  fairness:
+    undesirable shifts min/max : 10 / 25
+    undesirable shifts stdev   : 4.125
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.5
+  pattern quality:
+    evening->night transitions : 21
+    rest gaps under 12h        : 98
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+28_65.sched
+  time=0.33  result=68518
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 14.56
+    zero-backup shift-days     : 27
+    days with some zero backup : 21
+    min daily-op slack         : 4
+    avg daily-op slack         : 78.857
+  hours:
+    employee hours min/max     : 112 / 160
+    employee hours mean        : 154.585
+    employee hours stdev       : 10.697
+    weekly hours below 40      : 32
+    weekly hours >= 40         : 228
+    short-shift fraction       : 0.2421
+  fairness:
+    undesirable shifts min/max : 7 / 25
+    undesirable shifts stdev   : 5.522
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.5
+  pattern quality:
+    evening->night transitions : 37
+    rest gaps under 12h        : 130
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+7_14.sched
+  time=0.0  result=2
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 1.143
+    zero-backup shift-days     : 11
+    days with some zero backup : 7
+    min daily-op slack         : 14
+    avg daily-op slack         : 26.0
+  hours:
+    employee hours min/max     : 20 / 40
+    employee hours mean        : 28.0
+    employee hours stdev       : 8.281
+    weekly hours below 40      : 10
+    weekly hours >= 40         : 4
+    short-shift fraction       : 0.6757
+  fairness:
+    undesirable shifts min/max : 2 / 5
+    undesirable shifts stdev   : 0.86
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.495
+  pattern quality:
+    evening->night transitions : 8
+    rest gaps under 12h        : 10
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+7_17.sched
+  time=0.0  result=1
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 1.81
+    zero-backup shift-days     : 7
+    days with some zero backup : 6
+    min daily-op slack         : 10
+    avg daily-op slack         : 23.143
+  hours:
+    employee hours min/max     : 20 / 24
+    employee hours mean        : 21.882
+    employee hours stdev       : 1.997
+    weekly hours below 40      : 17
+    weekly hours >= 40         : 0
+    short-shift fraction       : 0.9551
+  fairness:
+    undesirable shifts min/max : 2 / 5
+    undesirable shifts stdev   : 0.776
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.456
+  pattern quality:
+    evening->night transitions : 10
+    rest gaps under 12h        : 10
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
+========================================================================
+7_20.sched
+  time=0.0  result=0
+  coverage:
+    min shift slack            : 0
+    avg shift slack            : 2.333
+    zero-backup shift-days     : 6
+    days with some zero backup : 4
+    min daily-op slack         : 0
+    avg daily-op slack         : 3.429
+  hours:
+    employee hours min/max     : 20 / 32
+    employee hours mean        : 22.2
+    employee hours stdev       : 3.219
+    weekly hours below 40      : 20
+    weekly hours >= 40         : 0
+    short-shift fraction       : 0.8788
+  fairness:
+    undesirable shifts min/max : 2 / 5
+    undesirable shifts stdev   : 0.853
+    night shifts min/max       : 1 / 2
+    night shifts stdev         : 0.497
+  pattern quality:
+    evening->night transitions : 9
+    rest gaps under 12h        : 9
+  validity warnings:
+    malformed pairs            : 0
+    cross-shift pairs          : 0
+    training violations        : 0
+    consecutive-night viol.    : 0
+    total-night violations     : 0
