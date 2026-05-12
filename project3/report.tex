@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+
+\usepackage[round]{natbib}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+
+\newcommand\todo[1]{\textcolor{red}{#1}}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\renewcommand\lstlistingname{Code}
+\renewcommand\lstlistlistingname{Code}
+\def\lstlistingautorefname{Code}
+ 
+\lstdefinestyle{Python}{
+    language        = Python,
+    frame           = lines, 
+    numbers=left,
+    basicstyle      = \footnotesize,
+    keywordstyle    = \color{blue},
+    stringstyle     = \color{red},
+    commentstyle    = \color{green}\ttfamily
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+%%%%%%%%%%%%% INPUT HERE
+\newcommand\COURSE{CSCI2951-O}
+\newcommand\PROJECTNUMBER{III}
+\newcommand\FULLNAMEONE{Valentina Lin}
+\newcommand\FULLNAMETWO{}
+\newcommand\CSLOGINS{vlin10 }       
+\newcommand\SCREENNAME{Kel} 
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\FULLNAMEONE\\\FULLNAMETWO}
+\chead{\textbf{\Large Project -- \PROJECTNUMBER}}
+\rhead{\CSLOGINS \\ \SCREENNAME}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+
+\begin{document}
+
+\section{SECTION NAME HERE} 
+
+
+\section{Approach}
+\label{s:approach}
+
+
+\bibliographystyle{plainnat} 
+\bibliography{references}
+
+\end{document}
+
