@@ -1,0 +1,162 @@
+\documentclass[11pt]{article}
+
+\usepackage[round]{natbib}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{tabularx}
+
+\newcommand\todo[1]{\textcolor{red}{#1}}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\renewcommand\lstlistingname{Code}
+\renewcommand\lstlistlistingname{Code}
+\def\lstlistingautorefname{Code}
+ 
+\lstdefinestyle{Python}{
+    language        = Python,
+    frame           = lines, 
+    numbers=left,
+    basicstyle      = \footnotesize,
+    keywordstyle    = \color{blue},
+    stringstyle     = \color{red},
+    commentstyle    = \color{green}\ttfamily
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+%%%%%%%%%%%%% INPUT HERE
+\newcommand\COURSE{CSCI2951-O}
+\newcommand\PROJECTNUMBER{III}
+\newcommand\FULLNAMEONE{Valentina Lin}
+\newcommand\FULLNAMETWO{}
+\newcommand\CSLOGINS{vlin10 }       
+\newcommand\SCREENNAME{Kel} 
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\FULLNAMEONE\\\FULLNAMETWO}
+\chead{\textbf{\Large Project -- \PROJECTNUMBER}}
+\rhead{\CSLOGINS \\ \SCREENNAME}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+
+\begin{document}
+
+\section{Problem}
+\label{s:problem}
+
+We are given a set of potential facility locations $F$ and a set of customers
+$C$. Each facility $f \in F$ has an opening cost $o_f$ and a capacity $q_f$.
+Each customer $c \in C$ has demand $d_c$ and a service cost $a_{c,f}$ for
+being served from facility $f$. Vehicles are identical: each pays a fixed
+usage cost $u$ and may drive at most $T$ total round-trip distance, where
+$\delta_{c,f}$ is the round-trip distance between $c$ and $f$. Up to
+$V = |C|$ vehicles may be used per facility (in the worst case, one per
+customer). The goal is a \emph{lower bound} on the total cost of opening
+facilities, allocating customers, and renting vehicles, computed quickly
+through the LP relaxation.
+
+\section{LP Model}
+\label{s:model}
+
+\paragraph{Decision variables.} All continuous (this is the LP relaxation of
+the natural mixed-integer program):
+\begin{itemize}
+  \item $y_f \in [0,1]$ for each $f \in F$: fraction of facility $f$ opened.
+  \item $x_{c,f} \in [0,1]$ for each $c \in C, f \in F$: fraction of customer
+        $c$'s demand served from facility $f$.
+  \item $v_f \in [0, V]$ for each $f \in F$: continuous number of vehicles
+        deployed at facility $f$.
+\end{itemize}
+
+\paragraph{Objective.} Minimize
+\[
+  \sum_{f \in F} o_f\, y_f
+  \;+\; \sum_{c \in C}\sum_{f \in F} a_{c,f}\, x_{c,f}
+  \;+\; u \sum_{f \in F} v_f .
+\]
+
+\paragraph{Constraints.}
+\begin{align}
+  \sum_{f \in F} x_{c,f} &= 1
+    && \forall c \in C
+    \tag{full service} \\
+  x_{c,f} &\le y_f
+    && \forall c \in C,\, f \in F
+    \tag{open before serve} \\
+  \sum_{c \in C} d_c\, x_{c,f} &\le q_f\, y_f
+    && \forall f \in F
+    \tag{facility capacity} \\
+  \sum_{c \in C} \delta_{c,f}\, x_{c,f} &\le T\, v_f
+    && \forall f \in F
+    \tag{vehicle workload} \\
+  v_f &\le V\, y_f
+    && \forall f \in F
+    \tag{vehicle requires open}
+\end{align}
+
+The vehicle-workload constraint is the standard LP-relaxation surrogate for
+``each vehicle drives at most $T$'': summed over the $v_f$ vehicles at the
+facility, total round-trip distance cannot exceed $T \cdot v_f$. Because
+$v_f$ is continuous in the relaxation, fractional vehicle counts are
+allowed.
+
+\section{Implementation}
+\label{s:impl}
+
+We use Google OR-Tools'
+\texttt{ortools.linear\_solver.python.model\_builder} API with the SCIP
+backend that the stencil already constructs; since every variable is
+continuous, SCIP solves the model as a pure linear program. We did not
+switch to the original CP solver (\texttt{pywrapcp}) because it only
+supports integer variables and cannot express the continuous relaxation
+that the lower bound requires.
+
+The implementation lives entirely in \texttt{src/lpinstance.py}. The
+\texttt{solve()} method builds the variables and constraints above using
+\texttt{model.new\_num\_var}, \texttt{model.add}, and
+\texttt{model.minimize}, then reports $\lceil \text{obj} \rceil$ as the
+integer \texttt{Result} field required by the grader.
+
+\paragraph{Verifier.} A standalone script \texttt{src/verify.py}
+recomputes every constraint on the fractional solution returned by SCIP
+(absolute tolerance $10^{-6}$) and independently recomputes the
+objective from $y, x, v$ to confirm it matches
+\texttt{solver.objective\_value}. It is run manually on a handful of
+instances as a sanity check; it is \emph{not} wired into
+\texttt{run.sh} or \texttt{runAll.sh}, so grading-time output is
+unaffected.
+
+\section{Effort}
+Approximately \todo{N} hours, including modeling, debugging, and writing
+this report.
+
+
+\bibliographystyle{plainnat} 
+\bibliography{references}
+
+\end{document}
+
