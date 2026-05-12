@@ -186,9 +186,12 @@ def evaluate_subset(
     indices: np.ndarray,
     max_new_tokens: int = 64,
     prompt_mode: Literal["continuation", "chat"] = "continuation",
+    eval_type: Literal["generation", "likelihood"] = "generation",
 ) -> dict:
     exact = 0
     set_ok = 0
+    total_log_likelihood = 0.0
+    total_probability = 0.0
     rows = []
     device = model.device
     continuation_stop = (
@@ -196,7 +199,7 @@ def evaluate_subset(
         if prompt_mode == "continuation"
         else None
     )
-    desc = f"Evaluating [{prompt_mode}]: "
+    desc = f"Evaluating [{prompt_mode}, {eval_type}]: "
     for i in tqdm(indices, total=len(indices), desc=desc):
         row = ds[int(i)]
         if prompt_mode == "continuation":
@@ -218,32 +221,84 @@ def evaluate_subset(
         else:
             raise ValueError(f"Unknown prompt_mode: {prompt_mode!r}")
         input_ids = model_inputs["input_ids"]
-        gen_kw = dict(
-            **model_inputs,
-            do_sample=False,
-            max_new_tokens=max_new_tokens,
-            pad_token_id=tokenizer.eos_token_id,
-        )
-        if prompt_mode == "continuation":
-            gen_kw["stopping_criteria"] = continuation_stop
-        out = model.generate(**gen_kw)
-        raw_suffix = decode_new_tokens(tokenizer, input_ids, out)
-        pred = parse(raw_suffix)
-        e = exact_match(pred, gold)
-        s = sets_match(pred, gold)
-        exact += int(e)
-        set_ok += int(s)
-        out_row = {
-            "i": int(i),
-            "sample_id": row["sample_id"],
-            "numops": int(row["numops"]),
-            "prompt_mode": prompt_mode,
-            "gold": gold,
-            "pred": pred,
-            "raw_suffix": raw_suffix[:200],
-            "exact": e,
-            "set_match": s,
-        }
+        if eval_type == "generation":
+            gen_kw = dict(
+                **model_inputs,
+                do_sample=False,
+                max_new_tokens=max_new_tokens,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+            if prompt_mode == "continuation":
+                gen_kw["stopping_criteria"] = continuation_stop
+            out = model.generate(**gen_kw)
+            raw_suffix = decode_new_tokens(tokenizer, input_ids, out)
+            pred = parse(raw_suffix)
+            e = exact_match(pred, gold)
+            s = sets_match(pred, gold)
+            exact += int(e)
+            set_ok += int(s)
+            out_row = {
+                "i": int(i),
+                "sample_id": row["sample_id"],
+                "numops": int(row["numops"]),
+                "prompt_mode": prompt_mode,
+                "eval_type": eval_type,
+                "gold": gold,
+                "pred": pred,
+                "raw_suffix": raw_suffix[:200],
+                "exact": e,
+                "set_match": s,
+            }
+        elif eval_type == "likelihood":
+            gt_cont = " " + gold
+            gt_ids = tokenizer(
+                gt_cont,
+                add_special_tokens=False,
+                return_tensors="pt",
+            )["input_ids"].to(device)
+            gt_len = int(gt_ids.shape[-1])
+            if gt_len <= 0:
+                raise ValueError("Gold continuation tokenized to 0 tokens in likelihood mode")
+
+            full_input_ids = torch.cat([input_ids, gt_ids], dim=-1)
+            full_inputs = {"input_ids": full_input_ids}
+            if "attention_mask" in model_inputs:
+                full_inputs["attention_mask"] = torch.cat(
+                    [
+                        model_inputs["attention_mask"],
+                        torch.ones_like(gt_ids, device=model_inputs["attention_mask"].device),
+                    ],
+                    dim=-1,
+                )
+
+            with torch.no_grad():
+                logits = model(**full_inputs).logits
+            log_probs = torch.log_softmax(logits[:, :-1, :], dim=-1)
+            targets = full_input_ids[:, 1:]
+            token_log_probs = log_probs.gather(-1, targets.unsqueeze(-1)).squeeze(-1)
+
+            prompt_len = int(input_ids.shape[-1])
+            start = prompt_len - 1
+            gt_token_log_probs = token_log_probs[:, start : start + gt_len]
+            gt_log_likelihood = float(gt_token_log_probs.sum().item())
+            gt_probability = float(np.exp(gt_log_likelihood))
+            total_log_likelihood += gt_log_likelihood
+            total_probability += gt_probability
+
+            out_row = {
+                "i": int(i),
+                "sample_id": row["sample_id"],
+                "numops": int(row["numops"]),
+                "prompt_mode": prompt_mode,
+                "eval_type": eval_type,
+                "gold": gold,
+                "gold_continuation_scored": gt_cont,
+                "gold_num_tokens": gt_len,
+                "gold_log_likelihood": gt_log_likelihood,
+                "gold_probability": gt_probability,
+            }
+        else:
+            raise ValueError(f"Unknown eval_type: {eval_type!r}")
         if "numops_by_op" in row:
             out_row["numops_by_op"] = {
                 str(k): int(v) for k, v in dict(row["numops_by_op"]).items()
@@ -254,8 +309,11 @@ def evaluate_subset(
     return {
         "n": n,
         "prompt_mode": prompt_mode,
-        "exact_accuracy": exact / n,
-        "set_accuracy": set_ok / n,
+        "eval_type": eval_type,
+        "exact_accuracy": (exact / n) if eval_type == "generation" else None,
+        "set_accuracy": (set_ok / n) if eval_type == "generation" else None,
+        "mean_log_likelihood": (total_log_likelihood / n) if eval_type == "likelihood" else None,
+        "mean_probability": (total_probability / n) if eval_type == "likelihood" else None,
         "rows": rows,
     }
 
@@ -270,5 +328,19 @@ def accuracy_by_numops(rows: list[dict]) -> dict[int, dict[str, float | int]]:
             "n": n,
             "exact_accuracy": sum(1 for r in sub if r["exact"]) / n,
             "set_accuracy": sum(1 for r in sub if r["set_match"]) / n,
+        }
+    return out
+
+
+def likelihood_by_numops(rows: list[dict]) -> dict[int, dict[str, float | int]]:
+    bins = sorted({int(r["numops"]) for r in rows})
+    out: dict[int, dict[str, float | int]] = {}
+    for k in bins:
+        sub = [r for r in rows if int(r["numops"]) == k]
+        n = len(sub)
+        out[k] = {
+            "n": n,
+            "mean_log_likelihood": sum(float(r["gold_log_likelihood"]) for r in sub) / n,
+            "mean_probability": sum(float(r["gold_probability"]) for r in sub) / n,
         }
     return out

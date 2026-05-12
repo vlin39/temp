@@ -1,3 +1,12 @@
+> **Project note:** This folder contains the upstream `needlehaystack` benchmark package. It is
+> not a project-specific evaluation wrapper for the OLMo/Qwen HuggingFace models used in the
+> ablation study. Project-specific NIAH results are rendered heatmaps in
+> `Figs/In-Context-Retrieval/fig_niah_*.jpeg`. See the parent
+> [`Tasks/In-Context Retrieval/README.md`](../README.md) for how this benchmark fits into the
+> broader study.
+
+---
+
 # Needle In A Haystack - Pressure Testing LLMs
 
 A simple 'needle in a haystack' analysis to test in-context retrieval ability of long context LLMs.

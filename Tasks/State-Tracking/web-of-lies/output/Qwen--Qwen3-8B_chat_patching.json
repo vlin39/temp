@@ -1,0 +1,261 @@
+{
+  "model_name": "Qwen/Qwen3-8B",
+  "task": "web_of_lies",
+  "prompt_mode": "chat",
+  "pairs_file": "output/patching_pairs_200.json",
+  "num_pairs": 200,
+  "patching_results": [
+    {
+      "layer_idx": 0,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.007940681009453136,
+      "patched_accuracy": 0.455
+    },
+    {
+      "layer_idx": 1,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.015908537826807546,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 2,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.053810993010087495,
+      "patched_accuracy": 0.465
+    },
+    {
+      "layer_idx": 3,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.04779239996143323,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 4,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.006749867452267316,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 5,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": -0.020766511785039327,
+      "patched_accuracy": 0.46
+    },
+    {
+      "layer_idx": 6,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.21237082982966943,
+      "patched_accuracy": 0.43
+    },
+    {
+      "layer_idx": 7,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.5120396988205156,
+      "patched_accuracy": 0.415
+    },
+    {
+      "layer_idx": 8,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.6254504834439405,
+      "patched_accuracy": 0.45
+    },
+    {
+      "layer_idx": 9,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.6189655120046044,
+      "patched_accuracy": 0.455
+    },
+    {
+      "layer_idx": 10,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.5891190838949116,
+      "patched_accuracy": 0.44
+    },
+    {
+      "layer_idx": 11,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.5887624431900494,
+      "patched_accuracy": 0.44
+    },
+    {
+      "layer_idx": 12,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.6906370566684078,
+      "patched_accuracy": 0.455
+    },
+    {
+      "layer_idx": 13,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.7236469441867277,
+      "patched_accuracy": 0.505
+    },
+    {
+      "layer_idx": 14,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.7541672600039862,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 15,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.8553634396070458,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 16,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.8542955070266903,
+      "patched_accuracy": 0.465
+    },
+    {
+      "layer_idx": 17,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.8930575171658484,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 18,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9230379197948573,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 19,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9706708661477059,
+      "patched_accuracy": 0.465
+    },
+    {
+      "layer_idx": 20,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9404950440355063,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 21,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9761579078344829,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 22,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.954109034819309,
+      "patched_accuracy": 0.485
+    },
+    {
+      "layer_idx": 23,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.964697969445275,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 24,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9672251320275648,
+      "patched_accuracy": 0.485
+    },
+    {
+      "layer_idx": 25,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9674319344422199,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 26,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9711928416698029,
+      "patched_accuracy": 0.49
+    },
+    {
+      "layer_idx": 27,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9708965821893663,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 28,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9685269277592972,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 29,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9761484546617083,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 30,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9680000462517693,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 31,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9690030412009831,
+      "patched_accuracy": 0.475
+    },
+    {
+      "layer_idx": 32,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9606971257166221,
+      "patched_accuracy": 0.485
+    },
+    {
+      "layer_idx": 33,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9622591959304233,
+      "patched_accuracy": 0.48
+    },
+    {
+      "layer_idx": 34,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.9585262365717142,
+      "patched_accuracy": 0.47
+    },
+    {
+      "layer_idx": 35,
+      "layer_type": "self_attn",
+      "n_pairs": 200,
+      "mean_normalized_logit_diff": 0.98,
+      "patched_accuracy": 0.475
+    }
+  ]
+}

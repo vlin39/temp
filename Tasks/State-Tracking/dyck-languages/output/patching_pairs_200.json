@@ -1,0 +1,1606 @@
+{
+  "num_pairs": 200,
+  "seed": 0,
+  "pairs": [
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( (",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) [ (",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) { < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",
+      "clean_closing": "> } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { } } ( < [ ] [ { } ] > ) ( { { } { { ( ) } } } ) < < { { [ ] } [ ( ) ] } ( < { [ < > ] } > ) < ( [ ] { ( < < [ ] > > ) [ { [ [ ( ( ) ) ] ] } ] } { } ) > ( { { [ [ ( ) ] ] } } )",
+      "corrupt_closing": "> > >",
+      "target_len": 3,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( ) ( < [ ] > ( ) < [ [ { } { < > } < > ] ] > ) [ ] > [ ( < { [ ] } [ ] ( { [ < > ] < < > > ( ( < { } > ) ) } ) [ [ [ < < < ( ( ) ) > > > ] < < { [ ] } > > ( [ < > ] ) ] ] > ) ] < >",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < < < ( ( ) ) ( [ ] ) > > { [ ] }",
+      "clean_closing": "> ) )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < < < ( ( ) ) ( [ ] ) > > { [ ] }",
+      "corrupt_closing": "> ) ]",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > < { { { [ ( ) ] } } } > ( { [ { ( [ ] { } ) } ]",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > < { { { [ ( ) ] } } } > < { [ { ( [ ] { } ) } ]",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } [ { { { ( < [ ] > ) } { < > } } }",
+      "clean_closing": "] } }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ) { < > { ( [ [ { } ] [ ( ) ] ] ) } { { { { ( < [ ] > ) } { < > } } }",
+      "corrupt_closing": "} } }",
+      "target_len": 3,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) [ ( [ < { { ( { } ) } } >",
+      "clean_closing": "] ) ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( ( [ < { { ( { } ) } } >",
+      "corrupt_closing": "] ) )",
+      "target_len": 3,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ < < [ ] > > ] )",
+      "clean_closing": "> )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ < < [ ] > > ] )",
+      "corrupt_closing": "> ]",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ]",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [ { < > { } { } < < < < { } > > ( < ( ( ) ) [ ( [ ] ) ] > ) > > { } } [ < < > > ] < ( ) > ] ]",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ < { < { } > } > ( ( < { [ ] } > { { } } ) { } ) ] > ]",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < [ < { < { } > } > ( ( < { [ ] } > { { } } ) { } ) ] > ]",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [",
+      "clean_closing": "] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] { { } { < ( { } ) > } } > ] ( {",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] { { } { < ( { } ) > } } > ] ( (",
+      "corrupt_closing": ") )",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ { < { } > } ( ) ]",
+      "clean_closing": "} }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ { < { } > } ( ) ]",
+      "corrupt_closing": "] }",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] }",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ ] }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < < > [ < { } > ] { < [ ] > ( ( ( [ [ { < > } ] ] ) ) ) ( < < > > ) } > ]",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ < < > [ < { } > ] { < [ ] > ( ( ( [ [ { < > } ] ] ) ) ) ( < < > > ) } > ]",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) ( { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( [ [ ] ] ) { { [ { < { ( ) < [ [ < > { [ ( < ( < [ { < < ( [ ( ) ] [ ( < ( { [ ] } ) > ) ] [ < > ] ) > [ { ( < > ) } ] > } ] > ) > ) ] } ] ] > { } [ [ ] ] { } } > ( ( < > ) ) } ] }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 26
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] [ ( ( [ ] )",
+      "clean_closing": ") ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ { ( < < < < > { } > { [ { } ] } > > ) } ] [ ] } ] [ < { { } } [ [ ( ( ) ) ] ] > ] < ( ( [ ] )",
+      "corrupt_closing": ") >",
+      "target_len": 2,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { } }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } }",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ { [ ] { [ [ ] ] } { ( ) } } { [ [ ( [ ] ) ] ] } ] } { < ( ) { [ [ ( ) { [ { { } } ] < > { < ( < { ( < ( [ ] ) > ) } > ) { [ ( < ( ) > ) ] } [ ] { } > } ( ) } ] [ ( ( { < > } ) ) ] ] } >",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 16
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( )",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( )",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < ( )",
+      "clean_closing": "> > }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < ( )",
+      "corrupt_closing": "> ) }",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { [ ] } ] } [ [ { { } } [ < >",
+      "clean_closing": "] ] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { [ ] } ] } [ [ { { } } { < >",
+      "corrupt_closing": "} ] ]",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] <",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ] > ] ] [",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { [ { } ] } [ ] [ ] )",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( { [ { } ] } [ ] [ ] )",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) < { < { } >",
+      "clean_closing": "} >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { } ) ( { < { } >",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( { } ) { < ( ( [ ] ) ) >",
+      "clean_closing": "} ] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ( { } ) { < ( ( [ ] ) ) >",
+      "corrupt_closing": "} ] ]",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < > } > } [ ( < < > > ) [ { < ( ) > } ] ] [ ] } < ( { [ < [ { [ ( ) ] } ] > < { ( [ [ [ { } < > { ( < { [ ] } > ( ) ) } ] ] ] ) } > ] } )",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < > } > } [ ( < < > > ) [ { < ( ) > } ] ] [ ] } ( ( { [ < [ { [ ( ) ] } ] > < { ( [ [ [ { } < > { ( < { [ ] } > ( ) ) } ] ] ] ) } > ] } )",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 15
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ] > ( { [ ] } <",
+      "clean_closing": "> ) }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ] > ( { [ ] } (",
+      "corrupt_closing": ") ) }",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { [ ] } >",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { [ ] } >",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } ( ) [ ] {",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } ( ) [ ] [",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { < { } > { { ( [ ( { } ) ( ( [ ( [ ( { [ { } ] } ) ] ) ] ) ) [ < [ [ [ [ [ < > ] [ { [ [ { ( ( < [ ] > ) [ ( [ ] ) ] < { [ ] } > ) } ] ] } ] { < ( < > ) > } ] ] ] ] > ] ] ) } } } >",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 22
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { }",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { }",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ] ( ( ( ( { { } } ) ) )",
+      "clean_closing": ") } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ < > ] ( ( ( ( { { } } ) ) )",
+      "corrupt_closing": ") ) >",
+      "target_len": 3,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] [",
+      "clean_closing": "] ) )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( ) > [ { [ { ( ) } ] } ] ] > [ { } ] ( < { < [ { } ] > } > ) ) ( ( < ( ) > [ ] [ < { ( ) } > ] [ { } ] {",
+      "corrupt_closing": "} ) )",
+      "target_len": 3,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ < > ] } < [ ( [ { } ] ) ] > < [ < > { } ] < ( [ ] ) > <",
+      "clean_closing": "> > }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ < > ] } < [ ( [ { } ] ) ] > < [ < > { } ] < ( [ ] ) > [",
+      "corrupt_closing": "] > }",
+      "target_len": 3,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) < > > { < > } { ( ) ( < ( ) > ) } < < { [ ] }",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) < > > { < > } { ( ) ( < ( ) > ) } < ( { [ ] }",
+      "corrupt_closing": ") >",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ { } ] ] { < [ < [ { } ] > ] > }",
+      "clean_closing": "] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] { < [ < [ { } ] > ] > }",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < [ { < ( ) > } ] >",
+      "clean_closing": "] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < [ { < ( ) > } ] >",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > [ [ [ { { < { } ( { } ) > } } < { { { } } } < > > ] ] ( )",
+      "clean_closing": "] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > > [ [ [ { { < { } ( { } ) > } } < { { { } } } < > > ] ] ( )",
+      "corrupt_closing": "] ]",
+      "target_len": 2,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ] ) > {",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) > {",
+      "corrupt_closing": "} }",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( )",
+      "clean_closing": "> } ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < ( )",
+      "corrupt_closing": "> } )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ( { < ( { } ) > } )",
+      "clean_closing": ") ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { < ( { } ) > } )",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) <",
+      "clean_closing": "> ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) (",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < { < ( ( ) ) > } >",
+      "clean_closing": "] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < ( ( ) ) > } >",
+      "corrupt_closing": "} }",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ ]",
+      "clean_closing": "> }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ]",
+      "corrupt_closing": "> >",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] [ < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ < ( < [ ] > ) < > < { } > { < > { } { { < [ < < { } [ { } ] < > > > ] < > > } < [ [ ] ] > } } > ] [ ( ) ] > } [ { ( < ( ( ( [ { } ] ) ) ) > ) } ] { < ( ) ( ( { ( ) [ { { ( { } ) } } ] } ) ) >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 13
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ < > ] (",
+      "clean_closing": ") ] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ < > ] (",
+      "corrupt_closing": ") ] )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ < > { [ { ( ) } ] < { < { } > [ ( < > ) ] } > } [ < > ] ] ) { { ( { ( ( [ ( [ ] ) ] < { } > ) ) { { ( [ [ ] ] ) } [ ( ) ] { { [ ] } } } } ) } ( { } ) }",
+      "corrupt_closing": "] >",
+      "target_len": 2,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( { [ [ { < [ ] > } ] ] } ) [ ( < { < > } > ) ]",
+      "clean_closing": "} }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ [ { < [ ] > } ] ] } ) [ ( < { < > } > ) ]",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > }",
+      "clean_closing": "> ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( { < [ ( < > ) ( ( [ [ ] ] ) ) ( ( { } ) ) { [ ] } < ( < > ) > ] > }",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < > ( [ ]",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( [ ]",
+      "corrupt_closing": ") )",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ [ < [ ] > ]",
+      "clean_closing": "] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > < [ < [ ] > ]",
+      "corrupt_closing": "> ]",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { ( ) }",
+      "clean_closing": "} ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { ( ) }",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { { { < [ ( < > { ( ) } ) ] > } } }",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { { < [ ( < > { ( ) } ) ] > } } }",
+      "corrupt_closing": "> }",
+      "target_len": 2,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( < >",
+      "clean_closing": ") > >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { < >",
+      "corrupt_closing": "} > >",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > { < [ ] >",
+      "clean_closing": "} ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > [ < [ ] >",
+      "corrupt_closing": "] ]",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] ) } [ ] ( { < > } ( { } ( { { } } ) ) ( [ ] ) ( ) ( < ( { { ( < { [ ( ) ] } > ) } } [ < [ ( [ { } ] [ < > < < > > ] ) ] > ] { < { } > } < > ) > )",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] ) } [ ] [ { < > } ( { } ( { { } } ) ) ( [ ] ) ( ) ( < ( { { ( < { [ ( ) ] } > ) } } [ < [ ( [ { } ] [ < > < < > > ] ) ] > ] { < { } > } < > ) > )",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ ( )",
+      "clean_closing": "] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( )",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ( < [ ( { [ ( ) ] [ ( ( { [ ] } ) ) ] } ) ] > ) ] <",
+      "clean_closing": "> > >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ( < [ ( { [ ( ) ] [ ( ( { [ ] } ) ) ] } ) ] > ) ] <",
+      "corrupt_closing": "> } >",
+      "target_len": 3,
+      "max_open_depth": 13
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] ( ( )",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ { } ] [ ( )",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ) ( { ( < ( ) > ) }",
+      "clean_closing": ") ) }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ) ( { ( < ( ) > ) }",
+      "corrupt_closing": ") ) >",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ { < { } > { [ ( [ ( ) ] ) ]",
+      "clean_closing": "} } ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] ( { < { } > { [ ( [ ( ) ] ) ]",
+      "corrupt_closing": "} } )",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ [ ( ) ] ] ] ]",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ [ ( ) ] ] ] ]",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( { } ) ) } ( ) ) < { (",
+      "clean_closing": ") } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( { } ) ) } ( ) ) < [ (",
+      "corrupt_closing": ") ] >",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] < < {",
+      "clean_closing": "} > >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { ( < ( ( [ < < { } > < < [ ( { < < > > } ) ] > > > ] { } ) ) > ) } ] [ < < { } > ( < < ( ) < ( [ ] ) > > ( ( ) ) > ) > ] > ] ( < {",
+      "corrupt_closing": "} > )",
+      "target_len": 3,
+      "max_open_depth": 17
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < { [ [ { [ [ ( [ < < > > ( ( [ ( ) ( { ( < [ ] > ) } ) ] ) ) ] ) ] ( ) ] } { [ [ ] ] } ] ] } > [ { < > } ]",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 19
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",
+      "clean_closing": "} } )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < { { [ ] } < > [ ] } [ [ [ < [ [ ] ] > ] ] ] > } [ ] { { { { [ { } ] } ( < [ [ [ ] ] ] > ) < < ( { ( [ ] ) [ { { } } ] { [ ] } } ) [ [ { [ [ { ( { } ) [ ( ) { } ] { } } ] ] < > } ] ] > > }",
+      "corrupt_closing": "} } ]",
+      "target_len": 3,
+      "max_open_depth": 14
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( )",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( )",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < { [ < { ( [ ] ) } > { ( { } ) } ( ) ] } > } [ < < > > ] { } [ ] < { }",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { [ < { ( [ ] ) } > { ( { } ) } ( ) ] } > } [ < < > > ] { } [ ] < { }",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < >",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] ( ) ( ( { { } } ) ) < { < > } > [ ] > ] < ( ) > ( ( ( ) ) ) ( < >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] ( ) ( ( { { } } ) ) < { < > } > [ ] > ] < ( ) > ( ( ( ) ) ) [ < >",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [",
+      "clean_closing": "] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( {",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ]",
+      "clean_closing": "> ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ]",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( < < < [ < [ [ ] ( ( ) ) ] > < > ] > > > )",
+      "clean_closing": "> }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( < < < [ < [ [ ] ( ( ) ) ] > < > ] > > > )",
+      "corrupt_closing": "> ]",
+      "target_len": 2,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { } ) } < < ( ) { { < [ { [ ( ) ] } ] > } } > >",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( { } ) } < < ( ) { { < [ { [ ( ) ] } ] > } } > >",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { } [ ] >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } [ ] >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( [ ] ) > < >",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) > < >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ < ( < [ ( ) ] > ) > ] } ) } ] [ ] [ ( { ( ) } ) ] < { ( ( ( ( ( < > ) ) ) ) ) [ < [ ( < > ) ] > [ [ ] ( ( { } { [ { < [ ] > } ] } < { } > < [ < > ] > [ ] ) ) ] ] } > { [ { ( )",
+      "clean_closing": "} ] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { [ < ( < [ ( ) ] > ) > ] } ) } ] [ ] [ ( { ( ) } ) ] < { ( ( ( ( ( < > ) ) ) ) ) [ < [ ( < > ) ] > [ [ ] ( ( { } { [ { < [ ] > } ] } < { } > < [ < > ] > [ ] ) ) ] ] } > { [ < ( )",
+      "corrupt_closing": "> ] }",
+      "target_len": 3,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ { { < ( ) > } } ]",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { { < ( ) > } } ]",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ ( ) ( ( { < { < { { } } > } > } ) ) ] ] > ( ) { ( ) }",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ [ ( ) ( ( { < { < { { } } > } > } ) ) ] ] > ( ) { ( ) }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { { { { < < ( { ( { { < < [ < [ [ ] ] > ] [ ] > [ [ ] ] > ( < [ { < > < [ ] > } ] > ) } } ) } ) > > } } }",
+      "clean_closing": "} } )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { { { { < < ( { ( { { < < [ < [ [ ] ] > ] [ ] > [ [ ] ] > ( < [ { < > < [ ] > } ] > ) } } ) } ) > > } } }",
+      "corrupt_closing": "} } >",
+      "target_len": 3,
+      "max_open_depth": 19
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < { < < > > } > < < { < ( < > ) < > [ [ [ < ( ( ) ) > [ ] [ ] ] ] ] < ( ) > ( ) [ ( [ [ ] ] ) ] > } { } { < [ < { ( { } ) } > ] > } { { } } > >",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < { < < > > } > < < { < ( < > ) < > [ [ [ < ( ( ) ) > [ ] [ ] ] ] ] < ( ) > ( ) [ ( [ [ ] ] ) ] > } { } { < [ < { ( { } ) } > ] > } { { } } > >",
+      "corrupt_closing": "> }",
+      "target_len": 2,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { < > ( ) [ { < ( < > < ( ( ) ( [ { } ] ) ) > { { } { ( ) } } ) [ ] > } ] { { } } }",
+      "corrupt_closing": ") >",
+      "target_len": 2,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < > } { (",
+      "clean_closing": ") } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < > } ( (",
+      "corrupt_closing": ") ) >",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < [ < ( [ ( ) ] < > < ( { } ) > ) < [ ] > > ] ( ) < [ < > ] >",
+      "clean_closing": "> )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ < ( [ ( ) ] < > < ( { } ) > ) < [ ] > > ] ( ) < [ < > ] >",
+      "corrupt_closing": "> >",
+      "target_len": 2,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { { { ( < > )",
+      "clean_closing": "} } }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ { { < > [ ( ) ] ( ( ) ) } } ] > ] { [ { ( < > )",
+      "corrupt_closing": "} ] }",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < <",
+      "clean_closing": "> > }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < (",
+      "corrupt_closing": ") > }",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < {",
+      "clean_closing": "} >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [",
+      "corrupt_closing": "] >",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( (",
+      "clean_closing": ") ) }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( {",
+      "corrupt_closing": "} ) }",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( ( [ ] )",
+      "clean_closing": ") > >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( [ ] )",
+      "corrupt_closing": ") } >",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ ( { ( ( < [ { < > } ] > { { [ ] } } ) ) } ( [ [ < > ] ] ) ) ] ] ] ) ( < > < [ ( ) ] > (",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ [ [ ( { ( ( < [ { < > } ] > { { [ ] } } ) ) } ( [ [ < > ] ] ) ) ] ] ] ) [ < > < [ ( ) ] > (",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } ( ( < > )",
+      "clean_closing": ") }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { } [ ( < > )",
+      "corrupt_closing": "] }",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( < < { }",
+      "clean_closing": "> > )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) < < < { }",
+      "corrupt_closing": "> > >",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( [ ( )",
+      "clean_closing": "] ) )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > ( { ( )",
+      "corrupt_closing": "} ) )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { [ [ ] { { < > [ ( ) ( [ ] ) [ ] { < > } ] } } [ { [ ] } ] { ( ) }",
+      "clean_closing": "] } }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ ] { { < > [ ( ) ( [ ] ) [ ] { < > } ] } } [ { [ ] } ] { ( ) }",
+      "corrupt_closing": "] ] }",
+      "target_len": 3,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < { [ { } < ( { ( < < < { [ ( [ ( [ { { < [ { } < ( ) > ] > } } ] ) ] ) ] } > < > > ( ( < { } > ) ) > ) } ) > ] } > )",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 24
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > {",
+      "clean_closing": "} }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( ) > { < > } ( < > ) < ( ) > [ ] < < < < ( ( ) ) < ( ) > > > > > <",
+      "corrupt_closing": "> }",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < ( { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",
+      "clean_closing": ") > }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < > } } < > < { { ( ) } } > { } } { < [ { [ < > ] [ ( ) < ( ) > { < ( ( ( ) ) ) > [ ] } ] < > ( < { } > ) }",
+      "corrupt_closing": "] > }",
+      "target_len": 3,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] ( [ [ { < { { ( < > [ ] ) } } < > > } ] ] { }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ [ [ { < { { ( < > [ ] ) } } < > > } ] ] { }",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ ( [ < ( ) > [ < { } { [ ] } [ ] [ ] > { ( < { < > } > ) } ] ] ) ] )",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } [",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ [ ] ] > ] ] { } { ( { ( ( ) ) ( ) { { [ [ ( { < { [ { [ ( < ( ( < < < [ ( ) ] [ ] > > > ) ) > < [ < { < ( ) > } > ] > ) ] } ] } > ( ( ) ) } ) [ ( ) ] ] ( < > ) ] } } } ) } {",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 23
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ( ( [ < { ( { } ) } < < > > > ] ) ) ] ) >",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ( [ [ < [ { { [ ] } } ] > ] ] ( ) ) )",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < { < ( ) > } >",
+      "clean_closing": ") }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { < ( ) > } >",
+      "corrupt_closing": "} }",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > >",
+      "clean_closing": "] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < < { [ ] ( [ [ ( [ [ { [ ] } ] ] ) ( ) ] ] ) ( ) [ ] < [ ( ( ( ) ) ) ] < < < > [ ( ) ] > [ ] > > [ < > ] } > >",
+      "corrupt_closing": "] >",
+      "target_len": 2,
+      "max_open_depth": 13
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ) ) [ { ( < > ) }",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ) ) < { ( < > ) }",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) }",
+      "clean_closing": "] ] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ [ [ < { ( ) } ( ) > { ( ) } ] { ( ) }",
+      "corrupt_closing": "] ] }",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",
+      "clean_closing": ") > }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < > ( [ [ { ( ( [ ] < > ) ) } ] { [ [ ] { } { [ { < > } ] } ( { { { { } } } } ) ] } ] ) (",
+      "corrupt_closing": ") } }",
+      "target_len": 3,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ < [ < { } > ] [ ] >",
+      "clean_closing": "] } ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { < [ < { } > ] [ ] >",
+      "corrupt_closing": "} } ]",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) < [",
+      "clean_closing": "] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > [ { [ [ ( [ ] ) [ < ( < > ) { [ ( { ( [ ( ( < ( ( < [ ] { < > } > [ ] ) ) > ) [ { } ] ) ] ) } ) ] } > ] ] ] } [ ] ] ) ( [",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 21
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < < { } >",
+      "clean_closing": "> ] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < < { } >",
+      "corrupt_closing": "> ) ]",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { < { < { < > } > } > } ) ( ) ( { [ ( < ( < < { ( { < > } ) } > > ) > ) { ( { < ( { [ ] } ( ) ) > } < { < { { ( ) } } > { < [ { ( ) } ] > } } > ) } [ [ ( ) ] ] ]",
+      "clean_closing": "} ) )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { < { < { < > } > } > } ) ( ) ( { [ ( < ( < < { ( { < > } ) } > > ) > ) { ( { < ( { [ ] } ( ) ) > } < { < { { ( ) } } > { < [ { ( ) } ] > } } > ) } [ [ ( ) ] ] ]",
+      "corrupt_closing": "} ) }",
+      "target_len": 3,
+      "max_open_depth": 13
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < [ < > ] > }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < [ < > ] > }",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { } }",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { { } }",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { } [ [ ( ( < { < { [ ] } > } > ) )",
+      "clean_closing": "] ] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { } < [ ( ( < { < { [ ] } > } > ) )",
+      "corrupt_closing": "] > >",
+      "target_len": 3,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] [ [ < > ]",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < > ] { [ < > ]",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",
+      "clean_closing": "> } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ( ) ( ( < > < ( ( < < > > ) ) { ( ) } > ) ) { { } }",
+      "corrupt_closing": "] } >",
+      "target_len": 3,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( < < > [ ] ( ) >",
+      "clean_closing": ") > ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( < < > [ ] ( ) >",
+      "corrupt_closing": ") } ]",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] [ ( [ [ ( ) ] ] ) < < [ ] > > < < >",
+      "clean_closing": "> ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < ( [ [ ( ) ] ] ) < < [ ] > > < < >",
+      "corrupt_closing": "> >",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ [ ] ]",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ ] ]",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( { } ) < > }",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( { } ) < > }",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < [ [ ] ( ) { < > ( [ { } { < > } { } ] ) } [ [ [ ( [ ( ) [ [ { < [ { { } } < { { < ( ) > } } > ] > } ] ] ] ) ] < < [ [ ( < < ( ) > > ) ] ] > > [ ] ] ] ] < ( [ ] ) > { ( ( < { } > ) ) } > >",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 19
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",
+      "clean_closing": "} ] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( { { < ( ) > { < { } > ( < ( ) > { < [ ( { { ( < [ ] > ) } } { ( ( [ [ { } [ ] ] ] ) ) } ) ] > } ) } }",
+      "corrupt_closing": "} ) >",
+      "target_len": 3,
+      "max_open_depth": 16
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ < > ]",
+      "clean_closing": "} >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ < > ]",
+      "corrupt_closing": "} )",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ { ( < [ { ( ) { } } ] > ) < > } ]",
+      "clean_closing": ") }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < [ { ( < [ { ( ) { } } ] > ) < > } ]",
+      "corrupt_closing": "> }",
+      "target_len": 2,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ < [ ] > { { [ [ ] ] } } ]",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ < [ ] > { { [ [ ] ] } } ]",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( <",
+      "clean_closing": "> ) }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < <",
+      "corrupt_closing": "> > }",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) > { } < { [ < > ]",
+      "clean_closing": "} >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) > { } < < [ < > ]",
+      "corrupt_closing": "> >",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [",
+      "clean_closing": "] ] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [",
+      "corrupt_closing": "] } >",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",
+      "clean_closing": ") ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < [ [ { [ < [ < ( [ ] ) > ] < > > ( < [ < [ < ( [ ( [ ] ) < ( ) > ] [ ( { ( ) } [ < { { { ( [ ] ) } } } > ] ) ] ) > ] > ] > ) ] } ] ] > ) ( { { { } } }",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 23
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { { [ ] } } { < [ { { < > } } [ ( ) ( ) ] [ [ [ [ ( { < ( < ( [ ] ) > ) > } ) ] ] ] ] ] ( ) ( [ ] { } ) > } > [ { ( ( ) ) } ]",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 16
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ { }",
+      "clean_closing": "] } )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { }",
+      "corrupt_closing": "> } )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > < [ [ ] ] > ) { } )",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ( ( < > < [ [ ] ] > ) { } )",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( { ( ( { } ) ) ( ( [ ] ) ) } )",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( { ( ( { } ) ) ( ( [ ] ) ) } )",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ < ( )",
+      "clean_closing": "> ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < > ) { < < { ( ( ) { { { < > { } } [ < > ] ( ) } } ( ( ) ) ) < [ { { ( ( < > ) ) } } [ { < { } > } ] ( ) ] > } { [ ] } > > [ ] } > ( [ ] ) [ < { ( ( ( ) ( ) ) ) ( ) } > ] [ { ( )",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 12
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < ( ) > }",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < ( ) > }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < > [ [ < > ] ] > ] ( < < < ( [ [ ] ] ) [ ( ( [ { { } } ] ) ) ] > >",
+      "clean_closing": "> ) )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < > [ [ < > ] ] > ] ( { < < ( [ [ ] ] ) [ ( ( [ { { } } ] ) ) ] > >",
+      "corrupt_closing": "} ) )",
+      "target_len": 3,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < { [ ( ) ] } > }",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] ( { < { [ ( ) ] } > }",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ [ { } ] ]",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ [ { } ] ]",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { { < { } < ( ( < > ) ) > > } } { [ [ { } ] ] [ ] < < { } > [ ( ) { ( { } ) } ] > ( [ < [ ( ( { } ( ) < > < [ < < { { ( [ { } ] ) } } { } { } > > ] > ( ) ) ) < > ] > ] )",
+      "clean_closing": "} }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { < { } < ( ( < > ) ) > > } } { [ [ { } ] ] [ ] < < { } > [ ( ) { ( { } ) } ] > ( [ < [ ( ( { } ( ) < > < [ < < { { ( [ { } ] ) } } { } { } > > ] > ( ) ) ) < > ] > ] )",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 17
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { < ( ( < { } { < < { { { } } } > < < < > [ ] > { } ( < { { ( [ ( ) ] ) } } > ) > > } > ) ) > } >",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 17
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < [ [ ( { } ) ] ]",
+      "clean_closing": "> } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < [ [ ( { } ) ] ]",
+      "corrupt_closing": "> ) >",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ { } ] } > ) ) < {",
+      "clean_closing": "} >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < { [ { } ] } > ) ) [ {",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { ( ) { [ ] { ( ( { < > } ) ) ( < < > < > > < ( ( ) ) > ) } < ( < < < { } > > > ) > } }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 9
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { } < { } < > (",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { } { { } < > (",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < >",
+      "clean_closing": "> > )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { < >",
+      "corrupt_closing": "} > )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < [ < > ]",
+      "clean_closing": "> ) }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ < > ]",
+      "corrupt_closing": "] ) }",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } } ] ( < { < [ ( ( ) ) ] > } >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { { } } ] < < { < [ ( ( ) ) ] > } >",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ]",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ]",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < { ( < ( ) > ) }",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { { ( < ( ) > ) }",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { < { ( ) } > } { ( { [ ] } ) }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < { ( ) } > } { ( { [ ] } ) }",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > {",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < > (",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 1
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { [ [ [ < ( < [ ] { [ ( [ ] ) ] [ ] < > } > ) > ] ( [ ] ) ] ] } }",
+      "clean_closing": "] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { { [ [ [ < ( < [ ] { [ ( [ ] ) ] [ ] < > } > ) > ] ( [ ] ) ] ] } }",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 14
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] } > ( ) < [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { [ ] } > ( ) [ [ [ { [ [ ] ] } ] ] ( ) [ < ( [ { } ] ) > ( ( ) ) ]",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( [ { } ] )",
+      "clean_closing": ") )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ { } ] )",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { } > { (",
+      "clean_closing": ") } }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < { } > { (",
+      "corrupt_closing": ") } )",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) { <",
+      "clean_closing": "> }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ) ( <",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } [ ( { ( { [ < > ] } ) ( ) } ) ] { [ < > ] } [ [ ( [ ]",
+      "clean_closing": ") ] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > } [ ( { ( { [ < > ] } ) ( ) } ) ] { [ < > ] } [ < ( [ ]",
+      "corrupt_closing": ") > ]",
+      "target_len": 3,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < > ) } ( ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]",
+      "clean_closing": "> )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( < > ) } { ( [ ] ) < [ ( [ [ ] ] [ { } ] { } [ < { [ ] } > ] ( ) ) ]",
+      "corrupt_closing": "> }",
+      "target_len": 2,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > > < ( < < < [ [ [ [ ] ] ] ] > > > ) [ < < [ ] > > ] { [ < > ] < > [ ( ) ] } { [ ]",
+      "clean_closing": "} > ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < < > > < ( < < < [ [ [ [ ] ] ] ] > > > ) [ < < [ ] > > ] { [ < > ] < > [ ( ) ] } { [ ]",
+      "corrupt_closing": "} > }",
+      "target_len": 3,
+      "max_open_depth": 10
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) { { [ { [ { } ] } ] ( [ { } ] )",
+      "clean_closing": "} }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < { { } } > } < { } > { < { { [ < [ [ ] ] > ] } } > } ( ) [ { [ { [ { } ] } ] ( [ { } ] )",
+      "corrupt_closing": "} ]",
+      "target_len": 2,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > < > [ ] [",
+      "clean_closing": "] )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > > < > [ ] <",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { < ( )",
+      "clean_closing": "> } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( )",
+      "corrupt_closing": ") } >",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < >",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ < >",
+      "corrupt_closing": "] >",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) )",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( ( < > ) ) ( { { } [ { } ] [ ] < ( ) > } ) )",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ ] ) > ] { [ { }",
+      "clean_closing": "] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < ( [ ] ) > ] ( [ { }",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > ( [ < { { } } ( ) > ] ) [ ( ) ] [ ] [ { } ] >",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",
+      "clean_closing": ") ] >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( [ ( ) [ < [ < > ] < > [ ] > ] < < ( ) ( ) > < { } > > [ < > ] ]",
+      "corrupt_closing": ") > >",
+      "target_len": 3,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > < ( < { } { [ { [ ] } ] } >",
+      "clean_closing": ") > ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ [ < > ] ] < ( ) > [ { } ] < [ [ ] ] > ( ) < { < [ ] < < [ [ { [ ] } ] ] > > ( [ ( ( ) ) ] ) > } > [ { { < > } } ] > ( ( < { } { [ { [ ] } ] } >",
+      "corrupt_closing": ") ) ]",
+      "target_len": 3,
+      "max_open_depth": 11
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( { < > } )",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( ( { < > } )",
+      "corrupt_closing": ") }",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ ] { < ( ) > } [ ] ( { }",
+      "clean_closing": ") >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ] { < ( ) > } [ ] ( { }",
+      "corrupt_closing": ") ]",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( { < > } ) } [ ( ) ] { } [ { { ( < > ) } <",
+      "clean_closing": "> } ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] { ( { < > } ) } [ ( ) ] { } [ < { ( < > ) } <",
+      "corrupt_closing": "> > ]",
+      "target_len": 3,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < > >",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < > >",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( ) >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < ( ) >",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < < [ ( ) ] >",
+      "clean_closing": "> >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < [ ( ) ] >",
+      "corrupt_closing": "> )",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",
+      "clean_closing": "> } ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { { < > < [ ] > [ < { } > ] [ ( { } ) ] [ ] [ ( ) ] ( ) < { { < { { { { { ( { } ) } ( { < > } ) } } } } > } }",
+      "corrupt_closing": "> } }",
+      "target_len": 3,
+      "max_open_depth": 13
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ < < { } > > ]",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ < < { } > > ]",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { ( < [ [ ] ] > )",
+      "clean_closing": "} ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( < [ [ ] ] > )",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < ( [ ] ) >",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < ( [ ] ) >",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { < > { { ( { } ) } { { ( ( ) ) } } }",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < > { { ( { } ) } { { ( ( ) ) } } }",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { [ [ { } ] ] }",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ { [ [ { } ] ] }",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( < < < ( < < > > ) > > >",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < < < ( < < > > ) > > >",
+      "corrupt_closing": "]",
+      "target_len": 1,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ < [ ] > [",
+      "clean_closing": "] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < [ ] > [",
+      "corrupt_closing": "] >",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] ( { }",
+      "clean_closing": ") ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ < [ ( [ < [ ] > ] ) ] > ] [ { }",
+      "corrupt_closing": "] ]",
+      "target_len": 2,
+      "max_open_depth": 8
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { < > } }",
+      "clean_closing": "} ] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < [ { { { < > } }",
+      "corrupt_closing": "} ] >",
+      "target_len": 3,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ [ ] ( ) ]",
+      "clean_closing": ") }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( [ [ ] ( ) ]",
+      "corrupt_closing": ") >",
+      "target_len": 2,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < > } > { (",
+      "clean_closing": ") }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ] < { < > } > { {",
+      "corrupt_closing": "} }",
+      "target_len": 2,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ { { { } } }",
+      "clean_closing": "] }",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( [ { { { } } }",
+      "corrupt_closing": "] )",
+      "target_len": 2,
+      "max_open_depth": 5
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( [ ] )",
+      "clean_closing": "}",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( [ ] )",
+      "corrupt_closing": ")",
+      "target_len": 1,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( [",
+      "clean_closing": "] ) ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( (",
+      "corrupt_closing": ") ) ]",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ [ ( { { ( { } ) } < < ( [ [ { } < [ { < [ { ( ) ( [ { } ] ) } ] < > > } ] ( < { ( [ ] ) } > ) > ] ( [ < ( ) > ] ) ] ) > > }",
+      "clean_closing": ") ] ]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { [ ( { { ( { } ) } < < ( [ [ { } < [ { < [ { ( ) ( [ { } ] ) } ] < > > } ] ( < { ( [ ] ) } > ) > ] ( [ < ( ) > ] ) ] ) > > }",
+      "corrupt_closing": ") ] }",
+      "target_len": 3,
+      "max_open_depth": 18
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( {",
+      "clean_closing": "} ) >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < < {",
+      "corrupt_closing": "} > >",
+      "target_len": 3,
+      "max_open_depth": 3
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: [ ( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }",
+      "clean_closing": "]",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ) { [ ] } [ ] [ ] { < { ( ( { } ) ) { [ { } ] } } > [ ] }",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 7
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( )",
+      "clean_closing": ">",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: { ( )",
+      "corrupt_closing": "}",
+      "target_len": 1,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( {",
+      "clean_closing": "} )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < {",
+      "corrupt_closing": "} >",
+      "target_len": 2,
+      "max_open_depth": 2
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <",
+      "clean_closing": "> )",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( < [ { { } } ] > { } ) ( < > ) [ ( < > ) ] <",
+      "corrupt_closing": "> >",
+      "target_len": 2,
+      "max_open_depth": 6
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < { ( ( )",
+      "clean_closing": ") } >",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( { ( ( )",
+      "corrupt_closing": ") } )",
+      "target_len": 3,
+      "max_open_depth": 4
+    },
+    {
+      "clean_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: ( ( ( ) )",
+      "clean_closing": ")",
+      "corrupt_prompt": "Complete the rest of the sequence, making sure that the parentheses are closed properly. Input: < ( ( ) )",
+      "corrupt_closing": ">",
+      "target_len": 1,
+      "max_open_depth": 3
+    }
+  ]
+}
