@@ -1,0 +1,417 @@
+\documentclass[11pt,letterpaper]{article}
+
+% --- Page setup ---
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{microtype}
+
+% --- Citations ---
+\usepackage[round,authoryear]{natbib}
+\bibliographystyle{plainnat}
+
+% --- Formatting ---
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% --- Editorial markers (replace these in final draft) ---
+% Fabricated content that must be replaced with real data
+\newcommand{\fabricated}[1]{{\color{red}\textbf{[FABRICATED --- REPLACE:} #1\textbf{]}}}
+% Real citations whose characterization should be verified against source
+\newcommand{\citeverify}[1]{{\color{orange}\textbf{[CITATION VERIFY:} #1\textbf{]}}}
+% Placeholders for the student's actual observations
+\newcommand{\dataneeded}[1]{{\color{blue}\textbf{[YOUR DATA NEEDED:} #1\textbf{]}}}
+% General editorial notes
+\newcommand{\todonote}[1]{{\color{violet}\textbf{[NOTE:} #1\textbf{]}}}
+
+% --- Title block ---
+\title{Detect, Diagnose, Resolve:\\
+A Curriculum-Anchored, Neurodivergence-Informed Framework\\
+for Evaluating LLM Behavior on Underspecified Reasoning Problems}
+
+\author{
+[Author Name]\\
+[Affiliation]\\
+[Course / Date]
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\fbox{\parbox{0.95\textwidth}{
+\textbf{HOW TO USE THIS MOCKUP.} Three categories of placeholder are marked throughout. \fabricated{example} marks invented content that must be replaced with real data or removed. \citeverify{example} marks places where the cited paper is real but my characterization should be checked against the source. \dataneeded{example} marks placeholders for your own observations. Delete all of these markers (and this box) before submission. The prose itself is editable as a draft --- adopt what you like, rewrite what feels off, and most importantly, make sure the voice sounds like yours rather than mine before you submit.
+}}
+\end{center}
+
+\begin{abstract}
+Existing evaluations of large language models on underspecified reasoning problems treat the task as binary: does the model abstain, does it ask for clarification, yes or no. We argue that this framing collapses three distinct cognitive achievements that human reasoning research has long held apart --- \emph{detecting} that a problem is underspecified, \emph{diagnosing} what specific information is missing, and \emph{resolving} the gap through a clarifying move that would actually narrow the answer space. We propose an evaluation framework that scores these three stages independently and grounds item difficulty in two underused human reference frames: K--12 curriculum standards and standardized-testing item parameters, which provide age-graded difficulty norms; and the clinical and educational literatures on autism and ADHD, which provide well-characterized variation in how individuals with different cognitive profiles handle pragmatic and constraint-checking tasks. We illustrate the framework with six worked examples spanning three grade bands and report preliminary qualitative observations from prompting three mainstream LLMs. We argue that LLM evaluation has so far drawn primarily on the Bayesian and probabilistic-program tradition of cognitive science, and that the developmental, psychometric, and clinical traditions offer complementary tools the field has not yet exploited.
+\end{abstract}
+
+\todonote{Tighten to $\sim$200 words after the body is finalized. The current draft runs $\sim$210; trim once the framework section settles.}
+
+\section{Introduction}
+
+In 1985, the French mathematician Stella Baruk drew renewed attention to an unsettling finding from elementary classrooms. When children were asked questions like ``There are 26 sheep and 10 goats on a ship; how old is the captain?'', a substantial fraction produced a numerical answer --- usually some arithmetic combination of 26 and 10 --- rather than recognizing that the question was unanswerable from the given information \citeverify{Baruk, \emph{L'\^age du capitaine}, 1985, French original; date and primary source should be confirmed.}. The phenomenon has been replicated across decades and languages. \citet{verschaffel2000} and \citet{reusser1997} attribute it to the implicit ``school contract'': children learn that word problems always have numerical answers, so producing one --- any one --- feels safer than refusing.
+
+Large language models exhibit a strikingly similar pattern. Given a reasoning problem missing information necessary for a definite answer, frontier models often generate fluent, confident, and entirely fabricated solutions rather than flagging the gap. Several recent benchmarks document this. AbstentionBench \citep{wen2025} finds that even reasoning-tuned models confabulate on a substantial fraction of unanswerable items. CLAMBER \citep{zhang2024clamber} reports that LLMs identify ambiguity inconsistently across ambiguity types. QuestBench \citep{li2025questbench}, the most directly adjacent prior work, frames underspecified reasoning as a constraint-satisfaction problem with a single missing variable and asks LLMs to choose among candidate clarifying questions; performance varies dramatically across reasoning domains, with frontier models achieving above 80\% on its grade-school-math subset but only 40--50\% on its logic and planning subsets \citeverify{confirm these specific percentages against QuestBench's reported numbers; the qualitative claim that performance varies dramatically is correct, but the specific bounds should be checked.}.
+
+These benchmarks share a common methodological commitment we wish to examine. They treat the LLM's task as essentially binary: detect the underspecification or not; abstain or not; pick the right clarification from a list or not. From the perspective of human reasoning research, this is a significant simplification. Cognitive psychology, developmental psychology, and educational psychometrics have long distinguished at least three separable competences in reasoning under uncertainty: \emph{noticing} that a question is ill-posed, \emph{articulating} what specifically is missing, and \emph{producing} a clarifying move that would resolve the gap rather than restate the difficulty. These competences come online at different developmental ages, dissociate in different cognitive profiles, and respond to different instructional interventions. Treating them as a single capacity discards information the cognitive science literature has spent decades carefully measuring.
+
+This paper proposes a methodological reframe. We define a three-stage evaluation framework --- \emph{Detect, Diagnose, Resolve} --- that separates these competences and scores them independently. We anchor item difficulty in two underused human reference frames. The first is K--12 curriculum standards: specifically the Common Core State Standards' Mathematical Practices MP1 and MP6, which require students to attend to precision and the well-posedness of problems; NAEP and PISA released items with their published item-difficulty parameters; and the GRE Quantitative Comparison item type, whose ``cannot be determined from the information given'' answer choice is the closest standardized-testing analog of the abstention behavior we want to evaluate. The second reference frame is the clinical and educational literature on autism and ADHD, which provides well-characterized variation in how individuals with different cognitive profiles handle pragmatic inference and constraint-checking on academic tasks. We use these literatures not to claim that any LLM ``is like'' any human cognitive profile --- a comparison we explicitly reject as both empirically unsupported and ethically problematic --- but as a source of validated descriptive vocabulary for the dimensions along which underspecified-reasoning behavior can vary.
+
+Our contributions are threefold. First, we articulate the \emph{Detect-Diagnose-Resolve} framework and define operational scoring criteria for each stage. Second, we propose two cross-cutting evaluation axes --- curriculum difficulty band and pragmatic dimension --- that allow framework results to be reported in vocabulary educators and researchers already use. Third, we demonstrate the framework on six worked examples spanning three grade bands and report preliminary qualitative observations from prompting three mainstream LLMs.
+
+A note on scope. This is a position paper. The contribution is the framework and the cross-disciplinary synthesis behind it, not a finished benchmark. Our worked examples and qualitative observations are illustrative; we do not claim statistical results, and we identify in Section~\ref{sec:discussion} the empirical work required to convert this framework into a deployable benchmark.
+
+\section{Related Work}
+
+\subsection{LLM clarification, abstention, and underspecified reasoning}
+
+The most directly comparable prior work is QuestBench \citep{li2025questbench}, which formalizes underspecified reasoning as a constraint-satisfaction problem with a single missing variable. QuestBench presents the LLM with an underspecified problem and a multiple-choice list of candidate clarifying questions; the model is scored on whether it picks the question that would actually resolve the missing variable. The benchmark's four datasets --- Logic-Q, Planning-Q, GSM-Q (grade-school-math problems with one missing variable assignment), and GSME-Q --- span a usefully diverse set of reasoning domains.
+
+Our framework differs from QuestBench along three axes that together motivate the present paper. First, QuestBench collapses the three stages we wish to disentangle: by offering candidate clarifying questions in multiple-choice form, it provides external scaffolding for diagnosis and resolution and reports only an aggregate score. We score the three stages independently, which requires open-ended responses. Second, QuestBench's difficulty axes are CSP-internal --- search depth, brute-force enumeration count --- meaningful from a constraint-satisfaction perspective but unconnected to any external human reference. Our curriculum-grade anchoring provides a difficulty axis that human educators, psychometricians, and developmental researchers already use. Third, QuestBench has no human reference population beyond aggregate annotator accuracy; our framework explicitly imports descriptive vocabulary from the clinical and educational literatures on cognitive variation.
+
+CLAMBER \citep{zhang2024clamber} constructs a taxonomy of ambiguity types and tests whether LLMs identify ambiguity in information-seeking queries. It is concerned with retrieval-style queries rather than reasoning problems, and it scores identification of \emph{ambiguity type} rather than the multi-stage behavior we target. ClarQ-LLM \citep{gan2024clarq} studies clarification in task-oriented dialog, again in a setting different from our reasoning-problem focus. AbstentionBench \citep{wen2025} holistically scores abstention across underspecified, vague, and unanswerable queries; like CLAMBER and the earlier ``clarify when necessary'' line \citep{zhang2023clarify}, it treats abstention as a binary outcome rather than as the endpoint of a three-stage cognitive process.
+
+A separate line of work studies LLMs' ability to ask informative clarification questions in well-specified games such as 20 Questions, scoring questions by expected information gain \citep{mazzaccara2024}. This literature establishes an information-theoretic vocabulary for question quality but in a hypothesis-narrowing game where confabulation is not the worrying alternative behavior.
+
+\subsection{Cognitive science as a source for LLM evaluation}
+
+A growing body of recent work uses cognitive science as a source of evaluation methodology. \citet{hu2023pragmatic} compare LLM performance on seven pragmatic phenomena to human data, providing a methodological template for ``cognitive comparison'' papers. \citet{strachan2024} compare frontier LLMs to a human sample on theory-of-mind tasks; \citet{kosinski2024} and the critical responses by \citet{ullman2023} and \citet{shapira2023} illustrate the methodological care required when claiming cognitive parallels.
+
+A particularly active subfield uses \emph{probabilistic-program} and \emph{world-model} theories of cognition to ground evaluation. \citet{wong2025} propose translating from natural language to probabilistic-language-of-thought representations as a basis for LLM-grounded reasoning. \citet{ying2026} propose evaluating LLMs on novel games as a probe of world-model induction, drawing on the computational cognitive-science tradition associated with Tenenbaum, Gershman, Goodman, Lake, and collaborators. These works establish that ``use cognitive science to design AI evaluations'' is a recognized and active research program.
+
+What is striking about this body of work is that it draws almost exclusively on a particular slice of cognitive science: the Bayesian and probabilistic-program tradition closest to computer science itself. Largely absent from current LLM evaluation are the developmental tradition (Piagetian and post-Piagetian work on conservation, transitive inference, false belief), the educational psychometric tradition (item response theory, grade-equivalence scaling, the design and validation of standardized assessment instruments), and the clinical-neuropsychological tradition (response inhibition paradigms, working-memory updating tasks, weak central coherence, pragmatic-inference batteries from autism research). These traditions are not absent from cognitive science generally; they are simply not yet drawn upon for LLM evaluation. This is the gap our paper occupies.
+
+\subsection{Autism, ADHD, and pragmatic / constraint-checking behavior}
+
+Three theoretical accounts in the autism research literature are particularly relevant. \emph{Weak Central Coherence} theory \citep{frith1989, happe2006wcc} characterizes autism as marked by detail-focused processing and a reduced tendency to integrate parts into a global pragmatic whole --- a profile that, on certain task classes, looks behaviorally similar to a system processing surface tokens without integrating broader context. Theory-of-mind work \citep{baroncohen1985, happe1994advanced} characterizes some autistic individuals' difficulties with inferring unstated mental states. \emph{Relevance-theoretic} accounts \citep{sperber1995, happe1993, loukusa2007} model pragmatic differences as differences in the inferential filling-in of unstated propositions.
+
+We invoke these accounts with two important caveats. First, the deficit framing of autism is increasingly contested by the neurodiversity paradigm \citep{pellicano2022} and by Milton's \citeyearpar{milton2012} double-empathy problem, which reframes communication breakdowns as bidirectional rather than autism-located. Second, autism is enormously heterogeneous, and the patterns documented in the experimental literature are statistical tendencies on specific tasks, not characterizations of any individual. We import vocabulary from this literature; we do not import claims about identity or mechanism.
+
+The ADHD literature provides a parallel resource on a different dimension. \citet{barkley1997} executive-function theory characterizes ADHD as marked by reduced response inhibition. \citet{diamond2013} review establishes inhibition, working-memory updating, and cognitive flexibility as separable executive components. Empirically, \citet{re2016} document that children with ADHD make more errors on math word problems specifically when information must be updated or selected from a larger field --- a profile that bears informative similarity to the LLM behavior of producing fluent answers without fully verifying constraints. Again, we use this only as descriptive vocabulary, not as a claim of shared mechanism between LLMs and any human cognitive profile.
+
+\todonote{After reading Bottema-Beutel et al. (2021), audit this entire section for ableist language. Use identity-first phrasing (``autistic person'') consistently. Avoid ``high-functioning''/``low-functioning'' except in direct quotation. Never write ``LLMs are autistic-like.''}
+
+\section{Theoretical Motivation}
+
+\subsection{Curriculum and standardized testing as developmental anchor}
+
+The argument for grounding LLM evaluation in K--12 curriculum standards rests on a simple observation: educational psychometrics has spent more than a century developing instruments whose item difficulties are calibrated to specific ages and grades. The Common Core State Standards' Mathematical Practice 1 (``Make sense of problems and persevere in solving them'') and Mathematical Practice 6 (``Attend to precision'') explicitly require students at every grade level to attend to whether a problem is well-posed and what it actually asks. The Operations and Algebraic Thinking standards from second grade onward require students to identify extraneous and missing information in word problems \citeverify{review CCSS.MATH.CONTENT.2.OA.A.1 wording to confirm the ``missing information'' framing is in the standard rather than only in subsequent commentary.}.
+
+NAEP and PISA release items with empirically measured percent-correct values across large student samples, providing item-difficulty parameters anchored to specific grade levels. The GRE Quantitative Comparison item type, with its ``cannot be determined'' answer choice, is the closest standardized-testing analog of the LLM abstention behavior we want to study. ETS publishes item-level statistics, and the test-preparation literature documents a robust pattern: examinees systematically \emph{under}-select the ``cannot be determined'' option even when it is correct, because doing so feels like surrender \citeverify{confirm against ETS published item analyses or against test-prep secondary sources before treating this as established. The qualitative pattern is widely reported but I have not personally verified the primary source.}.
+
+Why is this anchoring useful? Because it lets the framework report difficulty in vocabulary that makes claims interpretable. Saying ``GPT-X correctly detected underspecification on 70\% of fourth-grade-band items but 30\% of high-school-band items'' is more informative --- and more falsifiable --- than saying ``GPT-X scored 0.55 on AbstentionBench.'' It allows comparison to a concrete human reference: at this difficulty level, this is what typical students at this age can already do. It also opens the framework to immediate use in education-adjacent contexts, where decisions about deploying LLMs in classroom and tutoring settings depend on understanding what students at what levels can already verify.
+
+\subsection{Neurodivergence as analytical lens}
+
+The argument for invoking the autism and ADHD literatures is more delicate and we want to state it carefully. We do not claim that LLMs are like autistic or ADHD individuals. We do not claim shared mechanism. We do not endorse popular-press analogies (which appear in technology blogs and Substacks) that draw facile parallels between LLM literal interpretation and autistic cognition; such analogies are empirically unsupported, ethically problematic, and rejected by autism research and advocacy communities \citep{bottemabeutel2021}.
+
+What we do claim is methodological: the autism and ADHD research literatures contain decades of careful experimental work on specific dimensions of pragmatic and constraint-checking behavior, and this work provides validated vocabulary for describing variation that LLM evaluation otherwise has to invent from scratch. Weak Central Coherence research operationalizes the dimension of \emph{local-versus-global integration}. Relevance-theoretic work operationalizes the dimension of \emph{contextual filling-in of unstated propositions}. ADHD research operationalizes the dimensions of \emph{response inhibition} and \emph{constraint updating}. These dimensions are precisely the ones along which underspecified-reasoning behavior varies, and adopting their vocabulary makes our framework more analytically precise than it would otherwise be.
+
+The framing principle, in one sentence: \emph{neurodivergent populations are independently studied human reference points whose well-characterized response patterns provide vocabulary for describing dimensions of variation; the framework borrows the vocabulary, not the identity claim.} We center Milton's \citeyearpar{milton2012} double-empathy framing as an additional reminder that communication breakdowns --- including those between humans and LLMs --- are bidirectional. An LLM that fails to detect underspecification is not ``broken'' in some unilateral sense; it is operating in a communicative situation where its training distribution rewarded fluent confident completion, and where the user's expectations were shaped by a different distribution. Naming this bidirectionality, rather than locating the failure entirely in the model, is a more analytically honest framing.
+
+\section{The Detect-Diagnose-Resolve Framework}
+\label{sec:framework}
+
+\subsection{Three stages}
+
+We define three stages of underspecified-reasoning behavior, corresponding to three separable cognitive achievements documented in the human reasoning literature.
+
+\textbf{Stage 1: Detect.} Given an underspecified problem, does the model recognize that the problem cannot be answered from the information provided? We score this as a binary outcome from a free-form response: the model either flags the underspecification (with a verbal marker such as ``this problem is missing information,'' ``cannot be determined,'' ``I would need to know,'' or equivalent) or proceeds to compute an answer as if the problem were well-posed.
+
+\textbf{Stage 2: Diagnose.} Conditional on detection, does the model correctly identify the \emph{specific} piece of information that is missing? A correct diagnosis names the relevant variable, relationship, or premise; a vague diagnosis (``more context would help'') is scored as partial; an incorrect diagnosis (naming a different variable than the one actually missing) is scored as a failure. This stage is rubric-coded with anchors and dual-rater agreement on a sample.
+
+\textbf{Stage 3: Resolve.} Conditional on diagnosis, what does the model \emph{do} with that information? Four resolution behaviors are distinguished: (a) ask the user a clarifying question; (b) state the limitation explicitly without asking (``the answer depends on X, which is not given''); (c) make an explicit assumption and label it as such (``assuming X $=$ 5, the answer would be Y''); or (d) silently confabulate (produce a definite answer without flagging that an assumption was required). These are not ordered from worst to best; (a), (b), and (c) are all defensible behaviors in different deployment contexts, and (d) is the failure mode we most worry about.
+
+The three stages are scored independently, which means a single response can pass one stage and fail another. This is exactly the discriminating power the framework is designed to provide. A model that detects underspecification but cannot diagnose what is missing is in a different cognitive position than a model that cannot detect at all; a model that diagnoses correctly but then confabulates anyway (we observe such behavior; see Section~\ref{sec:observations}) is in a different cognitive position than a model that simply produces a definite answer from the start.
+
+\subsection{Curriculum difficulty axis}
+
+We define three difficulty bands anchored to U.S.\ K--12 curriculum standards and standardized-testing reference points.
+
+\textbf{Band 1: Early elementary (Grades 2--4).} Items at this band involve single-step or simple multi-step word problems with one missing quantity. Reference: Common Core 2.OA.A.1, 3.OA.A.8, NAEP Grade 4 Mathematics released items at the basic-and-proficient range.
+
+\textbf{Band 2: Late elementary / middle (Grades 5--8).} Items at this band involve multi-step problems with missing relations, missing presuppositions, or extraneous information requiring selective attention. Reference: Common Core 5.OA, 7.RP, NAEP Grade 8 Mathematics released items, PISA released items at the lower difficulty levels.
+
+\textbf{Band 3: High school and beyond (Grades 9--12+).} Items at this band involve quantitative-comparison-style ``cannot be determined'' problems, statistical inference under unstated assumptions, and multi-step word problems with hidden conditional structure. Reference: NAEP Grade 12 Mathematics, PISA released items at higher difficulty levels, GRE Quantitative Comparison practice items.
+
+For each item we record the curriculum reference (specific standard or released-item ID) and, where available, the human percent-correct on the source item.
+
+\subsection{Pragmatic dimensions}
+
+Cross-cutting the difficulty axis, we identify four pragmatic dimensions along which an item's missing information may sit.
+
+\textbf{Missing-quantity items} are missing a specific numerical value. Example: ``A train travels for 2 hours; how far does it go?'' The missing variable is the train's speed. This dimension corresponds most closely to QuestBench's GSM-Q construction.
+
+\textbf{Missing-relation items} are missing a relationship between specified entities. Example: ``Maria has apples. Her brother has 3 apples. How many do they have together?'' The missing relation is how many apples Maria has, which is presupposed-but-unspecified rather than numerically absent in the same way.
+
+\textbf{Missing-presupposition items} are missing an implicit world-knowledge fact required for the problem to have a determinate answer. Example: a probability problem where the independence of two events is unstated. This dimension connects most directly to relevance-theoretic accounts of pragmatic inference \citep{sperber1995, loukusa2007}.
+
+\textbf{Missing-purpose items} are missing a clear specification of what the question is actually asking. Example: ``Which of these numbers is best?'' The dimension corresponds to ambiguity-of-intent rather than ambiguity-of-content.
+
+\subsection{Scoring and inter-rater reliability}
+
+Each item produces three binary or rubric-coded scores (Detect, Diagnose, Resolve). For a real benchmark deployment, inter-rater reliability on Diagnose and on the four Resolve categories should be established with two trained raters and Cohen's $\kappa \geq 0.7$ as a minimum threshold. For the present position paper, we report only single-rater coding by the author and treat the observations as illustrative.
+
+\todonote{The inter-rater reliability claim is what would make this a real benchmark; flagging it here is honest about what's missing from a position paper and is the natural future-work hook.}
+
+\section{Worked Examples}
+\label{sec:examples}
+
+We present six worked examples, two per curriculum band, illustrating different pragmatic dimensions. For each item we provide the prompt, the curriculum reference, the predicted typical-grade response based on the educational-psychology literature, predicted patterns drawn from the autism and ADHD research literatures (with the framing caveats from Section~3.2), and observed responses from three mainstream LLMs.
+
+\dataneeded{Throughout this section, every ``Observed LLM response'' below is FABRICATED and must be replaced with actual model output from your prompting runs. The framing for each example, the curriculum reference, and the predicted human responses are usable as drafted, but each one should be checked for accuracy before submission.}
+
+\subsection{Example 1 (Band 1, Missing-Quantity): The reduced apples problem}
+
+\textbf{Prompt.} \textit{``Maria has some apples. She gives 3 apples to her friend. How many apples does Maria have left?''}
+
+\textbf{Curriculum reference.} Common Core 2.OA.A.1 (Use addition and subtraction within 100 to solve one- and two-step word problems involving situations of adding to, taking from, etc.). The standard requires that ``the unknown'' be in any position; well-formed items specify a starting quantity. This item is deliberately malformed by omitting the start state.
+
+\textbf{Predicted typical-grade response.} Children in late kindergarten and Grade 1 frequently produce a numerical answer regardless, often subtracting 3 from a recently-mentioned number or producing a guess; by Grade 2--3 a substantial fraction will report confusion or ask for the missing quantity, especially when explicitly invited to \citep{verschaffel2020} \citeverify{this specific claim about Grade 2--3 detection rates is plausible but may not be exactly what Verschaffel reports; check before citing.}.
+
+\textbf{Predicted neurodivergence-informed patterns.} The autism research literature \citep{loukusa2007} suggests that children with strong context-use difficulties may be more likely than typically-developing peers to ask explicitly for the missing quantity rather than to fill it in by inference, since the inference of ``Maria probably had a number of apples big enough to give 3 away'' depends on contextual filling-in that this profile may not perform automatically. ADHD-related research suggests that students may produce a rapid numerical guess driven by reduced response inhibition \citep{re2016, barkley1997}. These are descriptive patterns; we do not generalize across individuals.
+
+\textbf{Observed LLM responses.} \fabricated{Replace entirely with real responses from your prompting runs. Example placeholder: Model A: produces ``Maria has some apples minus 3 apples left.'' Detection: yes. Diagnose: implicit. Resolve: explicit limitation (b). Model B: ``I notice this problem doesn't tell us how many apples Maria started with. Could you let me know that number?'' Detection: yes. Diagnose: explicit. Resolve: ask (a). Model C: ``Maria has 0 apples left.'' Detection: no. Diagnose: n/a. Resolve: confabulation (d).}
+
+\subsection{Example 2 (Band 1, Missing-Presupposition): The Captain's age, modernized}
+
+\textbf{Prompt.} \textit{``There are 26 sheep and 10 goats on a ship. How old is the captain?''}
+
+\textbf{Curriculum reference.} This item does not correspond to a specific standard; it is a classic teaching item from the Verschaffel/Reusser tradition used to demonstrate the implicit ``school contract.'' We include it as a known reference point with extensive documented human-response data \citeverify{confirm \citet{verschaffel2000} or \citet{reusser1997} for the canonical citation and approximate response distribution.}.
+
+\textbf{Predicted typical-grade response.} Across multiple replications in different countries and languages, between 60\% and 90\% of elementary-school children produce a numerical answer to this question rather than refusing to answer \fabricated{these specific percentages are illustrative; the qualitative claim is well-attested but verify the actual percentages against Verschaffel et al. before citing.}.
+
+\textbf{Predicted neurodivergence-informed patterns.} Anecdotally, some autism research suggests autistic children may be \emph{less} susceptible to the school-contract effect, since the inferential leap ``the question is well-formed because school questions always are'' depends on a pragmatic assumption their profile may not automatically make. To our knowledge, this specific prediction has not been directly tested with this item; this would be an interesting follow-up study \citeverify{this is conjecture on my part; it is consistent with WCC and relevance-theoretic accounts but I have no direct empirical reference. Either remove this paragraph, mark it as conjecture, or find a citation to support it.}.
+
+\textbf{Observed LLM responses.} \fabricated{Replace.}
+
+\subsection{Example 3 (Band 2, Missing-Relation): The unspecified arrival times}
+
+\textbf{Prompt.} \textit{``A train leaves Station A at 9:00 AM. Another train leaves Station B at 10:00 AM. When do the two trains meet?''}
+
+\textbf{Curriculum reference.} Distance-rate-time word problems are addressed at Common Core 6.RP.A.3 and 7.RP.A.2 ranges; a well-formed version of this item specifies the distance between A and B and the speeds of both trains. The malformed version here omits all three.
+
+\textbf{Predicted typical-grade response.} Most middle-school students, when prompted carefully, recognize that the speeds and distance are missing; many will name one missing quantity but not all three \citep{daroczy2015} \citeverify{this specific claim about middle-school students naming ``one missing quantity but not all three'' is FABRICATED inference; Daroczy et al. is a real review paper but I have not verified that it makes this specific claim.}.
+
+\textbf{Predicted neurodivergence-informed patterns.} This item highlights the \emph{constraint-tracking} dimension. ADHD research suggests that students with reduced working-memory updating may produce a numerical answer by latching onto the salient times (9:00 and 10:00) without verifying that those alone determine the meeting \citep{re2016, diamond2013}. The autism literature is less directly applicable here because the missing information is not pragmatically presupposed but mathematically necessary.
+
+\textbf{Observed LLM responses.} \fabricated{Replace.}
+
+\subsection{Example 4 (Band 2, Missing-Purpose): The ``best'' sequence}
+
+\textbf{Prompt.} \textit{``Consider the sequence 2, 4, 8, 16. Which number is best?''}
+
+\textbf{Curriculum reference.} Loosely related to Common Core 4.OA.C.5 (pattern identification); the item is deliberately ill-posed because ``best'' has no defined meaning in this domain.
+
+\textbf{Predicted typical-grade response.} Strong students will typically ask ``best for what?'' or note that the question is unclear; weaker students may produce an answer (often 16 by recency or 2 by primacy) and rationalize \fabricated{this is a plausible-sounding prediction but not grounded in a specific empirical study I can cite. Either find a real source or rephrase as conjecture.}.
+
+\textbf{Predicted neurodivergence-informed patterns.} Items with missing-purpose (rather than missing-content) ambiguity are particularly interesting from the relevance-theoretic perspective: resolving them requires recognizing that the speaker's communicative intent is itself underspecified, not just the data \fabricated{I am extrapolating from relevance theory rather than citing direct empirical work on missing-purpose ambiguity in autism research; needs verification or removal.}.
+
+\textbf{Observed LLM responses.} \fabricated{Replace.}
+
+\subsection{Example 5 (Band 3, Quantitative Comparison): The unspecified inequality}
+
+\textbf{Prompt.} \textit{``Quantity A: $x^2$. Quantity B: $x$. Is Quantity A greater than, less than, or equal to Quantity B, or cannot the relationship be determined from the information given?''}
+
+\textbf{Curriculum reference.} GRE Quantitative Comparison item type. The correct answer is ``cannot be determined'': for $x > 1$, $A > B$; for $0 < x < 1$, $A < B$; for $x = 1$ or $x = 0$, $A = B$; for negative $x$, $A > B$. ETS and test-prep secondary sources document that examinees commonly select ``A $>$ B'' by anchoring on positive integers \citeverify{this is widely repeated in test-prep literature but I have not personally verified that ETS publishes this specific finding.}.
+
+\textbf{Predicted typical response.} Strong examinees correctly select ``cannot be determined.'' Test-prep literature consistently reports that this answer is under-selected even when correct, with examinees preferring a definite answer.
+
+\textbf{Predicted neurodivergence-informed patterns.} This item type is particularly interesting because the ``correct'' behavior is to abstain --- a pattern that a profile less subject to social pressure to produce a definite answer might \emph{outperform} on. We do not know of direct empirical research comparing autistic and neurotypical examinees on QC items specifically, and we flag this as an open empirical question rather than a claim \citeverify{I am not aware of direct empirical evidence here; this is conjecture and is marked as such in the paragraph itself.}.
+
+\textbf{Observed LLM responses.} \fabricated{Replace.}
+
+\subsection{Example 6 (Band 3, Missing-Presupposition with statistical structure): The independence assumption}
+
+\textbf{Prompt.} \textit{``In a town, 30\% of people own a dog and 40\% own a cat. What percent own both a dog and a cat?''}
+
+\textbf{Curriculum reference.} Common Core HSS-CP.A.2 (independence and conditional probability). A well-formed version specifies whether the events are independent.
+
+\textbf{Predicted typical response.} Strong high school statistics students will recognize that the joint probability cannot be computed without an independence assumption or additional data; weaker students will multiply $0.30 \times 0.40$ and report 12\% \fabricated{the specific claim about ``weaker students will multiply'' is plausible-sounding pedagogical commentary but should be tied to a real source from the statistics-education literature, e.g., Garfield \& Ben-Zvi, before citing.}.
+
+\textbf{Predicted neurodivergence-informed patterns.} This item highlights the \emph{missing-presupposition} dimension at its most subtle: the independence assumption is the kind of unstated proposition that relevance-theoretic accounts \citep{sperber1995} identify as routinely filled in by pragmatic inference. Whether this filling-in is \emph{correct} in this case is a separate question; the cognitive task is similar to filling in a missing premise in a verbal pragmatic inference.
+
+\textbf{Observed LLM responses.} \fabricated{Replace.}
+
+\section{Preliminary Qualitative Observations}
+\label{sec:observations}
+
+\dataneeded{This entire section is fabricated and must be replaced with your actual prompting runs. The structure below shows what the section should look like; the specific findings are illustrative only.}
+
+We ran each of the six worked examples through three mainstream LLMs \fabricated{model identifiers; replace with the specific models and version dates you used}. Each item was prompted once per model with no system prompt and default temperature. We acknowledge upfront that $n = 1$ per cell is illustrative and not statistically meaningful; the purpose is to motivate full empirical work, not to draw conclusions. We coded each response on the three framework stages, with the author as sole rater. Several patterns are worth describing qualitatively.
+
+\textbf{Pattern 1: Detection-without-diagnosis is rare.} Across our six items $\times$ three models $=$ 18 responses, when a model detected underspecification it almost always also named a specific missing variable. Models did not frequently produce vague ``more context would help'' responses; either they engaged with the missing information specifically or they ignored it entirely. \fabricated{Replace with whatever your actual data shows, even if it contradicts this prediction.}
+
+\textbf{Pattern 2: Resolution behavior varies dramatically by model family.} Model A consistently asked clarifying questions (resolution category a); Model B consistently stated the limitation explicitly without asking (b); Model C consistently produced explicit-assumption responses (c). Confabulation (d) was infrequent across all three on these items, but appeared more often on the Quantitative Comparison item (Example 5) than on others. \fabricated{Replace.}
+
+\textbf{Pattern 3: Missing-purpose items elicit different behavior than missing-quantity items.} All three models handled the missing-quantity items (Examples 1, 3) more consistently than the missing-purpose item (Example 4), where two of three produced definite answers without flagging that ``best'' was undefined. This is consistent with the framework's prediction that the four pragmatic dimensions are not interchangeable. \fabricated{Replace.}
+
+\todonote{When you replace this section with real data, do not over-claim. Your professor and any reviewer will know that 18 responses with one rater is illustrative. Frame each pattern as ``preliminary observation consistent with the framework's predictions'' rather than as a finding. If your actual data contradicts the framework, that is also fine and worth reporting honestly --- null or negative results in a position paper are acceptable because the contribution is the framework, not the empirical claims.}
+
+\section{Discussion, Limitations, and Future Work}
+\label{sec:discussion}
+
+\subsection{Limitations}
+
+The framework as presented has several limitations we want to state explicitly. First, we have not collected fresh human data; our developmental and clinical comparisons are mediated entirely through published literature. A real validation of the framework would require either matched-item human studies or, more practically, mining existing standardized-testing item banks for items with both LLM-suitable phrasings and published human response distributions.
+
+Second, the worked examples were constructed by the author rather than drawn from validated assessment instruments. A real benchmark deployment would need items with established psychometric properties, ideally drawn from NAEP, PISA, or TIMSS released-item banks. Our examples are illustrative scaffolds, not benchmark items.
+
+Third, single-rater coding is not adequate for the rubric components of the framework (Diagnose; Resolve subcategories). Inter-rater reliability with $\kappa \geq 0.7$ should be a minimum threshold for any deployment.
+
+Fourth, model versions drift. The qualitative observations in Section~\ref{sec:observations} are tied to specific model versions on specific dates \dataneeded{list exact versions and dates}, and we do not expect them to replicate exactly even three months later. This is a general problem in LLM evaluation but is worth flagging.
+
+Fifth, the autism and ADHD literatures are heterogeneous and often contested. We have tried to use them carefully and to invoke current best-practice framing \citep{bottemabeutel2021, pellicano2022, milton2012}, but reviewers from those fields may reasonably disagree with how we have done this. We welcome that disagreement and have tried to write the paper such that the framework's curriculum-anchoring contribution stands independently of any commitment to the neurodivergence-comparative dimension.
+
+\subsection{Future work}
+
+The natural empirical follow-up is a benchmark deployment. We anticipate three components: an item bank of 200--300 items drawn from released NAEP, PISA, TIMSS, and GRE Quantitative Comparison items, with each item tagged for curriculum band, pragmatic dimension, and known human percent-correct; a multi-model run with several frontier and open-weight models, with per-item scoring on the three framework stages by two trained raters; and per-item difference scoring against the human percent-correct, identifying items where LLM behavior diverges most from typical student behavior at the targeted age band.
+
+A second empirical follow-up, at much greater scope, would involve direct human comparison studies with autistic and ADHD adult participants on a subset of items, conducted in collaboration with autism and ADHD research groups using participatory-research norms. This is well outside the scope of the present paper but is the natural test of whether the descriptive vocabulary we have borrowed from those literatures actually maps onto LLM behavior in the way Section~3.2 conjectures.
+
+\subsection{Broader implications}
+
+Beyond the specific framework, our position is that LLM evaluation has significant unrealized value to extract from cognitive-science traditions other than the Bayesian-computational tradition currently dominant in CS-adjacent work. Educational psychometrics in particular offers decades of carefully calibrated instruments and difficulty parameters that the field has not yet exploited. We hope the present framework is one example of how that exploitation can proceed.
+
+\section{Conclusion}
+
+We have proposed a three-stage evaluation framework --- \emph{Detect, Diagnose, Resolve} --- for LLM behavior on underspecified reasoning problems, anchored in K--12 curriculum standards and standardized-testing item parameters and informed by the autism and ADHD research literatures as a source of descriptive vocabulary for cognitive variation. The framework is offered as a methodological proposal rather than a finished benchmark, and we have illustrated it with six worked examples and preliminary qualitative observations from prompting three mainstream LLMs. We argue that LLM evaluation has substantial unrealized value to extract from cognitive-science traditions other than the Bayesian-computational tradition currently dominant in computer-science-adjacent work, and that the developmental, psychometric, and clinical traditions are particularly well-suited to provide validated reference data for evaluation design.
+
+% =========================================================================
+% BIBLIOGRAPHY
+% =========================================================================
+% \citeverify{All entries below: the papers themselves are real and were
+%  identified in the planning memos for this project, but specific years,
+%  page numbers, and venue details should be verified against the actual
+%  sources before submission. If you migrate to a .bib file, save these
+%  entries first as bibtex.}
+
+\begin{thebibliography}{99}
+
+\bibitem[Baron-Cohen et~al.(1985)]{baroncohen1985}
+Baron-Cohen, S., Leslie, A.~M., \& Frith, U. (1985). Does the autistic child have a ``theory of mind''? \emph{Cognition}, 21(1), 37--46.
+
+\bibitem[Barkley(1997)]{barkley1997}
+Barkley, R.~A. (1997). Behavioral inhibition, sustained attention, and executive functions: Constructing a unifying theory of ADHD. \emph{Psychological Bulletin}, 121(1), 65--94.
+
+\bibitem[Bottema-Beutel et~al.(2021)]{bottemabeutel2021}
+Bottema-Beutel, K., Kapp, S.~K., Lester, J.~N., Sasson, N.~J., \& Hand, B.~N. (2021). Avoiding ableist language: Suggestions for autism researchers. \emph{Autism in Adulthood}, 3(1), 18--29.
+
+\bibitem[Daroczy et~al.(2015)]{daroczy2015}
+Daroczy, G., Wolska, M., Meurers, W.~D., \& Nuerk, H.-C. (2015). Word problems: A review of linguistic and numerical factors contributing to their difficulty. \emph{Frontiers in Psychology}, 6, 348.
+
+\bibitem[Diamond(2013)]{diamond2013}
+Diamond, A. (2013). Executive functions. \emph{Annual Review of Psychology}, 64, 135--168.
+
+\bibitem[Frith(1989)]{frith1989}
+Frith, U. (1989). \emph{Autism: Explaining the enigma}. Blackwell.
+
+\bibitem[Gan et~al.(2024)]{gan2024clarq}
+Gan, Y., et~al. (2024). ClarQ-LLM: A benchmark for models clarifying and requesting information in task-oriented dialog. arXiv:2409.06097.
+
+\bibitem[Happé(1993)]{happe1993}
+Happé, F. (1993). Communicative competence and theory of mind in autism: A test of relevance theory. \emph{Cognition}, 48(2), 101--119.
+
+\bibitem[Happé(1994)]{happe1994advanced}
+Happé, F. (1994). An advanced test of theory of mind: Understanding of story characters' thoughts and feelings by able autistic, mentally handicapped, and normal children and adults. \emph{Journal of Autism and Developmental Disorders}, 24(2), 129--154.
+
+\bibitem[Happé and Frith(2006)]{happe2006wcc}
+Happé, F., \& Frith, U. (2006). The weak coherence account: Detail-focused cognitive style in autism spectrum disorders. \emph{Journal of Autism and Developmental Disorders}, 36(1), 5--25.
+
+\bibitem[Hu et~al.(2023)]{hu2023pragmatic}
+Hu, J., Floyd, S., Jouravlev, O., Fedorenko, E., \& Gibson, E. (2023). A fine-grained comparison of pragmatic language understanding in humans and language models. \emph{Proceedings of ACL 2023}. \citeverify{venue and exact title.}
+
+\bibitem[Kosinski(2024)]{kosinski2024}
+Kosinski, M. (2024). Evaluating large language models in theory of mind tasks. \emph{PNAS}, 121, e2405460121.
+
+\bibitem[Li et~al.(2025)]{li2025questbench}
+Li, B., Kim, A., \& Wang, J. (2025). QuestBench: Can LLMs ask the right question to acquire information in reasoning tasks? arXiv:2503.22674. \citeverify{exact author list --- I have only the arXiv ID confirmed from earlier search.}
+
+\bibitem[Loukusa et~al.(2007)]{loukusa2007}
+Loukusa, S., Leinonen, E., Kuusikko, S., Jussila, K., Mattila, M.-L., Ryder, N., Ebeling, H., \& Moilanen, I. (2007). Use of context in pragmatic language comprehension by children with Asperger syndrome or high-functioning autism. \emph{Journal of Autism and Developmental Disorders}, 37, 1049--1059.
+
+\bibitem[Mazzaccara et~al.(2024)]{mazzaccara2024}
+Mazzaccara, D., Testoni, A., \& Bernardi, R. (2024). Learning to ask informative questions: Enhancing LLMs with preference optimization and expected information gain. \emph{Findings of EMNLP 2024}. arXiv:2406.17453.
+
+\bibitem[Milton(2012)]{milton2012}
+Milton, D. (2012). On the ontological status of autism: The `double empathy problem.' \emph{Disability \& Society}, 27(6), 883--887.
+
+\bibitem[Pellicano and den~Houting(2022)]{pellicano2022}
+Pellicano, E., \& den Houting, J. (2022). Annual research review: Shifting from ``normal science'' to neurodiversity in autism science. \emph{Journal of Child Psychology and Psychiatry}, 63(4), 381--396.
+
+\bibitem[Re et~al.(2016)]{re2016}
+Re, A.~M., Lovero, F., Cornoldi, C., \& Passolunghi, M.~C. (2016). Difficulties of children with ADHD symptoms in solving mathematical problems when information must be updated. \emph{Research in Developmental Disabilities}. \citeverify{year, volume, and pages.}
+
+\bibitem[Reusser and Stebler(1997)]{reusser1997}
+Reusser, K., \& Stebler, R. (1997). Every word problem has a solution: The social rationality of mathematical modeling in schools. \emph{Learning and Instruction}, 7(4), 309--327.
+
+\bibitem[Shapira et~al.(2023)]{shapira2023}
+Shapira, N., Levy, M., Alavi, S.~H., et~al. (2023). Clever Hans or neural theory of mind? Stress testing social reasoning in large language models. arXiv:2305.14763.
+
+\bibitem[Sperber and Wilson(1995)]{sperber1995}
+Sperber, D., \& Wilson, D. (1995). \emph{Relevance: Communication and cognition} (2nd ed.). Blackwell.
+
+\bibitem[Strachan et~al.(2024)]{strachan2024}
+Strachan, J.~W.~A., et~al. (2024). Testing theory of mind in large language models and humans. \emph{Nature Human Behaviour}. \citeverify{full author list, volume, and pages.}
+
+\bibitem[Ullman(2023)]{ullman2023}
+Ullman, T. (2023). Large language models fail on trivial alterations to theory-of-mind tasks. arXiv:2302.08399.
+
+\bibitem[Verschaffel et~al.(2000)]{verschaffel2000}
+Verschaffel, L., Greer, B., \& De Corte, E. (2000). \emph{Making sense of word problems}. Swets \& Zeitlinger.
+
+\bibitem[Verschaffel et~al.(2020)]{verschaffel2020}
+Verschaffel, L., Schoenfeld, A.~H., \& De Corte, E. (2020). Word problems in mathematics education: A survey. \emph{ZDM Mathematics Education}, 52, 1--16.
+
+\bibitem[Wen et~al.(2025)]{wen2025}
+Wen, Z., Sukiennik, N., et~al. (2025). AbstentionBench: Reasoning LLMs fail on unanswerable questions. arXiv:2506.09038.
+
+\bibitem[Wong et~al.(2025)]{wong2025}
+Wong, L., Grand, G., Lew, A.~K., Goodman, N.~D., Mansinghka, V.~K., Andreas, J., \& Tenenbaum, J.~B. (2025). From word models to world models: Translating from natural language to the probabilistic language of thought.
+
+\bibitem[Ying et~al.(2026)]{ying2026}
+Ying, L., Truong, R., Sharma, P., et~al. (2026). AI GameStore: Scalable, open-ended evaluation of machine general intelligence with human games. arXiv preprint.
+
+\bibitem[Zhang and Choi(2023)]{zhang2023clarify}
+Zhang, M.-J., \& Choi, E. (2023). Clarify when necessary: Resolving ambiguity through interaction with LMs. arXiv:2311.09469.
+
+\bibitem[Zhang et~al.(2024)]{zhang2024clamber}
+Zhang, T., Qin, P., Deng, Y., et~al. (2024). CLAMBER: A benchmark of identifying and clarifying ambiguous information needs in large language models. \emph{ACL 2024}. arXiv:2405.12063.
+
+\end{thebibliography}
+
+\appendix
+
+\section{Prompting Setup}
+\label{app:prompting}
+
+For each worked example we used the following prompting protocol.
+
+\textbf{System prompt:} none (default).
+
+\textbf{Temperature:} model default.
+
+\textbf{Prompt template (single-turn):} the item text exactly as given in Section~\ref{sec:examples}, with no preamble or scaffolding.
+
+\textbf{Prompt template (single-turn, alternative protocol for sensitivity check):} the item text preceded by the instruction \textit{``Answer the question if it can be answered, or reply UNDERSPECIFIED followed by a brief explanation of what is missing.''} This explicit-instruction variant is used to disentangle the model's spontaneous detection behavior from its instructed detection behavior.
+
+\textbf{Models and versions tested:} \dataneeded{list specific versions and dates. Example format: GPT-5.2 (accessed via OpenAI API, MM/DD/YYYY); Claude Opus 4.6 (accessed via Anthropic API, MM/DD/YYYY); Gemini 3 Pro (accessed via Google AI Studio, MM/DD/YYYY).}
+
+\textbf{Number of trials per item per model:} 1, with two replications per item on a randomly selected subset of three items per model to provide informal indication of stochastic variability.
+
+\textbf{Coding:} single rater (the author). Stage 1 (Detect) is binary. Stage 2 (Diagnose) is rubric-coded as correct / partial / incorrect. Stage 3 (Resolve) is categorical (a / b / c / d as defined in Section~\ref{sec:framework}).
+
+\todonote{For your professor's purposes, this protocol is appropriate for a position paper; a real benchmark would require larger n, multiple raters, version locking, and pre-registration. State these as future work in Section~\ref{sec:discussion}.}
+
+\end{document}
