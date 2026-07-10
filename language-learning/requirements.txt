@@ -1,0 +1,8 @@
+pypinyin>=0.51
+jieba>=0.42
+EbookLib>=0.18
+fonttools>=4.50
+brotli>=1.1
+# System dependency (not pip): espeak-ng  — needed for French/Italian/German IPA
+#   macOS:  brew install espeak-ng
+#   Debian: sudo apt-get install espeak-ng

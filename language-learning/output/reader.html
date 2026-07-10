@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Percy Jackson and the Lightning Thief</title>
+<style>
+:root{
+  --paper:#fbfaf7; --ink:#1b1a17; --soft:#6c665b; --rule:#e6e0d4;
+  --hl:#fff3d0; --pin:#ffe49c; --accent:#3a5a78; --pinyin:#9a5b3d; --ipa:#3f6d5a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;line-height:1.5}
+.wrap{max-width:1500px;margin:0 auto;padding:28px 22px 120px}
+header h1{font-size:22px;margin:0 0 2px;font-weight:600}
+header .by{color:var(--soft);font-size:13px;margin:0 0 18px}
+
+.controls{position:sticky;top:0;z-index:20;display:flex;gap:16px;flex-wrap:wrap;
+  align-items:center;padding:12px 4px;margin-bottom:14px;
+  background:linear-gradient(var(--paper) 80%,transparent);border-bottom:1px solid var(--rule)}
+.group{display:flex;gap:6px;align-items:center}
+.group .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin-right:2px}
+.chip{font:inherit;font-size:13px;padding:6px 12px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--rule);background:#fff;color:var(--ink);transition:all .12s ease}
+.chip[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+table.reader{border-collapse:collapse;width:100%;table-layout:fixed}
+table.reader col{width:1fr}
+th.lang{position:sticky;top:56px;background:var(--paper);text-align:left;
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
+  padding:8px 14px;border-bottom:1px solid var(--rule);z-index:5}
+td{vertical-align:top;padding:14px 14px;border-bottom:1px solid var(--rule)}
+tbody tr{transition:background .1s ease}
+tbody tr:hover{background:var(--hl)}
+tbody tr.pinned{background:var(--pin)}
+td .num{display:none}
+
+/* text cells */
+.cell{font-size:var(--fs,17px)}
+.cell.zh{font-family:"Kaiti SC","STKaiti","KaiTi","LXGW WenKai","Songti SC",serif;
+  font-size:calc(var(--fs,17px) * 1.28);line-height:2.15}
+.cell.ipa-lang{line-height:2.0}
+ruby{ruby-align:center;margin:0 .01em}
+rt{font-size:.5em;font-weight:500;line-height:1.05;
+  font-family:"Charis SIL","Gentium Plus","Doulos SIL",ui-sans-serif,system-ui,sans-serif;
+  -webkit-user-select:none;user-select:none}
+.zh rt{color:var(--pinyin);font-family:ui-sans-serif,"Helvetica Neue",Arial,sans-serif;font-size:.42em}
+.ipa-lang rt{color:var(--ipa)}
+.word{margin-right:.14em}
+.punct{margin:0}
+
+/* toggles */
+body.hide-phon rt{display:none}
+body.hide-en td.c-en, body.hide-en th.c-en{display:none}
+body.hide-zh td.c-zh, body.hide-zh th.c-zh{display:none}
+body.hide-fr td.c-fr, body.hide-fr th.c-fr{display:none}
+body.hide-it td.c-it, body.hide-it th.c-it{display:none}
+body.hide-de td.c-de, body.hide-de th.c-de{display:none}
+
+.hint{color:var(--soft);font-size:12.5px;margin:10px 2px 0}
+@media (max-width:700px){ .cell{--fs:15px} .wrap{padding:18px 12px 90px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Percy Jackson and the Lightning Thief</h1>
+    <p class="by">Rick Riordan</p>
+  </header>
+
+  <div class="controls">
+    <div class="group"><span class="lbl">Languages</span><button class="chip" data-lang="en" aria-pressed="true">English</button><button class="chip" data-lang="zh" aria-pressed="true">中文</button><button class="chip" data-lang="fr" aria-pressed="true">Français</button><button class="chip" data-lang="it" aria-pressed="true">Italiano</button><button class="chip" data-lang="de" aria-pressed="true">Deutsch</button></div>
+    <div class="group"><span class="lbl">Show</span>
+      <button class="chip" id="phon" aria-pressed="true">Phonetics</button>
+    </div>
+    <div class="group"><span class="lbl">Size</span><button class="chip" data-fs="15" aria-pressed="false">A-</button><button class="chip" data-fs="17" aria-pressed="true">A</button><button class="chip" data-fs="20" aria-pressed="false">A+</button></div>
+  </div>
+
+  <table class="reader"><colgroup><col class="c-en"><col class="c-zh"><col class="c-fr"><col class="c-it"><col class="c-de"></colgroup>
+    <thead><tr><th class="lang c-en">English</th><th class="lang c-zh">中文</th><th class="lang c-fr">Français</th><th class="lang c-it">Italiano</th><th class="lang c-de">Deutsch</th></tr></thead>
+    <tbody>
+      <tr data-idx="0"><td class="c-en"><div class="cell en">Look, I didn’t want to be a half-blood.</div></td><td class="c-zh"><div class="cell zh"><span class="word"><ruby>瞧<rt>qiáo</rt></ruby></span><span class="punct">，</span><span class="word"><ruby>我<rt>wǒ</rt></ruby></span><span class="word"><ruby>其<rt>qí</rt></ruby><ruby>实<rt>shí</rt></ruby></span><span class="word"><ruby>不<rt>bù</rt></ruby></span><span class="word"><ruby>愿<rt>yuàn</rt></ruby><ruby>意<rt>yì</rt></ruby></span><span class="word"><ruby>当<rt>dāng</rt></ruby></span><span class="word"><ruby>一<rt>yí</rt></ruby><ruby>个<rt>gè</rt></ruby></span><span class="word"><ruby>混<rt>hùn</rt></ruby><ruby>血<rt>xuè</rt></ruby></span><span class="word"><ruby>者<rt>zhě</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="punct">。</span></div></td><td class="c-fr"><div class="cell ipa-lang"><span class="word"><ruby>Croyez<rt>kʁwajˈe</rt></ruby></span><span class="punct">-</span><span class="word"><ruby>moi<rt>mwˈa</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>je<rt>ʒˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>n'ai<rt>nˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>jamais<rt>ʒamˈɛ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>souhaité<rt>suɛtˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>être<rt>ˈɛtʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>un<rt>ˈœ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>sang<rt>sˈɑ̃</rt></ruby></span><span class="punct">-</span><span class="word"><ruby>mêlé<rt>mɛlˈe</rt></ruby></span><span class="punct">.</span></div></td><td class="c-it"><div class="cell ipa-lang"><span class="word"><ruby>Non<rt>nˈon</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ho<rt>ˈɔ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>scelto<rt>ʃˈelto</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>io<rt>ˈio</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>di<rt>dˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>essere<rt>ˈɛssere</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>un<rt>ˈun</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>mezzosangue<rt>medzːosˈaŋɡwe</rt></ruby></span><span class="punct">.</span></div></td><td class="c-de"><div class="cell ipa-lang"><span class="word"><ruby>Echt<rt>ˈɛçt</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>ich<rt>ˈɪç</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>hab<rt>hˈɑːp</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>nicht<rt>nˈɪçt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>darum<rt>dɑːrˈʊm</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>gebeten<rt>ɡəbˈeːtən</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>als<rt>ˈals</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Halbblut<rt>hˈalbluːt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>auf<rt>ˈaʊf</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>die<rt>dˈiː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Welt<rt>vˈɛlt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>zu<rt>tsˈuː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>kommen<rt>kˈɔmən</rt></ruby></span><span class="punct">.</span></div></td></tr><tr data-idx="1"><td class="c-en"><div class="cell en">If you’re reading this because you think you might be one, my advice is: close this book right now. Believe whatever lie your mom or dad told you about your birth, and try to lead a normal life.</div></td><td class="c-zh"><div class="cell zh"><span class="word"><ruby>如<rt>rú</rt></ruby><ruby>果<rt>guǒ</rt></ruby></span><span class="word"><ruby>你<rt>nǐ</rt></ruby></span><span class="word"><ruby>认<rt>rèn</rt></ruby><ruby>为<rt>wéi</rt></ruby></span><span class="word"><ruby>自<rt>zì</rt></ruby><ruby>己<rt>jǐ</rt></ruby></span><span class="word"><ruby>可<rt>kě</rt></ruby><ruby>能<rt>néng</rt></ruby></span><span class="word"><ruby>也<rt>yě</rt></ruby></span><span class="word"><ruby>是<rt>shì</rt></ruby></span><span class="word"><ruby>其<rt>qí</rt></ruby><ruby>中<rt>zhōng</rt></ruby></span><span class="word"><ruby>之<rt>zhī</rt></ruby><ruby>一<rt>yī</rt></ruby></span><span class="punct">，</span><span class="word"><ruby>而<rt>ér</rt></ruby><ruby>来<rt>lái</rt></ruby></span><span class="word"><ruby>读<rt>dú</rt></ruby></span><span class="word"><ruby>这<rt>zhè</rt></ruby></span><span class="word"><ruby>本<rt>běn</rt></ruby><ruby>书<rt>shū</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby><ruby>话<rt>huà</rt></ruby></span><span class="punct">，</span><span class="word"><ruby>我<rt>wǒ</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="word"><ruby>建<rt>jiàn</rt></ruby><ruby>议<rt>yì</rt></ruby></span><span class="word"><ruby>是<rt>shì</rt></ruby></span><span class="punct">：</span><span class="word"><ruby>赶<rt>gǎn</rt></ruby><ruby>紧<rt>jǐn</rt></ruby></span><span class="word"><ruby>合<rt>hé</rt></ruby></span><span class="word"><ruby>上<rt>shàng</rt></ruby><ruby>书<rt>shū</rt></ruby></span><span class="punct">。</span><span class="word"><ruby>无<rt>wú</rt></ruby><ruby>论<rt>lùn</rt></ruby></span><span class="word"><ruby>你<rt>nǐ</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="word"><ruby>妈<rt>mā</rt></ruby><ruby>妈<rt>mā</rt></ruby></span><span class="word"><ruby>爸<rt>bà</rt></ruby><ruby>爸<rt>bà</rt></ruby></span><span class="word"><ruby>对<rt>duì</rt></ruby></span><span class="word"><ruby>你<rt>nǐ</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="word"><ruby>身<rt>shēn</rt></ruby><ruby>世<rt>shì</rt></ruby></span><span class="word"><ruby>撞<rt>zhuàng</rt></ruby></span><span class="word"><ruby>了<rt>le</rt></ruby></span><span class="word"><ruby>多<rt>duō</rt></ruby></span><span class="word"><ruby>大<rt>dà</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="word"><ruby>谎<rt>huǎng</rt></ruby></span><span class="punct">，</span><span class="word"><ruby>都<rt>dōu</rt></ruby></span><span class="word"><ruby>不<rt>bú</rt></ruby><ruby>要<rt>yào</rt></ruby></span><span class="word"><ruby>怀<rt>huái</rt></ruby><ruby>疑<rt>yí</rt></ruby></span><span class="punct">，</span><span class="word"><ruby>然<rt>rán</rt></ruby><ruby>后<rt>hòu</rt></ruby></span><span class="word"><ruby>试<rt>shì</rt></ruby><ruby>着<rt>zhe</rt></ruby></span><span class="word"><ruby>去<rt>qù</rt></ruby><ruby>过<rt>guò</rt></ruby></span><span class="word"><ruby>普<rt>pǔ</rt></ruby><ruby>通<rt>tōng</rt></ruby><ruby>人<rt>rén</rt></ruby></span><span class="word"><ruby>的<rt>de</rt></ruby></span><span class="word"><ruby>生<rt>shēng</rt></ruby><ruby>活<rt>huó</rt></ruby></span><span class="punct">。</span></div></td><td class="c-fr"><div class="cell ipa-lang"><span class="word"><ruby>Si<rt>sˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vous<rt>vˈu</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>lisez<rt>lizˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ces<rt>sˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>lignes<rt>lˈinj</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>parce<rt>pˈaʁs</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>que<rt>kˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vous<rt>vˈu</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>soupçonnez<rt>supsɔnˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>en<rt>ˈɑ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>être<rt>ˈɛtʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>un<rt>ˈœ̃</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>vous<rt>vˈu</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>aussi<rt>osˈi</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>écoutez<rt>ekutˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>mon<rt>mˈɔ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>conseil<rt>kɔ̃sˈɛj</rt></ruby></span><span class="punct"> : </span><span class="word"><ruby>refermez<rt>ʁəfɛʁmˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ce<rt>sˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>livre<rt>lˈivʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>immédiatement<rt>imedjatmˈɑ̃</rt></ruby></span><span class="punct">. </span><span class="word"><ruby>Prenez<rt>pʁənˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>pour<rt>pˈuʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>argent<rt>aʁʒˈɑ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>comptant<rt>kɔ̃tˈɑ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>le<rt>lˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>mensonge<rt>mɑ̃sˈɔ̃ʒ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>que<rt>kˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vos<rt>vˈo</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>parents<rt>paʁˈɑ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vous<rt>vˈu</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ont<rt>ˈɔ̃</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>raconté<rt>ʁakɔ̃tˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>sur<rt>sˈyʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>votre<rt>vˈotʁ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>naissance<rt>nɛsˈɑ̃s</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>et<rt>ˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>tentez<rt>tɑ̃tˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>de<rt>dˈə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>mener<rt>mənˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>une<rt>ˈyn</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vie<rt>vˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>normale<rt>nɔʁmˈal</rt></ruby></span><span class="punct">.</span></div></td><td class="c-it"><div class="cell ipa-lang"><span class="word"><ruby>Se<rt>sˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>state<rt>stˈate</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>leggendo<rt>ledʒːˈɛndo</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>questo<rt>kwˈesto</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>libro<rt>lˈibro</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>perché<rt>perkˈe</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>pensate<rt>pensˈate</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>di<rt>dˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>poterlo<rt>potˈɛrlo</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>essere<rt>ˈɛssere</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>anche<rt>ˈanke</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>voi<rt>vˈoi</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>vi<rt>vˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>do<rt>dˈo</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>un<rt>ˈun</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>consiglio<rt>konsˈiʎo</rt></ruby></span><span class="punct">: </span><span class="word"><ruby>chiudetelo<rt>kjʊdˈetelo</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>all'istante<rt>allistˈante</rt></ruby></span><span class="punct">. </span><span class="word"><ruby>Credete<rt>kredˈete</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>a<rt>ˈaː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>qualsiasi<rt>kwalsˈiazɪ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>balla<rt>bˈalla</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>i<rt>ˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vostri<rt>vˈɔstrɪ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>genitori<rt>dʒenitˈorɪ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vi<rt>vˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>abbiano<rt>ˈabːjano</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>raccontato<rt>rakːontˈato</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>sulla<rt>sˈulla</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vostra<rt>vˈɔstra</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>nascita<rt>nˈaʃita</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>e<rt>ˈeː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>cercate<rt>tʃerkˈate</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>di<rt>dˈi</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vivere<rt>vˈivere</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>una<rt>ˈuna</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>vita<rt>vˈita</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>normale<rt>normˈale</rt></ruby></span><span class="punct">.</span></div></td><td class="c-de"><div class="cell ipa-lang"><span class="word"><ruby>Wenn<rt>vˈɛn</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ihr<rt>ˈiːɾ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>das<rt>dˈas</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>hier<rt>hˈiːɾ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>lest<rt>lˈɛst</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>weil<rt>vˈaɪl</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ihr<rt>ˈiːɾ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>auch<rt>ˈaʊx</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>gern<rt>ɡˈɛɾn</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>eins<rt>ˈaɪns</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>wärt<rt>vˈɛɾt</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>dann<rt>dˈan</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>rate<rt>rˈɑːtə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ich<rt>ˈɪç</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>euch<rt>ˈɔøç</rt></ruby></span><span class="punct">: </span><span class="word"><ruby>Klappt<rt>klˈapt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>das<rt>dˈas</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Buch<rt>bˈuːx</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ganz<rt>ɡˈants</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>schnell<rt>ʃnˈɛl</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>zu<rt>tsˈuː</rt></ruby></span><span class="punct">. </span><span class="word"><ruby>Glaubt<rt>ɡlˈaʊpt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>alle<rt>ˈalə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Lügen<rt>lˈyːɡən</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>die<rt>dˈiː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>eure<rt>ˈɔørə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Eltern<rt>ˈɛltɜn</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>euch<rt>ˈɔøç</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>über<rt>ˈyːbɜ</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>eure<rt>ˈɔørə</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Geburt<rt>ɡəbˈ??t</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>erzählt<rt>ɛɾtsˈɛːlt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>haben<rt>hˈɑːbən</rt></ruby></span><span class="punct">, </span><span class="word"><ruby>und<rt>ˈʊnt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>versucht<rt>fɛɾzˈuːxt</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>ein<rt>ˈaɪn</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>normales<rt>nɔɾmˈɑːləs</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>Leben<rt>lˈeːbən</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>zu<rt>tsˈuː</rt></ruby></span><span class="punct"> </span><span class="word"><ruby>führen<rt>fˈyːrən</rt></ruby></span><span class="punct">.</span></div></td></tr>
+    </tbody>
+  </table>
+  <p class="hint">Hover a paragraph to highlight it across every language &middot; click to pin &middot; toggle any language or the phonetics above.</p>
+</div>
+<script>
+const body=document.body;
+document.querySelectorAll('.chip[data-lang]').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const on=body.classList.toggle('hide-'+c.dataset.lang);
+    c.setAttribute('aria-pressed',String(!on));
+  });
+});
+const ph=document.getElementById('phon');
+ph.addEventListener('click',()=>{
+  const on=body.classList.toggle('hide-phon');
+  ph.setAttribute('aria-pressed',String(!on));
+});
+document.querySelectorAll('.chip[data-fs]').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.documentElement.style.setProperty('--fs',c.dataset.fs+'px');
+    document.querySelectorAll('.chip[data-fs]').forEach(x=>x.setAttribute('aria-pressed','false'));
+    c.setAttribute('aria-pressed','true');
+  });
+});
+// click a row to pin/unpin its highlight across all languages
+document.querySelectorAll('tbody tr').forEach(tr=>{
+  tr.addEventListener('click',e=>{
+    if(window.getSelection().toString())return; // don't fight text selection
+    tr.classList.toggle('pinned');
+  });
+});
+</script>
+</body>
+</html>
