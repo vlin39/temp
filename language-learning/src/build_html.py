@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Build a single-file interactive HTML parallel reader from an aligned JSON file.
+Build a single-file interactive HTML parallel reader from plain-text input
+(one .txt file per language, paragraphs separated by blank lines) or from a
+single aligned JSON file.
 
 Layout: one column per language, one row per paragraph. Because paragraphs are
 aligned across translations, each table row is the "same" paragraph in every
@@ -12,13 +14,15 @@ language. Features:
   * Adjust text size.
 
 Usage:
-    python3 src/build_html.py data/percy-jackson.json -o output/reader.html
+    python3 src/build_html.py data/percy-jackson.*.txt -o output/reader.html
+    python3 src/build_html.py data/percy-jackson.json  -o output/reader.html
 """
 
-import json
 import argparse
+from html import escape
 from pathlib import Path
 
+import load_input
 from phonetics import annotate
 
 CSS = """
@@ -68,13 +72,8 @@ rt{font-size:.5em;font-weight:500;line-height:1.05;
 .word{margin-right:.14em}
 .punct{margin:0}
 
-/* toggles */
+/* toggles (per-language hide rules are generated per input in build()) */
 body.hide-phon rt{display:none}
-body.hide-en td.c-en, body.hide-en th.c-en{display:none}
-body.hide-zh td.c-zh, body.hide-zh th.c-zh{display:none}
-body.hide-fr td.c-fr, body.hide-fr th.c-fr{display:none}
-body.hide-it td.c-it, body.hide-it th.c-it{display:none}
-body.hide-de td.c-de, body.hide-de th.c-de{display:none}
 
 .hint{color:var(--soft);font-size:12.5px;margin:10px 2px 0}
 @media (max-width:700px){ .cell{--fs:15px} .wrap{padding:18px 12px 90px} }
@@ -116,9 +115,15 @@ def build(data: dict) -> str:
     paras = data["paragraphs"]
     ipa_langs = {"fr", "it", "de"}
 
+    title = escape(data.get("title", "Parallel Reader"), quote=False)
+    author = escape(data.get("author", ""), quote=False)
+    hide_css = "".join(
+        f"body.hide-{l} td.c-{l},body.hide-{l} th.c-{l}{{display:none}}" for l in langs
+    )
+
     # header controls
     lang_chips = "".join(
-        f'<button class="chip" data-lang="{l}" aria-pressed="true">{names.get(l, l)}</button>'
+        f'<button class="chip" data-lang="{l}" aria-pressed="true">{escape(names.get(l, l), quote=False)}</button>'
         for l in langs
     )
     fs_chips = "".join(
@@ -127,7 +132,7 @@ def build(data: dict) -> str:
     )
 
     cols = "".join(f'<col class="c-{l}">' for l in langs)
-    thead = "".join(f'<th class="lang c-{l}">{names.get(l, l)}</th>' for l in langs)
+    thead = "".join(f'<th class="lang c-{l}">{escape(names.get(l, l), quote=False)}</th>' for l in langs)
 
     rows = []
     for i, p in enumerate(paras):
@@ -143,14 +148,14 @@ def build(data: dict) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{data.get('title','Parallel Reader')}</title>
-<style>{CSS}</style>
+<title>{title}</title>
+<style>{CSS}{hide_css}</style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>{data.get('title','Parallel Reader')}</h1>
-    <p class="by">{data.get('author','')}</p>
+    <h1>{title}</h1>
+    <p class="by">{author}</p>
   </header>
 
   <div class="controls">
@@ -176,11 +181,13 @@ def build(data: dict) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("data", help="aligned JSON file")
+    ap.add_argument("data", nargs="+",
+                    help="one .txt file per language (paragraphs separated by "
+                         "blank lines), or a single aligned .json file")
     ap.add_argument("-o", "--out", default="output/reader.html")
     args = ap.parse_args()
 
-    data = json.loads(Path(args.data).read_text(encoding="utf-8"))
+    data = load_input.load(args.data)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(build(data), encoding="utf-8")

@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 fonts/*.ttf
 fonts/*.otf
+output/

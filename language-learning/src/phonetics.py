@@ -28,9 +28,17 @@ import subprocess
 from pypinyin import pinyin, Style
 import jieba
 
-HANZI = re.compile(r"[\u4e00-\u9fff]")
-# A "word" for Latin scripts: letters incl. accents, plus internal apostrophes
-LATIN_WORD = re.compile(r"[A-Za-zÀ-ÖØ-öø-ÿ'\u2019]+")
+# hanzi incl. 〇, Ext-A/B+, and compatibility ideographs — everything pypinyin can read
+_HANZI_RANGES = "\u3007\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\U00020000-\U0003134f"
+HANZI = re.compile(f"[{_HANZI_RANGES}]")
+_HANZI_RUN = re.compile(f"[{_HANZI_RANGES}]+|[^{_HANZI_RANGES}]+")
+# A "word" for Latin scripts: letters incl. accents and Latin Extended-A (œ, š, …),
+# internal apostrophes, and internal hyphens (kept so espeak phonemizes the whole
+# compound — "peut-être" as one word keeps its liaison)
+_LATIN = "A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017f"
+LATIN_WORD = re.compile(f"[{_LATIN}'\u2019]+(?:[-\u2010][{_LATIN}'\u2019]+)*")
+# espeak wraps foreign-word phonemes in language-switch markers like (en)…(fr)
+_LANG_SWITCH = re.compile(r"\([a-z]{2,3}(?:-[a-z0-9-]+)?\)", re.I)
 
 ESPEAK = shutil.which("espeak-ng") or shutil.which("espeak")
 ESPEAK_VOICE = {"fr": "fr", "it": "it", "de": "de"}
@@ -57,6 +65,7 @@ def ipa_word(word: str, lang: str) -> str:
     except Exception:
         return ""
     ipa = r.stdout.strip().replace("\n", " ")
+    ipa = _LANG_SWITCH.sub("", ipa)
     # espeak marks some liaisons/word-links with a trailing hyphen; drop edges
     return ipa.strip(" -\u200d")
 
@@ -71,14 +80,20 @@ def ruby(base: str, top: str) -> str:
 def annotate_zh(text: str) -> str:
     out = []
     for word in jieba.cut(text, HMM=True):
-        if not any(HANZI.match(c) for c in word):
+        if not HANZI.search(word):
             out.append(f'<span class="punct">{esc(word)}</span>')
             continue
-        syls = pinyin(word, style=Style.TONE, heteronym=False)
+        # pypinyin collapses a non-hanzi run into ONE result item, so index it
+        # per hanzi run (one syllable per character) rather than per character
         chars = []
-        for i, ch in enumerate(word):
-            top = syls[i][0] if i < len(syls) and syls[i] else ""
-            chars.append(ruby(ch, top))
+        for run in _HANZI_RUN.findall(word):
+            if not HANZI.match(run):
+                chars.append(esc(run))
+                continue
+            syls = pinyin(run, style=Style.TONE, heteronym=False)
+            for i, ch in enumerate(run):
+                top = syls[i][0] if i < len(syls) and syls[i] else ""
+                chars.append(ruby(ch, top))
         out.append(f'<span class="word">{"".join(chars)}</span>')
     return "".join(out)
 

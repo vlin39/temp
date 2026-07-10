@@ -1,8 +1,8 @@
 # Parallel Reader
 
 A small toolkit for turning paragraph-aligned translations of the same book into
-study material for language learning. From one JSON file of aligned paragraphs it
-builds:
+study material for language learning. From plain text files of the translations
+(one `.txt` file per language) it builds:
 
 - **`reader.html`** — an interactive side-by-side reader. One column per language,
   one row per paragraph. Toggle any language on/off, toggle phonetics, and hover a
@@ -40,30 +40,43 @@ make epub          # -> output/reader.epub
 make all
 
 # or directly, e.g. an EPUB with just English + Chinese:
-python3 src/build_epub.py data/percy-jackson.json -l en zh -o output/en-zh.epub
+python3 src/build_epub.py data/percy-jackson.*.txt -l en zh -o output/en-zh.epub
 ```
 
 ## Adding text
 
-Edit `data/percy-jackson.json`. Each entry in `paragraphs` is one aligned
-paragraph, keyed by language code. Keep the paragraph order identical across
-languages — that alignment is what powers the row highlighting and the EPUB.
+The input is one plain-text `.txt` file per language. Paragraphs are separated
+by blank lines, and paragraph N must be the *same* paragraph in every file —
+that alignment is what powers the row highlighting and the EPUB.
 
-```json
-{
-  "en": "…", "zh": "…", "fr": "…", "it": "…", "de": "…"
-}
+```
+# title: Percy Jackson and the Lightning Thief
+# author: Rick Riordan
+
+Look, I didn’t want to be a half-blood.
+
+If you’re reading this because you think you might be one, …
 ```
 
-To add a language: add its code to `languages`, a display name to
-`language_names`, and its text to every paragraph. If it needs IPA, add its
-espeak-ng voice code to `ESPEAK_VOICE` in `src/phonetics.py`.
+The language is taken from the file name (`percy-jackson.en.txt` or `en.txt`
+→ `en`) or from an optional `# language: en` header line. Column order in the
+reader follows the order the files are passed on the command line. The `# title:`,
+`# author:` and `# language-name:` header lines are all optional; display
+names for en/zh/fr/it/de are built in.
+
+To add a language: add its `.txt` file to the build. If it needs IPA, add its
+espeak-ng voice code to `ESPEAK_VOICE` in `src/phonetics.py`, and (optionally)
+a display name to `DEFAULT_LANGUAGE_NAMES` in `src/load_input.py`.
+
+Alternatively a single aligned JSON file (the internal schema) is accepted —
+see `data/percy-jackson.json`.
 
 ## Layout
 
 ```
-data/         aligned source text (JSON)
+data/         aligned source text (one .txt per language; JSON also accepted)
 src/
+  load_input.py   input loading (.txt per language, or aligned JSON)
   phonetics.py    pinyin + IPA annotation (the shared core)
   build_html.py   interactive HTML reader
   build_epub.py   multilingual EPUB

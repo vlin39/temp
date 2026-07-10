@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Build a multilingual EPUB from an aligned JSON file.
+Build a multilingual EPUB from plain-text input (one .txt file per language,
+paragraphs separated by blank lines) or from a single aligned JSON file.
 
 EPUB is reflowable, so reliable "parallel" reading across many languages is done
 by *paragraph alignment*: each paragraph becomes one section, and inside it every
@@ -12,19 +13,22 @@ renders in Kai and IPA renders correctly even on e-readers without those fonts.
 Map which font serves which role in FONT_ROLES below.
 
 Usage:
-    python3 src/build_epub.py data/percy-jackson.json -o output/reader.epub
-    python3 src/build_epub.py data/percy-jackson.json -l en zh   # subset of langs
+    python3 src/build_epub.py data/percy-jackson.*.txt -o output/reader.epub
+    python3 src/build_epub.py data/percy-jackson.*.txt -l en zh  # subset of langs
+    python3 src/build_epub.py data/percy-jackson.json  -o output/reader.epub
 """
 
 import io
-import json
+import sys
 import argparse
+from html import escape
 from pathlib import Path
 
 from ebooklib import epub
 from fontTools import subset
 from fontTools.ttLib import TTFont
 
+import load_input
 from phonetics import annotate
 
 FONTS_DIR = Path(__file__).resolve().parent.parent / "fonts"
@@ -105,16 +109,22 @@ rt{{font-size:.5em;font-weight:normal;line-height:1;
                                 media_type="text/css", content=css))
 
     def page(title, lang, body):
+        # ebooklib regenerates each document's <head> from the item's title and
+        # links, so the stylesheet must be attached with add_link (see stylize)
         return (f'<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{lang}" lang="{lang}">'
-                f'<head><meta charset="utf-8"/><title>{title}</title>'
-                f'<link rel="stylesheet" type="text/css" href="../style/main.css"/></head>'
+                f'<head><meta charset="utf-8"/><title>{escape(title, quote=False)}</title></head>'
                 f'<body>{body}</body></html>')
+
+    def stylize(item):
+        item.add_link(href="../style/main.css", rel="stylesheet", type="text/css")
 
     # title page
     tp = epub.EpubHtml(title="Title", file_name="text/title.xhtml", lang="en")
-    tag = " · ".join(names.get(l, l) for l in langs)
+    stylize(tp)
+    title = escape(data.get("title", ""), quote=False)
+    tag = escape(" · ".join(names.get(l, l) for l in langs), quote=False)
     tp.content = page(data.get("title", ""), "en",
-        f'<div class="title-wrap"><h1>{data.get("title","")}</h1>'
+        f'<div class="title-wrap"><h1>{title}</h1>'
         f'<div class="tag">{tag}</div></div>')
     book.add_item(tp)
 
@@ -125,9 +135,11 @@ rt{{font-size:.5em;font-weight:normal;line-height:1;
         for l in langs:
             cls = "zh" if l == "zh" else ("ipa-lang" if l in ipa_langs else "en")
             blocks.append(
-                f'<div class="block"><p class="lbl">{names.get(l, l)}</p>'
+                f'<div class="block" lang="{l}" xml:lang="{l}">'
+                f'<p class="lbl">{escape(names.get(l, l), quote=False)}</p>'
                 f'<p class="txt {cls}">{annotate(p.get(l, ""), l)}</p></div>')
         pg = epub.EpubHtml(title=f"¶ {i}", file_name=f"text/p{i:03d}.xhtml", lang=langs[0])
+        stylize(pg)
         pg.content = page(f"Paragraph {i}", langs[0], f'<div class="para">{"".join(blocks)}</div>')
         book.add_item(pg)
         spine.append(pg)
@@ -145,14 +157,20 @@ rt{{font-size:.5em;font-weight:normal;line-height:1;
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("data")
+    ap.add_argument("data", nargs="+",
+                    help="one .txt file per language (paragraphs separated by "
+                         "blank lines), or a single aligned .json file")
     ap.add_argument("-o", "--out", default="output/reader.epub")
     ap.add_argument("-l", "--langs", nargs="+", default=None,
-                    help="subset/order of languages (default: all in file)")
+                    help="subset/order of languages (default: all in input)")
     args = ap.parse_args()
 
-    data = json.loads(Path(args.data).read_text(encoding="utf-8"))
+    data = load_input.load(args.data)
     langs = args.langs or data["languages"]
+    unknown = [l for l in langs if l not in data["languages"]]
+    if unknown:
+        sys.exit("language(s) not in the input: " + ", ".join(unknown)
+                 + " (have: " + ", ".join(data["languages"]) + ")")
     build(data, langs, args.out)
 
 

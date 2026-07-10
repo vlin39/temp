@@ -1,9 +1,10 @@
 # Project context for Claude Code
 
 ## What this is
-A generator for language-learning study material. Input: one JSON file of the
-same book's paragraphs aligned across languages. Output: an interactive HTML
-parallel reader and a multilingual EPUB. Phonetics (pinyin for Chinese, IPA for
+A generator for language-learning study material. Input: plain-text files of
+the same book — one `.txt` per language, paragraphs separated by blank lines
+and aligned by position (a single aligned JSON file is also accepted). Output:
+an interactive HTML parallel reader and a multilingual EPUB. Phonetics (pinyin for Chinese, IPA for
 French/Italian/German) are generated at build time.
 
 The user supplies the translations; this repo does **not** translate. Only the
@@ -11,6 +12,10 @@ text the user provides should live in `data/` — do not fetch or paste addition
 book text.
 
 ## Architecture
+- `src/load_input.py` normalizes input for both builders: per-language `.txt`
+  files (language from `# language:` header or `book.en.txt`-style file name,
+  optional `# title:`/`# author:`/`# language-name:` headers) or a single
+  aligned JSON file — both become the same dict.
 - `src/phonetics.py` is the shared core. `annotate(text, lang)` returns HTML where
   each unit is a `<ruby>` with its reading in `<rt>`. Both builders call it, so any
   improvement to readings benefits HTML and EPUB at once.
@@ -48,8 +53,6 @@ text for fr/it/de (no crash).
   an alternative to stacking — nice on tablets in two-up view.
 - **Tone-sandhi option** for pinyin, and a switch between IPA broad/narrow.
 - **Per-user saved state** in the HTML (which languages/phonetics are on).
-- **Import helper** that takes plain per-language text files and aligns by
-  paragraph into the JSON schema.
 
 ## Watch out for
 - IPA fonts: many e-readers lack full IPA coverage. Embedding Charis SIL
