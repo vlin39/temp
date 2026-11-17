@@ -532,14 +532,22 @@ persistence:  download -> parse gives an identical home
 
 ## Changes made while building
 
-Small departures from the pseudocode, each made to keep the code simpler:
+Departures from the pseudocode, each made to keep the code simpler or the app easier to use:
 
 - **Where a piece stands.** `x, y` is the corner of its floor footprint nearest the room's top-left corner, with `facing` saying which way the front points. The pseudocode said "back-left corner", which changes meaning with every rotation.
-- **Edits go through one helper.** The pseudocode listed one reducer action per edit. In the code, screens call the model functions through a single `tryEdit` helper that either saves the new home or returns the reason it was refused. The reducer keeps only a handful of actions.
+- **Edits go through one helper.** The pseudocode listed one reducer action per edit. In the code, screens call the model functions through `tryEdit` or `edit` in the store, which either save the new home or return the reason it was refused. The reducer keeps five actions.
+- **Saving is immediate.** The pseudocode waited 300 ms after the last change. The home is small, so it is saved on every change, and a reload straight after an edit loses nothing.
+- **File checking has its own file.** `parseHome` lives in `model/parse.ts`, not in `persistence.ts`, so it can be tested without a browser.
 - **No default fold per clothing type.** New items start flat, as you asked. An item taken off a rail goes back to its previous fold, or flat if it had none.
 - **The outline on a stored box** is drawn from the item's own parts, so it changes when you edit a sleeve or leg. There is no separate drawing per type.
 - **Adding things.** Two buttons add a box or a clothing item to the selected compartment or box, or to the unsorted tray when nothing is selected. The pseudocode put buttons on every compartment, which cluttered the drawing.
-- **"Move to" list.** The editor also has a dropdown of every compartment and box, for moves between pieces of furniture and for keyboard use.
+- **"Where" list.** The editor has a dropdown of every compartment and box, for moves between pieces of furniture and for keyboard use.
+- **Chips for thin things.** An item laid flat is a pixel or two tall in the drawing and hard to grab. Clicking a compartment lists its contents as named chips under the drawing, and an open box lists its contents the same way. Chips drag like the drawn shapes.
+- **Nothing is drawn off-screen.** Things that do not fit are drawn past the side of the piece, up to a limit, and pulled back to the edge beyond that, so an overfull shelf never hides anything.
+- **Names are editable.** The Measurements panel can rename a piece and its compartments.
+- **"Start over"** returns to the starter room, behind a second click.
+- **Two shared helpers for resizing.** Heights down a column and widths across a piece follow the same two rules, so `furniture.ts` has `giveToLargest` and `tradeWithNeighbour` in place of four separate routines.
+- **A few more small files** than the plan's table: `refusal.ts`, `ids.ts`, `drag.tsx`, `parts.tsx`, `ThingChip.tsx`, `AddBar.tsx` and `Header.tsx`. `ContentsLayer.tsx` became `Contents.tsx`. The README lists the files as built.
 
 ## Import check
 

@@ -46,7 +46,7 @@
       "description": "Your suite, its furniture and their compartments in one data file, taken from your sketch and table. Which pieces exist, where they stand and which way they face are fixed for now.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": []
     },
     {
@@ -55,7 +55,7 @@
       "description": "A dropdown plus a simple clickable floor plan of the suite. Picking a piece opens its front view.",
       "group": "T",
       "size": "S",
-      "done": false,
+      "done": true,
       "needs": [
         "T1"
       ]
@@ -66,7 +66,7 @@
       "description": "A to-scale drawing of one piece from the front: panels, shelves, hanging rail, drawers, cabinets.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": [
         "T1"
       ]
@@ -77,7 +77,7 @@
       "description": "Edit the size of a whole piece and of its shelves and compartments. Panel, shelf and divider thickness are part of the model, so inside sizes are calculated.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": [
         "T3"
       ]
@@ -88,7 +88,7 @@
       "description": "Add a box (small, medium, large, or a typed size), name it, drag it to another shelf, delete it. A box shows coloured stripes for what is inside; clicking it opens it.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": [
         "T3"
       ]
@@ -99,7 +99,7 @@
       "description": "Add a clothing item with a name, a type and a colour. Put it in a box, on a shelf, or on a rail, and drag it between them. An always-visible \"unsorted\" tray holds things not yet placed.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": [
         "T3"
       ]
@@ -110,7 +110,7 @@
       "description": "Each item starts as its laid-flat shape: a body with sleeves, or hips with legs. A per-item fold setting reshapes it: flat, halves, thirds, quarters, rolled, hung.",
       "group": "T",
       "size": "M",
-      "done": false,
+      "done": true,
       "needs": [
         "T6"
       ]
@@ -121,7 +121,7 @@
       "description": "Autosaves in the browser, plus \"download backup\" and \"restore backup\" for one file.",
       "group": "T",
       "size": "S",
-      "done": false,
+      "done": true,
       "needs": [
         "T1"
       ]
@@ -132,7 +132,7 @@
       "description": "Milestone. The trunk (T1 to T8) is built and usable. Every branch grows from here.",
       "group": "T",
       "size": "S",
-      "done": false,
+      "done": true,
       "needs": [
         "T2",
         "T4",
