@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Skill Tree Planner</title>
+  <link rel="stylesheet" href="tree.css">
+</head>
+<body>
+  <header class="toolbar">
+    <h1 class="app-name">Skill Tree Planner</h1>
+    <div class="toolbar-actions">
+      <input id="load-input" class="visually-hidden" type="file" accept=".json,application/json">
+      <label class="button" for="load-input">Load JSON</label>
+      <button id="export-button" class="button button-primary" type="button">Export JSON</button>
+      <button id="add-node-button" class="button" type="button">Add node</button>
+      <button id="new-tree-button" class="button" type="button">New tree</button>
+      <button id="starter-button" class="button" type="button" hidden>Reset to starter</button>
+    </div>
+    <div class="zoom" role="group" aria-label="Zoom">
+      <button id="zoom-out-button" class="button" type="button" aria-label="Zoom out">&minus;</button>
+      <button id="zoom-fit-button" class="button" type="button" title="Fit the whole width">Fit</button>
+      <button id="zoom-in-button" class="button" type="button" aria-label="Zoom in">+</button>
+    </div>
+    <p id="summary" class="summary"></p>
+    <p id="message" class="message" role="status" aria-live="polite"></p>
+  </header>
+
+  <main class="workspace">
+    <section id="canvas-wrap" class="canvas-wrap" aria-label="Tree">
+      <div id="canvas" class="canvas"></div>
+    </section>
+    <aside id="panel" class="panel" aria-label="Details"></aside>
+  </main>
+
+  <details class="json-box">
+    <summary>JSON text</summary>
+    <p class="hint">The current tree as text. To load a tree without a file, paste it here and choose "Use this text".</p>
+    <textarea id="json-text" rows="12" spellcheck="false" aria-label="Tree as JSON text"></textarea>
+    <div class="json-actions">
+      <button id="copy-button" class="button" type="button">Copy</button>
+      <button id="apply-text-button" class="button" type="button">Use this text</button>
+    </div>
+  </details>
+
+  <script src="tree.js"></script>
+</body>
+</html>
