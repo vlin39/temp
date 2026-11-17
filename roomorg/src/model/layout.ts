@@ -129,3 +129,11 @@ export function arrange(home: Home, parentId: Id, index: HomeIndex = indexHome(h
     ? arrangeRail(space, cellRef.cell, children)
     : arrangeShelf(space, children);
 }
+
+/** How far a set of placed things reaches to the right and upward. */
+export function reach(placed: Placed[]): { w: number; h: number } {
+  return {
+    w: Math.max(0, ...placed.map((p) => p.x + p.w)),
+    h: Math.max(0, ...placed.map((p) => p.y + p.h)),
+  };
+}

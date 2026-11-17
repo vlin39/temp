@@ -83,6 +83,14 @@ export function isRail(index: HomeIndex, parentId: Id | null): boolean {
   return parentId !== null && index.cells.get(parentId)?.cell.kind === 'hanging';
 }
 
+/** The compartment a box or an item is in, directly or inside a box. Undefined if it is in the tray. */
+export function cellHolding(index: HomeIndex, id: Id): CellRef | undefined {
+  const own = index.items.get(id) ?? index.organizers.get(id);
+  const holder = own?.parentId ? index.organizers.get(own.parentId) : undefined;
+  const cellId = holder ? holder.parentId : own?.parentId;
+  return cellId ? index.cells.get(cellId) : undefined;
+}
+
 /** An item going onto a rail becomes hung; coming off, it goes back to its earlier fold. */
 function refold(item: Item, ontoRail: boolean): Item {
   if (ontoRail && item.fold !== 'hung') return { ...item, fold: 'hung', previousFold: item.fold };

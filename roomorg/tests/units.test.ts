@@ -23,6 +23,13 @@ test('anything that is not a length above zero is refused', () => {
   for (const text of ['', 'abc', '0', '-3', '1/0', '12 ft', '1.2.3']) expect(parseLength(text), text).toBeNull();
 });
 
+test('zero is accepted only where it is asked for', () => {
+  expect(parseLength('0')).toBeNull();
+  expect(parseLength('0', true)).toBe(0);
+  expect(parseLength('0 cm', true)).toBe(0);
+  expect(parseLength('-1', true)).toBeNull();
+});
+
 test('what is shown can be typed back in', () => {
   for (const cm of [30.226, 97.79, 57.5, 1.8]) expect(parseLength(formatLength(cm))!).toBeCloseTo(cm, 1);
 });

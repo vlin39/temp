@@ -27,9 +27,10 @@ export function toDisplaySize(...lengths: number[]): string {
 /**
  * Reads what someone typed and returns centimetres, or null if it is not a
  * length above zero. Accepts '15.5', '15.5 in', '15.5"', '15 1/2', '1/2' and '40 cm'.
- * A bare number is inches.
+ * A bare number is inches. Pass `allowZero` where zero is a sensible answer,
+ * such as the thickness of a base that is not there.
  */
-export function parseLength(text: string): number | null {
+export function parseLength(text: string, allowZero = false): number | null {
   const match = text
     .trim()
     .toLowerCase()
@@ -40,6 +41,6 @@ export function parseLength(text: string): number | null {
   if (bottom !== undefined && Number(bottom) === 0) return null;
 
   const value = Number(whole ?? 0) + (top !== undefined ? Number(top) / Number(bottom) : 0);
-  if (!(value > 0)) return null;
+  if (!(value > 0) && !(allowZero && value === 0)) return null;
   return unit === 'cm' ? value : value * CM_PER_INCH;
 }

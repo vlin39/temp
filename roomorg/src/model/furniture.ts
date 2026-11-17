@@ -143,18 +143,53 @@ export function findCell(f: Furniture, cellId: Id): { column: Column; index: num
 
 /* ---- Restoring the rule ---- */
 
+/*
+ * Heights down a column and widths across a piece behave the same way, so the
+ * two helpers below work on a plain row of sizes. `nameOf` names an entry for
+ * the message when a change is refused.
+ */
+
 function tooSmall(name: string): Refusal {
-  return new Refusal(`There is not enough room: "${name}" would be left with less than ${toDisplay(MIN_CLEAR)}.`);
+  return new Refusal(`There is not enough room: ${name} would be left with less than ${toDisplay(MIN_CLEAR)}.`);
 }
 
-/** Gives a column's tallest compartment `extra` more height (or less, if negative). */
-function growTallestCell(column: Column, extra: number): Column {
-  if (Math.abs(extra) < 1e-9) return column;
-  const tallest = column.cells.reduce((a, b) => (b.height > a.height ? b : a));
-  const height = tallest.height + extra;
-  if (height < MIN_CLEAR) throw tooSmall(tallest.name);
-  return { ...column, cells: column.cells.map((cell) => (cell === tallest ? { ...cell, height } : cell)) };
+/** Adds `extra` to the largest size in the row (or takes it away, if negative). */
+function giveToLargest(sizes: number[], extra: number, nameOf: (index: number) => string): number[] {
+  if (Math.abs(extra) < 1e-9) return sizes;
+  const largest = sizes.indexOf(Math.max(...sizes));
+  if (sizes[largest] + extra < MIN_CLEAR) throw tooSmall(nameOf(largest));
+  return sizes.map((size, index) => (index === largest ? size + extra : size));
 }
+
+/** Sets one size in the row; the next entry (or the previous one, at the end) gives or takes the difference. */
+function tradeWithNeighbour(sizes: number[], index: number, value: number, nameOf: (index: number) => string): number[] {
+  const neighbour = index + 1 < sizes.length ? index + 1 : index - 1;
+  if (neighbour < 0) {
+    throw new Refusal(
+      `${nameOf(index)} has nothing beside it to give or take the difference. ` +
+        'Change the size of the whole piece, or switch to "keep the other compartments".',
+    );
+  }
+  const left = sizes[neighbour] - (value - sizes[index]);
+  if (left < MIN_CLEAR) throw tooSmall(nameOf(neighbour));
+  return sizes.map((size, i) => (i === index ? value : i === neighbour ? left : size));
+}
+
+const cellName = (column: Column) => (index: number) => `"${column.cells[index].name}"`;
+const columnName = (index: number) => `column ${index + 1}`;
+
+const withHeights = (column: Column, heights: number[]): Column => ({
+  ...column,
+  cells: column.cells.map((cell, index) => ({ ...cell, height: heights[index] })),
+});
+
+const withWidths = (f: Furniture, widths: number[]): Furniture => ({
+  ...f,
+  columns: f.columns.map((column, index) => ({ ...column, width: widths[index] })),
+});
+
+const heightsOf = (column: Column) => column.cells.map((cell) => cell.height);
+const widthsOf = (f: Furniture) => f.columns.map((column) => column.width);
 
 function fitHeights(f: Furniture, mode: ResizeMode): Furniture {
   let piece = f;
@@ -165,7 +200,9 @@ function fitHeights(f: Furniture, mode: ResizeMode): Furniture {
   const available = innerHeight(piece);
   return {
     ...piece,
-    columns: piece.columns.map((column) => growTallestCell(column, available - heightNeeded(piece, column))),
+    columns: piece.columns.map((column) =>
+      withHeights(column, giveToLargest(heightsOf(column), available - heightNeeded(piece, column), cellName(column))),
+    ),
   };
 }
 
@@ -173,12 +210,7 @@ function fitWidths(f: Furniture, mode: ResizeMode): Furniture {
   if (mode === 'keepCompartments') {
     return { ...f, outer: { ...f.outer, w: widthNeeded(f) + 2 * f.panel.side } };
   }
-  const extra = innerWidth(f) - widthNeeded(f);
-  if (Math.abs(extra) < 1e-9) return f;
-  const widest = f.columns.reduce((a, b) => (b.width > a.width ? b : a));
-  const width = widest.width + extra;
-  if (width < MIN_CLEAR) throw new Refusal(`There is not enough width for that. A column would be left with less than ${toDisplay(MIN_CLEAR)}.`);
-  return { ...f, columns: f.columns.map((column) => (column === widest ? { ...column, width } : column)) };
+  return withWidths(f, giveToLargest(widthsOf(f), innerWidth(f) - widthNeeded(f), columnName));
 }
 
 /** Makes the piece add up again after a change, or refuses. */
@@ -218,25 +250,14 @@ export function resizeCompartment(f: Furniture, cellId: Id, newHeight: number, m
   const found = findCell(f, cellId);
   if (!found) throw new Refusal('That compartment no longer exists.');
   const { column, index } = found;
-  const cell = column.cells[index];
-  if (newHeight < MIN_CLEAR) throw tooSmall(cell.name);
+  if (newHeight < MIN_CLEAR) throw tooSmall(cellName(column)(index));
 
-  let cells = column.cells.map((c) => (c === cell ? { ...c, height: newHeight } : c));
-  if (mode === 'keepOutside') {
-    // The shelf between this compartment and its neighbour moves.
-    const neighbour = column.cells[index + 1] ?? column.cells[index - 1];
-    if (!neighbour) {
-      throw new Refusal(
-        'This is the only compartment in its column, so its height follows the piece. ' +
-          'Change the piece\'s height, or switch to "keep the other compartments".',
-      );
-    }
-    const neighbourHeight = neighbour.height - (newHeight - cell.height);
-    if (neighbourHeight < MIN_CLEAR) throw tooSmall(neighbour.name);
-    cells = cells.map((c) => (c === neighbour ? { ...c, height: neighbourHeight } : c));
-  }
-
-  const columns = f.columns.map((c) => (c === column ? { ...c, cells } : c));
+  // In 'keepOutside' mode the shelf between this compartment and its neighbour moves.
+  const heights =
+    mode === 'keepOutside'
+      ? tradeWithNeighbour(heightsOf(column), index, newHeight, cellName(column))
+      : heightsOf(column).map((height, i) => (i === index ? newHeight : height));
+  const columns = f.columns.map((c) => (c === column ? withHeights(c, heights) : c));
   return rebalance({ ...f, columns, estimated: false }, mode);
 }
 
@@ -244,25 +265,13 @@ export function resizeCompartment(f: Furniture, cellId: Id, newHeight: number, m
 export function resizeColumn(f: Furniture, columnId: Id, newWidth: number, mode: ResizeMode): Furniture {
   const index = f.columns.findIndex((column) => column.id === columnId);
   if (index < 0) throw new Refusal('That column no longer exists.');
-  if (newWidth < MIN_CLEAR) throw new Refusal(`A column needs at least ${toDisplay(MIN_CLEAR)}.`);
+  if (newWidth < MIN_CLEAR) throw tooSmall(columnName(index));
 
-  const column = f.columns[index];
-  let columns = f.columns.map((c) => (c === column ? { ...c, width: newWidth } : c));
-  if (mode === 'keepOutside') {
-    const neighbour = f.columns[index + 1] ?? f.columns[index - 1];
-    if (!neighbour) {
-      throw new Refusal(
-        'This piece has one column, so its width follows the piece. ' +
-          'Change the piece\'s width, or switch to "keep the other compartments".',
-      );
-    }
-    const neighbourWidth = neighbour.width - (newWidth - column.width);
-    if (neighbourWidth < MIN_CLEAR) {
-      throw new Refusal(`There is not enough width: the next column would be left with less than ${toDisplay(MIN_CLEAR)}.`);
-    }
-    columns = columns.map((c) => (c === neighbour ? { ...c, width: neighbourWidth } : c));
-  }
-  return rebalance({ ...f, columns, estimated: false }, mode);
+  const widths =
+    mode === 'keepOutside'
+      ? tradeWithNeighbour(widthsOf(f), index, newWidth, columnName)
+      : widthsOf(f).map((width, i) => (i === index ? newWidth : width));
+  return rebalance({ ...withWidths(f, widths), estimated: false }, mode);
 }
 
 /** Sets a panel, shelf or divider thickness, or the height of the base. */
