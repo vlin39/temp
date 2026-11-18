@@ -13,6 +13,8 @@ This file records what was decided, what you asked for in your own words, the ps
 | Menus and forms | React | You |
 | First iteration | The trunk, T1 to T8: furniture front views, measurements, organizers, clothing, folding, saving | You, after two rounds of feedback |
 | Plan format | A skill tree, kept in `../tree/roomorg.json` | You |
+| Second iteration | The tidy-up game, G1 to G6: an angled view, doors and drawers, the floor, gaps, boxes that need room, bags | You, in feedback round 6 |
+| How the angled view is drawn | An oblique projection in SVG, inside the existing drawing code. Three.js still arrives with the whole-room view (R1). | Claude; say if you would rather have true 3D here |
 
 ## Feedback log
 
@@ -61,6 +63,23 @@ Answered: accepting covered building the tree page and the trunk only, on the br
 > without deleting anything currently in the plan, provide the pseudocode for both tree and roomorg
 
 Answered: the pseudocode was added to the plan, which you then approved. The organizer's half is below; the tree page's half is summarised in `../tree/README.md`.
+
+**Round 6** (after trying the first iteration)
+
+> Is this a working interactive webapp? I would like the furniture to be viewed from an angle and the storage organizers/boxes to have a gap between them. Furthermore, the bathroom sink is incorrect---on the left hand side, for example, there's a drawer then the top shelf of a cabinet and the lower shelf of a cabinet. In the middle is the sink, with a cabinet underneath. And on the right is a drawer, above the top shelf of a cabinet, and then there's the lower shelf. I'd also like to make sure the doors of each cabinet can be clicked to open (to reveal the shelves), and each box/storage organizer should be able to be "removed" and...for example, set on the floor. Other boxes should be able to do the same. Clothes should also be able to be set on the floor and shuffled between boxes, and boxes should be able to be shuffled between locations where there is enough room for them. (There should also be "bags"---later on, maybe distinct backpacks vs storage cubes vs pouches---that can hold clothes and can go into the storage boxes.) This should be similar to an organizing game, maybe a bit like A Little To the Left.
+
+Answered: yes, it is a working interactive app. This became the second iteration, described under "The second iteration" below. How each sentence was read:
+
+| You said | What was built |
+| --- | --- |
+| "viewed from an angle" | Each piece is drawn at an angle, so its top, its side and the depth of every shelf show (G1). |
+| "a gap between them" | Neighbours on a shelf or the floor sit 2 cm apart (G4). |
+| "the bathroom sink is incorrect" | The sink unit now has, on each side, a drawer above a cabinet with an upper and a lower shelf, and in the middle the sink above a cabinet (G2). |
+| "doors of each cabinet can be clicked to open" | Doors click open and closed; drawers pull out. What is behind a closed door is hidden and out of reach (G2). |
+| "removed and ... set on the floor" | Anything can be dragged to the floor in front of the piece. The floor replaces the unsorted tray (G3). |
+| "shuffled between locations where there is enough room" | A box is refused where it does not fit, and the place shows that while you carry the box over it (G4). |
+| "bags ... that can hold clothes and can go into the storage boxes" | Pouch, tote bag and backpack. A bag holds clothing and goes in a box. Distinct kinds of bag is a later node, G7. |
+| "similar to an organizing game" | Things are picked up and put down: a copy follows the pointer at real size, places light up, and things settle into place (G6). The look is its own; nothing is taken from another game. |
 
 ## The first iteration (trunk, T1 to T8)
 
@@ -548,6 +567,245 @@ Departures from the pseudocode, each made to keep the code simpler or the app ea
 - **"Start over"** returns to the starter room, behind a second click.
 - **Two shared helpers for resizing.** Heights down a column and widths across a piece follow the same two rules, so `furniture.ts` has `giveToLargest` and `tradeWithNeighbour` in place of four separate routines.
 - **A few more small files** than the plan's table: `refusal.ts`, `ids.ts`, `drag.tsx`, `parts.tsx`, `ThingChip.tsx`, `AddBar.tsx` and `Header.tsx`. `ContentsLayer.tsx` became `Contents.tsx`. The README lists the files as built.
+
+## The second iteration (tidy-up game, G1 to G6)
+
+Built from feedback round 6. These six nodes are a new branch, "Tidy-up game", in `../tree/roomorg.json`.
+
+| Node | What it adds |
+| --- | --- |
+| G1 Angled view | Each piece is drawn at an angle. Boxes, bags and clothing are blocks with a top and a side. |
+| G2 Doors and drawers | Doors click open and closed, drawers pull out, and the sink unit is laid out as it really is. |
+| G3 The floor | Anything can be set down on the floor in front of the piece. The floor follows you from piece to piece. |
+| G4 Gaps, and boxes need room | Neighbours keep a gap. A box only goes where it fits. |
+| G5 Bags | Pouches, tote bags and backpacks hold clothing and go inside boxes. |
+| G6 Pick up and put down | A carried thing follows the pointer at its real size; the place under it lights up or refuses; things settle. |
+
+### Choices made here that you did not spell out
+
+- **The angle is drawn in SVG, not Three.js.** An oblique projection keeps every front face a true rectangle, so the existing dragging, keyboard use and to-scale sizes carried over unchanged. True 3D arrives with the whole-room view (R1).
+- **The closets have double doors, starting open.** Your sketch draws them, but you only mentioned cabinet doors. The sink unit and the wall cabinet start closed. Doors are listed per piece in `roomData.ts`.
+- **Only boxes need room.** Clothing and bags are soft, so they are flagged when they do not fit, as before, and never refused.
+- **The floor is one place.** The same things are on the floor whichever piece is open, which is how you carry something between pieces. It is drawn in front of the open piece and listed in the strip along the bottom.
+- **The floor is drawn a little way in front of the piece**, so that a box or bag set down there does not hide the bottom shelves.
+- **An open drawer has see-through near walls**, so its contents are not hidden behind its own front.
+- **A box or bag on a shelf is not drawn open.** Its contents show as bands of colour, on its front and in its open top. Clicking it shows the inside in the side panel.
+- **Bags cannot hold bags, and boxes cannot hold boxes.** A bag goes in a box, on a shelf, in a drawer or on the floor.
+- **Arrangement stays automatic.** You choose the place and the order. Placing things at exact spots by hand would be a later node.
+- **Older saves are upgraded.** A room saved by the first iteration gains doors and the corrected sink unit. Anything that was in the sink unit's old middle drawer goes to the floor, because that compartment is now the sink.
+
+### Pseudocode
+
+**Data shapes (`model/types.ts`), what changed**
+
+```
+Home:
+    version:   2                              # was 1
+    open:      list of ids                    # the doors and drawers that are open
+
+Furniture:
+    doors:     list of Door
+
+Door:          id, name, cellIds              # covers the rectangle around those compartments
+
+Cell.kind:     "shelf" | "hanging" | "drawer" | "fixture"
+               # "cabinet" is gone: a cabinet is shelves behind a Door
+               # "fixture" takes up room and stores nothing (the sink)
+
+Organizer:
+    kind:      "box" | "bag"
+    parentId:  a Cell id, a box's id (for a bag), or none (on the floor)
+```
+
+**Doors and drawers (`model/furniture.ts`, `model/tree.ts`)**
+
+```
+function doorRect(f, door):
+    the rectangle around the clear spaces of door.cellIds,
+    widened to the middle of each neighbouring panel, or to the piece's edge
+
+function isReachable(f, cell, open):
+    false if cell is a fixture
+    false if cell is a drawer and its id is not in open
+    false if a door covers cell and that door's id is not in open
+    otherwise true
+
+function toggleOpen(home, id):        add id to home.open, or take it out
+function setAllOpen(home, f, open):   the same for every door and drawer of one piece
+function reveal(home, thingId):       open the door of the compartment holding the thing,
+                                      and the compartment itself if it is a drawer
+```
+
+**What may hold what (`model/tree.ts`)**
+
+```
+function whyNotHold(parent, thing):   # a sentence, or none if it may
+    the floor holds anything
+    a thing cannot go inside itself
+    a compartment holds anything, unless it is a fixture
+    a box holds bags and clothing, not another box
+    a bag holds clothing only
+
+function canHold(parent, thing):      whyNotHold(parent, thing) is none
+function move(home, id, parent, position):
+    refuse with whyNotHold's sentence; otherwise as in the first iteration
+    new boxes, bags and clothing always start on the floor
+```
+
+**Boxes need room (`model/place.ts`)**
+
+```
+function place(home, id, parent, position):       # used by dragging, the Where list and the Add buttons
+    moved = move(home, id, parent, position)
+    if the thing is a box and parent is not the floor
+       and boxesThatDoNotFit(moved, parent) > boxesThatDoNotFit(home, parent):
+        refuse: 'There is not enough room for "<name>" there.'
+    return moved
+
+function placeOrLeave(home, id, parent):          # for a newly added thing
+    try place; if refused, leave it on the floor and return the reason
+
+function nearestHolder(home, wish, id):           # where a new thing goes
+    start at wish (what is selected); while it may not hold the thing, step out to its parent
+    none means the floor
+```
+
+Comparing the number of misfit boxes before and after, and not just asking "does everything fit", means a shelf that is already overfull does not block you from reordering it or taking things off it.
+
+**Arrangement in depth, with gaps (`model/layout.ts`)**
+
+```
+Placed: { id, kind, x, y, z, w, h, d, fits }      # z runs back from the front opening; negative is in front
+
+function arrangeShelf(space, children, gap = THING_GAP):
+    as before, plus:
+        x advances by the thing's width + gap
+        z = 0, flush with the front; a thing deeper than the space gets z = space.d - size.d, so it sticks out in front
+    inside a box or bag the gap is PACKED_GAP
+
+function arrangeRail(space, cell, children):
+    as before, plus: hung clothing is centred under the rail, z = (space.d - size.d) / 2
+
+function arrangeFloor(children, rowWidth):
+    line = arrangeShelf(a space with no limits except pile height, children)
+    cut the line into rows no wider than rowWidth; a pile stays in one row
+    back = THING_GAP
+    for each row, nearest the furniture first:
+        each thing gets z = -(back + its depth)      # in front of the furniture, back edges lined up
+        back = back + the row's deepest thing + THING_GAP
+    return the placements, and back as the depth of floor used
+
+function boxesThatDoNotFit(home, parent):
+    how many placements in arrange(home, parent) are boxes with fits = false
+```
+
+The lists these return are already in painting order, furthest first, so the drawing code does not sort.
+
+**The angled view (`ui/view.ts`)**
+
+```
+ANGLED = { kx: 0.32, ky: 0.42 }       # one cm of depth moves a point this far right and up
+FLAT   = { kx: 0,    ky: 0 }          # used for the inside of a box in the side panel
+
+function toPixels(view, x, y, z):
+    screen x = view.originX + (x + z * view.kx) * view.scale
+    screen y = view.originY - (y + z * view.ky) * view.scale
+
+a block at (x, y, z) of size (w, h, d) is drawn as
+    its front face: a rectangle
+    its top face:   the front's top edge, pushed back by d
+    its side face:  the front's right edge, pushed back by d
+```
+
+**The drawing (`ui/FurnitureView.tsx`, `ui/Openings.tsx`, `ui/Contents.tsx`)**
+
+```
+scale = fit everything that could appear (the piece, the floor, every door and drawer open) into the space available,
+        so the picture does not change size when a door opens
+
+paint, from the back forward:
+    the floor patch                               # a drop zone for "the floor"
+    the outside of the piece: its top and right side; a basin above a fixture at the top of a column
+    for each reachable compartment:
+        its back, floor and left wall, cut off at the edges of its opening
+        its rail, if it has one
+        its opening, as the drop zone
+    the front edges of the panels
+    for each reachable shelf or hanging space: its contents, cut off at the opening unless they do not fit
+    doors, drawers and fixtures, from the bottom of the piece up:
+        a closed door or drawer: a panel with a knob or handle; click to open
+        an open door: its panels swung out toward you; click to close
+        an open drawer: pulled all the way out, its contents inside, its near walls see-through; press the handle to close
+        a fixture: a fixed panel
+    the things on the floor
+
+each thing: a group moved into place with a CSS transform, so it glides when its neighbours change,
+            and drops into place when it is first drawn
+    a box:      front with its name and a band of colour per thing inside; side; top with a dark opening showing the same bands
+    a bag:      the same in another colour, with a strap and no opening
+    clothing:   a block in its colour with its laid-flat outline on the front
+```
+
+**Picking up and putting down (`ui/drag.tsx`)**
+
+```
+on press:  remember the thing and where the pointer is
+on move, once past 5 px:
+    make a copy of the thing's own drawing and move it with the pointer
+    zone = the topmost drop zone under the pointer that may hold the thing (canHold)
+    refused = zone exists and place(home, thing, zone) would be refused
+    the zone lights up, or shows a red dashed outline if refused
+on release:
+    not moved: select the thing
+    no zone:   nothing changes
+    otherwise: edit(place(home, thing, zone, position among the things already there))
+               a refusal is shown in the notice line
+```
+
+**Reading an older file (`model/parse.ts`)**
+
+```
+function checkHome(saved):
+    if saved.version is 1: data = upgradeFromVersion1(saved)
+    check every record's shape (as before, plus doors, organizer kind and the open list)
+    if it was version 1: anything whose parent is gone or may no longer hold it goes to the floor
+    check the records fit together: every parent exists and whyNotHold says it may hold its contents
+
+function upgradeFromVersion1(data):
+    every organizer gets kind "box"
+    every "cabinet" compartment becomes "shelf"
+    each piece gets the doors the starter home gives it, where its compartments still match
+    the sink unit is replaced by the corrected one
+    open = the starter home's open doors
+```
+
+**Tests added**
+
+```
+layout:   gaps on a shelf and inside a box; flush with the front; sticking out when too deep; centred under a rail
+          the floor: rows wrap, a pile stays together, something wider than a row still gets a row
+place:    a box is refused where it does not fit and accepted where it does
+          a box can be reordered on its own shelf and set on the floor
+          bags and clothing are never refused for room, only marked
+          an overfull shelf does not block other moves on it
+          a new thing is left on the floor with the reason when its target has no room
+tree:     what may hold what, including bags in boxes and the sink
+          doors and drawers: starting state, toggling, open all, reveal
+          the sink unit's layout
+parse:    organizer kind, doors and the open list are checked
+          a version 1 file is upgraded; what was in the old drawer goes to the floor
+          a damaged version 1 file is still refused with reasons
+```
+
+### Import check for this iteration
+
+Nothing was added. The angled view is arithmetic on points (`view.ts`) drawn with the same SVG elements, and the carried copy is a clone of the thing's own drawing.
+
+| Need | Choice | Considered instead |
+| --- | --- | --- |
+| Depth | An oblique projection, under 100 lines in `view.ts` | Three.js: true 3D, but the dragging, keyboard use and labels would all be rebuilt on a canvas. It still arrives with R1. CSS 3D transforms: do not apply to SVG shapes. |
+| Things gliding and settling | CSS transitions and one keyframe animation | A motion library such as Motion (formerly Framer Motion); not needed for two effects |
+| The carried copy | `cloneNode` on the thing's own drawing | dnd-kit's drag overlay; it does not handle SVG shapes |
 
 ## Import check
 

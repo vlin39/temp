@@ -7,6 +7,10 @@
       "name": "Trunk"
     },
     {
+      "id": "G",
+      "name": "Tidy-up game"
+    },
+    {
       "id": "R",
       "name": "Room"
     },
@@ -96,7 +100,7 @@
     {
       "id": "T6",
       "title": "Clothing",
-      "description": "Add a clothing item with a name, a type and a colour. Put it in a box, on a shelf, or on a rail, and drag it between them. An always-visible \"unsorted\" tray holds things not yet placed.",
+      "description": "Add a clothing item with a name, a type and a colour. Put it in a box, on a shelf, or on a rail, and drag it between them. An always-visible \"unsorted\" tray holds things not yet placed (later replaced by the floor, G3).",
       "group": "T",
       "size": "M",
       "done": true,
@@ -139,6 +143,84 @@
         "T5",
         "T7",
         "T8"
+      ]
+    },
+    {
+      "id": "G1",
+      "title": "Angled view",
+      "description": "Each piece of furniture is drawn at an angle, so its top, its side and the depth of every shelf show. Boxes, bags and clothing are blocks with a top and a side.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G2",
+      "title": "Doors and drawers",
+      "description": "Closet and cabinet doors click open to show the shelves, and closed to hide them. Drawers pull out. What is behind a closed door cannot be reached. The sink unit is laid out as it really is: a drawer over a two-shelf cabinet on each side, the sink over a cabinet in the middle.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "G1"
+      ]
+    },
+    {
+      "id": "G3",
+      "title": "The floor",
+      "description": "Anything can be taken out and set down on the floor in front of the piece. The floor follows you from piece to piece, replacing the unsorted tray.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "G1"
+      ]
+    },
+    {
+      "id": "G4",
+      "title": "Gaps, and boxes need room",
+      "description": "Neighbours on a shelf or the floor keep a gap between them. A box only goes where there is room for it; clothing and bags are soft, so they are flagged instead of refused.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G5",
+      "title": "Bags",
+      "description": "Pouches, tote bags and backpacks: they hold clothing, and go inside boxes.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G6",
+      "title": "Pick up and put down",
+      "description": "A carried thing follows the pointer at its real size. The place under it lights up, or shows that it is refused. Things glide and settle into place.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "G3",
+        "G4"
+      ]
+    },
+    {
+      "id": "G7",
+      "title": "Kinds of bag",
+      "description": "Backpacks, storage cubes and pouches as distinct kinds, each with its own look and its own rules for what it holds.",
+      "group": "G",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "G5"
       ]
     },
     {
