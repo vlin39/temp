@@ -1,0 +1,893 @@
+{
+  "title": "Roomorg skill tree",
+  "version": 1,
+  "groups": [
+    {
+      "id": "T",
+      "name": "Trunk"
+    },
+    {
+      "id": "G",
+      "name": "Tidy-up game"
+    },
+    {
+      "id": "R",
+      "name": "Room"
+    },
+    {
+      "id": "C",
+      "name": "Clothing and organizers"
+    },
+    {
+      "id": "S",
+      "name": "Search and reminders"
+    },
+    {
+      "id": "D",
+      "name": "Data and access"
+    },
+    {
+      "id": "M",
+      "name": "Mannequin and styling"
+    },
+    {
+      "id": "K",
+      "name": "Colour"
+    },
+    {
+      "id": "P",
+      "name": "Photos and AI"
+    },
+    {
+      "id": "X",
+      "name": "Product"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "T1",
+      "title": "Room data",
+      "description": "Your suite, its furniture and their compartments in one data file, taken from your sketch and table. Which pieces exist, where they stand and which way they face are fixed for now.",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": []
+    },
+    {
+      "id": "T2",
+      "title": "Furniture picker",
+      "description": "A dropdown plus a simple clickable floor plan of the suite. Picking a piece opens its front view.",
+      "group": "T",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "T1"
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "Front view",
+      "description": "A to-scale drawing of one piece from the front: panels, shelves, hanging rail, drawers, cabinets.",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "T1"
+      ]
+    },
+    {
+      "id": "T4",
+      "title": "Measurements",
+      "description": "Edit the size of a whole piece and of its shelves and compartments. Panel, shelf and divider thickness are part of the model, so inside sizes are calculated.",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "T3"
+      ]
+    },
+    {
+      "id": "T5",
+      "title": "Organizers",
+      "description": "Add a box (small, medium, large, or a typed size), name it, drag it to another shelf, delete it. A box shows coloured stripes for what is inside; clicking it opens it.",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "T3"
+      ]
+    },
+    {
+      "id": "T6",
+      "title": "Clothing",
+      "description": "Add a clothing item with a name, a type and a colour. Put it in a box, on a shelf, or on a rail, and drag it between them. An always-visible \"unsorted\" tray holds things not yet placed (later replaced by the floor, G3).",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "T3"
+      ]
+    },
+    {
+      "id": "T7",
+      "title": "Shape and fold",
+      "description": "Each item starts as its laid-flat shape: a body with sleeves, or hips with legs. A per-item fold setting reshapes it: flat, halves, thirds, quarters, rolled, hung.",
+      "group": "T",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "T6"
+      ]
+    },
+    {
+      "id": "T8",
+      "title": "Saving",
+      "description": "Autosaves in the browser, plus \"download backup\" and \"restore backup\" for one file.",
+      "group": "T",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "T1"
+      ]
+    },
+    {
+      "id": "START",
+      "title": "Start: first iteration complete",
+      "description": "Milestone. The trunk (T1 to T8) is built and usable. Every branch grows from here.",
+      "group": "T",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "T2",
+        "T4",
+        "T5",
+        "T7",
+        "T8"
+      ]
+    },
+    {
+      "id": "G1",
+      "title": "Angled view",
+      "description": "Each piece of furniture is drawn at an angle, so its top, its side and the depth of every shelf show. Boxes, bags and clothing are blocks with a top and a side.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G2",
+      "title": "Doors and drawers",
+      "description": "Closet and cabinet doors click open to show the shelves, and closed to hide them. Drawers pull out. What is behind a closed door cannot be reached. The sink unit is laid out as it really is: a drawer over a two-shelf cabinet on each side, the sink over a cabinet in the middle.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "G1"
+      ]
+    },
+    {
+      "id": "G3",
+      "title": "The floor",
+      "description": "Anything can be taken out and set down on the floor in front of the piece. The floor follows you from piece to piece, replacing the unsorted tray.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "G1"
+      ]
+    },
+    {
+      "id": "G4",
+      "title": "Gaps, and boxes need room",
+      "description": "Neighbours on a shelf or the floor keep a gap between them. A box only goes where there is room for it; clothing and bags are soft, so they are flagged instead of refused.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G5",
+      "title": "Bags",
+      "description": "Pouches, tote bags and backpacks: they hold clothing, and go inside boxes.",
+      "group": "G",
+      "size": "M",
+      "done": true,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "G6",
+      "title": "Pick up and put down",
+      "description": "A carried thing follows the pointer at its real size. The place under it lights up, or shows that it is refused. Things glide and settle into place.",
+      "group": "G",
+      "size": "S",
+      "done": true,
+      "needs": [
+        "G3",
+        "G4"
+      ]
+    },
+    {
+      "id": "G7",
+      "title": "Kinds of bag",
+      "description": "Backpacks, storage cubes and pouches as distinct kinds, each with its own look and its own rules for what it holds.",
+      "group": "G",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "G5"
+      ]
+    },
+    {
+      "id": "R1",
+      "title": "Corner room view",
+      "description": "The room built in Three.js from the room data. Fixed camera at each corner, rotate buttons, zoom, near walls cut away. Click a piece to open its front view.",
+      "group": "R",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "R2",
+      "title": "Top-down view",
+      "description": "A fifth camera looking straight down: the 3D version of the floor plan.",
+      "group": "R",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "R1"
+      ]
+    },
+    {
+      "id": "R3",
+      "title": "Pixel-art style",
+      "description": "Low-resolution rendering, a limited warm palette and dark outlines. Original art, no game assets.",
+      "group": "R",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "R1"
+      ]
+    },
+    {
+      "id": "R4",
+      "title": "Art style toggle",
+      "description": "Switch between the pixel style and a plain one in settings.",
+      "group": "R",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "R3"
+      ]
+    },
+    {
+      "id": "R5",
+      "title": "Contents in the room",
+      "description": "Open-fronted furniture shows its boxes and clothing colours in the corner view.",
+      "group": "R",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "R1"
+      ]
+    },
+    {
+      "id": "R6",
+      "title": "Find-it highlight",
+      "description": "A chosen item glows in the room while everything else turns grey and see-through.",
+      "group": "R",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "R1"
+      ]
+    },
+    {
+      "id": "R7",
+      "title": "Move and rotate furniture",
+      "description": "Change where a piece stands and which way it faces, by dragging in the floor plan or top-down view.",
+      "group": "R",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "R8",
+      "title": "Resize rooms",
+      "description": "Type new dimensions for the rooms themselves.",
+      "group": "R",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "R9",
+      "title": "Furniture builder",
+      "description": "Add new furniture; add or remove shelves, rails, drawers and dividers.",
+      "group": "R",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "R10",
+      "title": "Depth rows",
+      "description": "Front and back rows on deep shelves, or a top-down look into one shelf or box.",
+      "group": "R",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "R11",
+      "title": "Walking character and quests",
+      "description": "The Godot stage: a character who walks to things, with quests such as \"find your passport\". Reads the same data file.",
+      "group": "R",
+      "size": "XL",
+      "done": false,
+      "needs": [
+        "R1"
+      ]
+    },
+    {
+      "id": "C1",
+      "title": "Quick add",
+      "description": "Type or paste many names, one per line, to create clothing items in one go.",
+      "group": "C",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C2",
+      "title": "Capacity meters",
+      "description": "Each rail shows length used; each shelf and box shows how full it is; overfull ones are flagged.",
+      "group": "C",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C3",
+      "title": "Tabbed item pop-up",
+      "description": "The Stardew-style menu with tabs: Look, Details, Size & Fold, Notes, Location. Built so later tabs slot in.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C4",
+      "title": "Opacity and patterns",
+      "description": "A transparency slider and basic patterns (stripes, dots, checks).",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C5",
+      "title": "Notes",
+      "description": "Free text per item: comfort, memories, whether it was a gift, souvenir or heirloom.",
+      "group": "C",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "C3"
+      ]
+    },
+    {
+      "id": "C6",
+      "title": "Detail tags",
+      "description": "Tag categories with starter options: category, fabric type, activity, season, temperature, care, comfort, weight. Several values per category, all optional.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C3"
+      ]
+    },
+    {
+      "id": "C7",
+      "title": "Custom categories",
+      "description": "Add, rename and remove categories and their options.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "C8",
+      "title": "Custom defaults",
+      "description": "Choose the default look for new or unfinished items and default values per category.",
+      "group": "C",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "C9",
+      "title": "Composition",
+      "description": "Materials with percentages, shown as a pie chart.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "C10",
+      "title": "Custom shapes",
+      "description": "Add or remove parts on any item (a hood, a wide skirt panel) beyond the type's starter shape.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C11",
+      "title": "Custom folds",
+      "description": "Define a fold step by step (thirds across, then halves down) and save it under a name.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "C12",
+      "title": "Care symbols",
+      "description": "Pick laundry symbols; hovering explains each one.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "C13",
+      "title": "Photos on items",
+      "description": "Attach photos, shown in the pop-up and in search results.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C3"
+      ]
+    },
+    {
+      "id": "C14",
+      "title": "Other item kinds",
+      "description": "Toiletries, makeup, art and sports supplies, each with their own categories.",
+      "group": "C",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C7"
+      ]
+    },
+    {
+      "id": "C15",
+      "title": "Duplicate and multi-move",
+      "description": "Copy an item; select several and move them together.",
+      "group": "C",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "S1",
+      "title": "Text search",
+      "description": "Type a name, get matches, click one to jump to its furniture with the item highlighted.",
+      "group": "S",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "S2",
+      "title": "Filters",
+      "description": "One filter per tag category.",
+      "group": "S",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "S1",
+        "C6"
+      ]
+    },
+    {
+      "id": "S3",
+      "title": "Grid and list results",
+      "description": "Grid shows pictures only; list shows the details too.",
+      "group": "S",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "S1"
+      ]
+    },
+    {
+      "id": "S4",
+      "title": "Result picture choice",
+      "description": "A dropdown for which picture results show: flat shape, folded box, or location in its closet with the surroundings muted grey.",
+      "group": "S",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "S3"
+      ]
+    },
+    {
+      "id": "S5",
+      "title": "\"Haven't seen this\" nudges",
+      "description": "Tracks when items were last moved or worn and lists the forgotten ones.",
+      "group": "S",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "S6",
+      "title": "Printable labels",
+      "description": "Print a label for each box listing its contents.",
+      "group": "S",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "D1",
+      "title": "Units toggle",
+      "description": "Switch between inches and cm. (Start shows inches.)",
+      "group": "D",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "D2",
+      "title": "Undo",
+      "description": "Step back through recent changes.",
+      "group": "D",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "D3",
+      "title": "Permanent web address",
+      "description": "Host the app on GitHub Pages; free because the repo is public. Adds a file outside roomorg/.",
+      "group": "D",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "D4",
+      "title": "Install as an app",
+      "description": "Works offline and installs to a phone or laptop home screen.",
+      "group": "D",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "D3"
+      ]
+    },
+    {
+      "id": "D5",
+      "title": "Phone and laptop sync",
+      "description": "The same data on every device. Needs an account-based store or a small server.",
+      "group": "D",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "D6",
+      "title": "One-click Codespaces",
+      "description": "A setup file so a codespace installs and starts the app by itself. Lives outside roomorg/.",
+      "group": "D",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Flat-lay display",
+      "description": "The item drawn laid flat at full size, as a display option.",
+      "group": "M",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "C3"
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Mannequin, front and back",
+      "description": "A simple shop mannequin with clothing placed on body regions, and a skin colour picker.",
+      "group": "M",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C3"
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Styles per item",
+      "description": "Several ways to wear one item (a scarf as a top or a belt), with a toggle.",
+      "group": "M",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "M2"
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Outfit board",
+      "description": "From the home screen, combine items in layers on one mannequin or across several.",
+      "group": "M",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "M2"
+      ]
+    },
+    {
+      "id": "M5",
+      "title": "Mannequin proportions",
+      "description": "Height, leg-to-torso ratio and hair, saved per mannequin.",
+      "group": "M",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "M2"
+      ]
+    },
+    {
+      "id": "M6",
+      "title": "Body-part search",
+      "description": "Drag over parts of the body to find clothes that cover them.",
+      "group": "M",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "M2",
+        "S2"
+      ]
+    },
+    {
+      "id": "M7",
+      "title": "Drape controls",
+      "description": "Adjust flare and how many waves a skirt makes.",
+      "group": "M",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "M2"
+      ]
+    },
+    {
+      "id": "K1",
+      "title": "Wardrobe palette",
+      "description": "A chart of every colour you own.",
+      "group": "K",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "START"
+      ]
+    },
+    {
+      "id": "K2",
+      "title": "Warm, cool and season tags",
+      "description": "Tag items as warm or cool, or by colour season.",
+      "group": "K",
+      "size": "S",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "K3",
+      "title": "Colour reference card",
+      "description": "A printable card to photograph beside clothes so colours can be corrected.",
+      "group": "K",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C13"
+      ]
+    },
+    {
+      "id": "P1",
+      "title": "Measure from a photo",
+      "description": "Use a ruler, tape or coins in the photo to work out an item's flat size.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C13"
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Photo on a person",
+      "description": "Use a worn photo to adjust how the item sits on the mannequin.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "P1",
+        "M2"
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Photo to layout",
+      "description": "Build furniture or room layouts from photos by tapping corners or automatic outlines.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "R9"
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "Care-tag photo",
+      "description": "Read care symbols and composition from a tag photo.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C12",
+        "C9"
+      ]
+    },
+    {
+      "id": "P5",
+      "title": "Receipt or cart import",
+      "description": "Create items, with details filled in, from a receipt or cart screenshot.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C6"
+      ]
+    },
+    {
+      "id": "P6",
+      "title": "Compare when updating",
+      "description": "Upload several photos of an existing item and compare them with its saved data.",
+      "group": "P",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "P1"
+      ]
+    },
+    {
+      "id": "P7",
+      "title": "Tag suggestions",
+      "description": "Suggest tags from typed or dictated notes.",
+      "group": "P",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "C5",
+        "C6"
+      ]
+    },
+    {
+      "id": "P8",
+      "title": "Plain-language search",
+      "description": "Describe what you want in words.",
+      "group": "P",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "S2"
+      ]
+    },
+    {
+      "id": "P9",
+      "title": "Photo and outfit matching",
+      "description": "Match a photo of you wearing something, or an outfit inspiration picture, to your items.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "S2",
+        "C13"
+      ]
+    },
+    {
+      "id": "P10",
+      "title": "Packing suggestions",
+      "description": "Account for squish and suggest the best arrangement for a space.",
+      "group": "P",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "C2"
+      ]
+    },
+    {
+      "id": "X1",
+      "title": "App-store version",
+      "description": "Wrap the web app for app stores.",
+      "group": "X",
+      "size": "L",
+      "done": false,
+      "needs": [
+        "D4"
+      ]
+    },
+    {
+      "id": "X2",
+      "title": "Donations and privacy policy",
+      "description": "A free web version with optional support, and a written privacy policy.",
+      "group": "X",
+      "size": "M",
+      "done": false,
+      "needs": [
+        "D3"
+      ]
+    }
+  ]
+}

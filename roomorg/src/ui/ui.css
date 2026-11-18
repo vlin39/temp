@@ -1,0 +1,1111 @@
+/* Layout: a top bar; then picker | furniture | details; the floor strip pinned along the bottom. */
+
+:root {
+  /* Page: cool neutrals, so the warm furniture drawing stands out. */
+  --bg: #edf0f2;
+  --surface: #ffffff;
+  --ink: #1c2126;
+  --ink-soft: #57616b;
+  --line: #cdd4da;
+
+  --accent: #1c6b86;
+  --accent-soft: #d9eaf1;
+  --on-accent: #ffffff;
+
+  --ok: #1c7748;
+  --danger: #b0281f;
+  --warn-soft: #fbe9d0;
+  --warn-ink: #7a4a05;
+
+  /* The furniture drawing. */
+  --wood: #c89b6c;
+  --wood-edge: #8c6741;
+  --interior: #f5eee3;
+  --rail: #77818b;
+  --door: #dcbd94;
+  --floor: #dde2e6;
+  --porcelain: #f6f8f9;
+  --box: #eadfce;
+  --box-edge: #8c7a60;
+  --bag: #a9bdd2;
+  --bag-edge: #4c627a;
+  --thing-edge: rgb(0 0 0 / 0.5);
+
+  /* The floor plan. */
+  --plan-room: #f6f8f9;
+  --plan-piece: #dde2e7;
+  --plan-storage: #e3c9a6;
+
+  --font-text: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181b;
+    --surface: #1d2226;
+    --ink: #e6eaed;
+    --ink-soft: #a1aab3;
+    --line: #394149;
+    --accent: #6fc2dc;
+    --accent-soft: #1d3641;
+    --on-accent: #0c1a20;
+    --ok: #74d39b;
+    --danger: #ff9086;
+    --warn-soft: #3d2f15;
+    --warn-ink: #f1ba63;
+    --wood: #8b6847;
+    --wood-edge: #5b4430;
+    --interior: #2b2622;
+    --rail: #9ba5af;
+    --door: #9c7650;
+    --floor: #262c31;
+    --porcelain: #c9d1d7;
+    --box: #4b4134;
+    --box-edge: #a39174;
+    --bag: #3f5268;
+    --bag-edge: #a5bad2;
+    --thing-edge: rgb(255 255 255 / 0.45);
+    --plan-room: #191d21;
+    --plan-piece: #2c3339;
+    --plan-storage: #5e4b37;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #14181b;
+  --surface: #1d2226;
+  --ink: #e6eaed;
+  --ink-soft: #a1aab3;
+  --line: #394149;
+  --accent: #6fc2dc;
+  --accent-soft: #1d3641;
+  --on-accent: #0c1a20;
+  --ok: #74d39b;
+  --danger: #ff9086;
+  --warn-soft: #3d2f15;
+  --warn-ink: #f1ba63;
+  --wood: #8b6847;
+  --wood-edge: #5b4430;
+  --interior: #2b2622;
+  --rail: #9ba5af;
+  --door: #9c7650;
+  --floor: #262c31;
+  --porcelain: #c9d1d7;
+  --box: #4b4134;
+  --box-edge: #a39174;
+  --bag: #3f5268;
+  --bag-edge: #a5bad2;
+  --thing-edge: rgb(255 255 255 / 0.45);
+  --plan-room: #191d21;
+  --plan-piece: #2c3339;
+  --plan-storage: #5e4b37;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.45 var(--font-text);
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+fieldset {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1rem;
+}
+
+h3 {
+  margin-top: 4px;
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Fill the window, so the tray sits at the bottom even when the page is short. */
+  min-height: calc(100vh - 12px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+}
+
+/* ---- Top bar ---- */
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.last-backup {
+  margin-left: 6px;
+  color: var(--ink-soft);
+}
+
+.notice {
+  flex-basis: 100%;
+  min-height: 1.45em;
+  color: var(--ink-soft);
+}
+
+.notice.is-ok {
+  color: var(--ok);
+}
+
+.notice.is-error {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* ---- Buttons and form controls ---- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--ink-soft);
+}
+
+.button-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+.button-small {
+  padding: 3px 8px;
+  font-size: 0.86rem;
+}
+
+.button-danger {
+  align-self: flex-start;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.button.is-armed {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: var(--surface);
+}
+
+#restore-input:focus-visible + .button {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  min-width: 0;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 31px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+/* Side by side, fields share the row; a narrow one keeps a fixed width. */
+.field-row > .field {
+  flex: 1 1 5.5rem;
+}
+
+.field-row > .field-narrow {
+  flex: 0 0 4.5rem;
+}
+
+.field-label {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.length-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.unit {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.field-problem {
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.check {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.hint {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.badge,
+.badge-inline {
+  border-radius: 4px;
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+  font-size: 0.82rem;
+}
+
+.badge {
+  padding: 4px 8px;
+}
+
+.badge-inline {
+  margin-left: 8px;
+  padding: 1px 6px;
+}
+
+.swatch {
+  display: inline-block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--thing-edge);
+  border-radius: 2px;
+}
+
+/* ---- Main layout ---- */
+
+.layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr) 320px;
+  gap: 12px;
+  align-items: start;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+/* ---- Furniture picker ---- */
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.floor-plan {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+}
+
+.plan-room {
+  fill: var(--plan-room);
+  stroke: var(--ink-soft);
+  stroke-width: 3;
+}
+
+.plan-room-name {
+  fill: var(--ink-soft);
+  opacity: 0.55;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.plan-piece rect {
+  fill: var(--plan-piece);
+  stroke: var(--ink-soft);
+  stroke-width: 1.5;
+}
+
+.plan-piece text {
+  fill: var(--ink-soft);
+  pointer-events: none;
+}
+
+.plan-piece.has-storage {
+  cursor: pointer;
+}
+
+.plan-piece.has-storage rect {
+  fill: var(--plan-storage);
+  stroke: var(--wood-edge);
+}
+
+.plan-piece.has-storage text {
+  fill: var(--ink);
+}
+
+.plan-front {
+  stroke: var(--wood-edge);
+  stroke-width: 7;
+}
+
+.plan-piece.is-open rect {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 5;
+}
+
+.plan-piece.is-open .plan-front {
+  stroke: var(--accent);
+}
+
+/* ---- Front view ---- */
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stage-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.stage-size {
+  color: var(--ink-soft);
+}
+
+.add-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.add-group {
+  display: flex;
+  gap: 4px;
+}
+
+.add-group select {
+  width: auto;
+  max-width: 11rem;
+}
+
+.add-target {
+  flex: 1 1 12rem;
+}
+
+.furniture-view {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.furniture-drawing {
+  display: block;
+  margin-inline: auto;
+}
+
+.interior {
+  fill: var(--interior);
+}
+
+/* The outside of the piece: its top is lit, its side is in shade. */
+.piece-face {
+  stroke: var(--wood-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.piece-top {
+  fill: color-mix(in srgb, var(--wood) 78%, white);
+}
+
+.piece-side {
+  fill: color-mix(in srgb, var(--wood) 80%, black);
+}
+
+/* The inside of a compartment or an open drawer. */
+.inside-back {
+  fill: var(--interior);
+}
+
+.inside-floor {
+  fill: color-mix(in srgb, var(--interior) 90%, black);
+}
+
+.inside-wall {
+  fill: color-mix(in srgb, var(--interior) 80%, black);
+}
+
+.panel {
+  fill: var(--wood);
+  stroke: var(--wood-edge);
+  stroke-width: 1;
+}
+
+.cell-zone {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.cell.is-selected .cell-zone,
+.cell.is-selected .drawer-inside {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.cell.is-selected .cell-zone {
+  fill: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.cell.is-over .cell-zone,
+.cell.is-over .drawer-inside {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.cell.is-over .cell-zone {
+  fill: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* A place that refuses what is being carried: a box where there is no room. */
+.cell.is-refused .cell-zone,
+.cell.is-refused .drawer-inside {
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.cell.is-refused .cell-zone {
+  fill: color-mix(in srgb, var(--danger) 16%, transparent);
+}
+
+.rail {
+  stroke: var(--rail);
+  stroke-width: 3;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.cell-name {
+  fill: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.cell-size {
+  fill: var(--ink-soft);
+  font-size: 10px;
+  pointer-events: none;
+}
+
+/* ---- The floor in front of the piece ---- */
+
+.floor-zone {
+  fill: var(--floor);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.floor-zone.is-over {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.floor-hint {
+  fill: var(--ink-soft);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+/* ---- Doors, drawers and fixtures ---- */
+
+.door,
+.drawer:not(.is-open),
+.drawer-handle,
+.fixture {
+  cursor: pointer;
+}
+
+.door-leaf,
+.fixture-front {
+  fill: var(--door);
+  stroke: var(--wood-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+/* An open door shows its paler inside, and lets a little of what is behind it show through. */
+.door.is-open .door-leaf {
+  fill: color-mix(in srgb, var(--door) 72%, white);
+  fill-opacity: 0.85;
+}
+
+.door:hover .door-leaf,
+.drawer:not(.is-open):hover .door-leaf,
+.drawer-handle:hover .handle {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.door-trim {
+  fill: none;
+  stroke: var(--wood-edge);
+  stroke-opacity: 0.4;
+  pointer-events: none;
+}
+
+.knob,
+.handle {
+  fill: var(--wood-edge);
+}
+
+.knob {
+  pointer-events: none;
+}
+
+.handle-reach {
+  fill: transparent;
+}
+
+/* The near walls of an open drawer are see-through, so what is in it is not hidden. */
+.drawer-glass {
+  fill: var(--door);
+  fill-opacity: 0.3;
+  stroke: var(--wood-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.drawer-inside {
+  stroke: var(--wood-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  cursor: pointer;
+}
+
+.fixture.is-selected .fixture-front {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.basin-bowl {
+  fill: var(--porcelain);
+  stroke: var(--rail);
+  stroke-width: 1;
+}
+
+.basin-tap {
+  fill: none;
+  stroke: var(--rail);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- Boxes, bags and clothing (drawn, and as chips) ---- */
+
+.thing {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  /* A drawn thing is moved into place with a transform, so it glides when its neighbours change. */
+  transition: transform 180ms ease-out;
+}
+
+/* A thing that has just been put somewhere drops into place. */
+.thing-body {
+  animation: settle 200ms ease-out;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0.4;
+    transform: translateY(-7px);
+  }
+}
+
+.thing.is-dragging {
+  opacity: 0.3;
+}
+
+.organizer-body {
+  fill: var(--box);
+  stroke: var(--box-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.bag-body {
+  fill: var(--bag);
+  stroke: var(--bag-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.bag-strap {
+  fill: none;
+  stroke: var(--bag-edge);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+/* The open top of a box, with a band of colour for each thing in it. */
+.box-opening {
+  fill: color-mix(in srgb, var(--box) 55%, black);
+  stroke: var(--box-edge);
+  stroke-width: 0.8;
+}
+
+.box-filling,
+.stripe {
+  pointer-events: none;
+}
+
+/* The top of a block is lit and its side is in shade, whatever its colour. */
+.tint {
+  pointer-events: none;
+}
+
+.tint-light {
+  fill: #ffffff;
+  fill-opacity: 0.3;
+}
+
+.tint-dark {
+  fill: #000000;
+  fill-opacity: 0.2;
+}
+
+.organizer.is-over .organizer-body,
+.organizer.is-over .bag-body,
+.organizer-body.is-over,
+.bag-body.is-over {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.organizer.is-refused .organizer-body,
+.organizer.is-refused .bag-body,
+.organizer-body.is-refused,
+.bag-body.is-refused {
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.item-body {
+  stroke: var(--thing-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.thing.is-selected .organizer-body,
+.thing.is-selected .bag-body,
+.thing.is-selected .item-body {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.thing.is-misfit .organizer-body,
+.thing.is-misfit .bag-body,
+.thing.is-misfit .item-body {
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.misfit-mark {
+  fill: var(--danger);
+  font-size: 13px;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.thing-label {
+  font-size: 10.5px;
+  pointer-events: none;
+}
+
+.organizer .thing-label {
+  fill: var(--ink);
+}
+
+.shape-outline rect {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* The copy of a thing that follows the pointer while it is carried: lifted, tilted a little, with a shadow. */
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  filter: drop-shadow(0 8px 7px rgb(0 0 0 / 0.32));
+  pointer-events: none;
+}
+
+.drag-ghost > * {
+  display: block;
+  overflow: visible;
+  transform: rotate(-2deg) scale(1.05);
+}
+
+.drag-ghost.is-refused {
+  opacity: 0.55;
+}
+
+.drag-ghost .thing-body {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thing {
+    transition: none;
+  }
+
+  .thing-body {
+    animation: none;
+  }
+
+  .drag-ghost > * {
+    transform: none;
+  }
+}
+
+/* ---- Side panel ---- */
+
+/* The panel scrolls by itself, so its contents and the drawing stay on screen together. */
+.side-panel {
+  position: sticky;
+  top: 8px;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+}
+
+.panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mode,
+.part {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.mode legend,
+.part legend {
+  padding-inline: 4px;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.column-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cell-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.cell-row.is-selected {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 5px;
+  background: var(--warn-soft);
+  color: var(--warn-ink);
+}
+
+.confirm p {
+  flex-basis: 100%;
+}
+
+.flat-preview,
+.inside-view {
+  display: block;
+  max-width: 100%;
+}
+
+.stored-size {
+  font-variant-numeric: tabular-nums;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chip-row,
+.compartment-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.compartment-list {
+  margin-top: 8px;
+}
+
+.compartment-list-name {
+  font-weight: 600;
+}
+
+/* ---- The floor strip ---- */
+
+.floor-strip {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-inline: -4px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -4px 14px rgb(0 0 0 / 0.08);
+}
+
+.floor-strip.is-over {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.floor-strip h2 {
+  flex: none;
+}
+
+.count {
+  margin-left: 4px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.floor-things {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  padding-block: 2px;
+}
+
+.chip {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+  white-space: nowrap;
+}
+
+.chip-box {
+  border-color: var(--box-edge);
+}
+
+.stage-head .button {
+  margin-left: auto;
+}
+
+.chip.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.chip-kind {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+/* ---- Narrower screens ---- */
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .sidebar {
+    grid-column: 1 / -1;
+  }
+
+  .picker {
+    display: grid;
+    grid-template-columns: minmax(0, 14rem) minmax(0, 20rem);
+    align-items: start;
+    gap: 12px;
+  }
+
+  .picker .hint {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .floor-plan {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side-panel {
+    position: static;
+    max-height: none;
+  }
+
+  .picker {
+    display: flex;
+  }
+
+  .floor-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+}
