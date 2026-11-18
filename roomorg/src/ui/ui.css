@@ -1,4 +1,4 @@
-/* Layout: a top bar; then picker | front view | details; the unsorted tray pinned along the bottom. */
+/* Layout: a top bar; then picker | furniture | details; the floor strip pinned along the bottom. */
 
 :root {
   /* Page: cool neutrals, so the warm furniture drawing stands out. */
@@ -22,8 +22,13 @@
   --wood-edge: #8c6741;
   --interior: #f5eee3;
   --rail: #77818b;
+  --door: #dcbd94;
+  --floor: #dde2e6;
+  --porcelain: #f6f8f9;
   --box: #eadfce;
   --box-edge: #8c7a60;
+  --bag: #a9bdd2;
+  --bag-edge: #4c627a;
   --thing-edge: rgb(0 0 0 / 0.5);
 
   /* The floor plan. */
@@ -55,8 +60,13 @@
     --wood-edge: #5b4430;
     --interior: #2b2622;
     --rail: #9ba5af;
+    --door: #9c7650;
+    --floor: #262c31;
+    --porcelain: #c9d1d7;
     --box: #4b4134;
     --box-edge: #a39174;
+    --bag: #3f5268;
+    --bag-edge: #a5bad2;
     --thing-edge: rgb(255 255 255 / 0.45);
     --plan-room: #191d21;
     --plan-piece: #2c3339;
@@ -82,8 +92,13 @@
   --wood-edge: #5b4430;
   --interior: #2b2622;
   --rail: #9ba5af;
+  --door: #9c7650;
+  --floor: #262c31;
+  --porcelain: #c9d1d7;
   --box: #4b4134;
   --box-edge: #a39174;
+  --bag: #3f5268;
+  --bag-edge: #a5bad2;
   --thing-edge: rgb(255 255 255 / 0.45);
   --plan-room: #191d21;
   --plan-piece: #2c3339;
@@ -490,6 +505,34 @@ input[aria-invalid="true"] {
   fill: var(--interior);
 }
 
+/* The outside of the piece: its top is lit, its side is in shade. */
+.piece-face {
+  stroke: var(--wood-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+
+.piece-top {
+  fill: color-mix(in srgb, var(--wood) 78%, white);
+}
+
+.piece-side {
+  fill: color-mix(in srgb, var(--wood) 80%, black);
+}
+
+/* The inside of a compartment or an open drawer. */
+.inside-back {
+  fill: var(--interior);
+}
+
+.inside-floor {
+  fill: color-mix(in srgb, var(--interior) 90%, black);
+}
+
+.inside-wall {
+  fill: color-mix(in srgb, var(--interior) 80%, black);
+}
+
 .panel {
   fill: var(--wood);
   stroke: var(--wood-edge);
@@ -501,17 +544,37 @@ input[aria-invalid="true"] {
   cursor: pointer;
 }
 
-.cell.is-selected .cell-zone {
-  fill: color-mix(in srgb, var(--accent) 10%, transparent);
+.cell.is-selected .cell-zone,
+.cell.is-selected .drawer-inside {
   stroke: var(--accent);
   stroke-width: 2;
 }
 
-.cell.is-over .cell-zone {
-  fill: var(--accent-soft);
+.cell.is-selected .cell-zone {
+  fill: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.cell.is-over .cell-zone,
+.cell.is-over .drawer-inside {
   stroke: var(--accent);
   stroke-width: 2;
   stroke-dasharray: 5 4;
+}
+
+.cell.is-over .cell-zone {
+  fill: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* A place that refuses what is being carried: a box where there is no room. */
+.cell.is-refused .cell-zone,
+.cell.is-refused .drawer-inside {
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.cell.is-refused .cell-zone {
+  fill: color-mix(in srgb, var(--danger) 16%, transparent);
 }
 
 .rail {
@@ -534,44 +597,222 @@ input[aria-invalid="true"] {
   pointer-events: none;
 }
 
-/* ---- Organizers and clothing (drawn and in the tray) ---- */
+/* ---- The floor in front of the piece ---- */
+
+.floor-zone {
+  fill: var(--floor);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.floor-zone.is-over {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.floor-hint {
+  fill: var(--ink-soft);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+/* ---- Doors, drawers and fixtures ---- */
+
+.door,
+.drawer:not(.is-open),
+.drawer-handle,
+.fixture {
+  cursor: pointer;
+}
+
+.door-leaf,
+.fixture-front {
+  fill: var(--door);
+  stroke: var(--wood-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+/* An open door shows its paler inside, and lets a little of what is behind it show through. */
+.door.is-open .door-leaf {
+  fill: color-mix(in srgb, var(--door) 72%, white);
+  fill-opacity: 0.85;
+}
+
+.door:hover .door-leaf,
+.drawer:not(.is-open):hover .door-leaf,
+.drawer-handle:hover .handle {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.door-trim {
+  fill: none;
+  stroke: var(--wood-edge);
+  stroke-opacity: 0.4;
+  pointer-events: none;
+}
+
+.knob,
+.handle {
+  fill: var(--wood-edge);
+}
+
+.knob {
+  pointer-events: none;
+}
+
+.handle-reach {
+  fill: transparent;
+}
+
+/* The near walls of an open drawer are see-through, so what is in it is not hidden. */
+.drawer-glass {
+  fill: var(--door);
+  fill-opacity: 0.3;
+  stroke: var(--wood-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.drawer-inside {
+  stroke: var(--wood-edge);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  cursor: pointer;
+}
+
+.fixture.is-selected .fixture-front {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.basin-bowl {
+  fill: var(--porcelain);
+  stroke: var(--rail);
+  stroke-width: 1;
+}
+
+.basin-tap {
+  fill: none;
+  stroke: var(--rail);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- Boxes, bags and clothing (drawn, and as chips) ---- */
 
 .thing {
   cursor: grab;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  /* A drawn thing is moved into place with a transform, so it glides when its neighbours change. */
+  transition: transform 180ms ease-out;
+}
+
+/* A thing that has just been put somewhere drops into place. */
+.thing-body {
+  animation: settle 200ms ease-out;
+}
+
+@keyframes settle {
+  from {
+    opacity: 0.4;
+    transform: translateY(-7px);
+  }
 }
 
 .thing.is-dragging {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .organizer-body {
   fill: var(--box);
   stroke: var(--box-edge);
   stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.bag-body {
+  fill: var(--bag);
+  stroke: var(--bag-edge);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.bag-strap {
+  fill: none;
+  stroke: var(--bag-edge);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+/* The open top of a box, with a band of colour for each thing in it. */
+.box-opening {
+  fill: color-mix(in srgb, var(--box) 55%, black);
+  stroke: var(--box-edge);
+  stroke-width: 0.8;
+}
+
+.box-filling,
+.stripe {
+  pointer-events: none;
+}
+
+/* The top of a block is lit and its side is in shade, whatever its colour. */
+.tint {
+  pointer-events: none;
+}
+
+.tint-light {
+  fill: #ffffff;
+  fill-opacity: 0.3;
+}
+
+.tint-dark {
+  fill: #000000;
+  fill-opacity: 0.2;
 }
 
 .organizer.is-over .organizer-body,
-.organizer-body.is-over {
+.organizer.is-over .bag-body,
+.organizer-body.is-over,
+.bag-body.is-over {
   fill: var(--accent-soft);
   stroke: var(--accent);
   stroke-width: 2;
 }
 
+.organizer.is-refused .organizer-body,
+.organizer.is-refused .bag-body,
+.organizer-body.is-refused,
+.bag-body.is-refused {
+  stroke: var(--danger);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
 .item-body {
   stroke: var(--thing-edge);
   stroke-width: 1;
+  stroke-linejoin: round;
 }
 
 .thing.is-selected .organizer-body,
+.thing.is-selected .bag-body,
 .thing.is-selected .item-body {
   stroke: var(--accent);
   stroke-width: 3;
 }
 
 .thing.is-misfit .organizer-body,
+.thing.is-misfit .bag-body,
 .thing.is-misfit .item-body {
   stroke: var(--danger);
   stroke-width: 2;
@@ -601,21 +842,42 @@ input[aria-invalid="true"] {
   pointer-events: none;
 }
 
+/* The copy of a thing that follows the pointer while it is carried: lifted, tilted a little, with a shadow. */
 .drag-ghost {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 14rem;
-  padding: 4px 8px;
-  border: 1px solid var(--accent);
-  border-radius: 5px;
-  background: var(--surface);
-  box-shadow: 0 4px 14px rgb(0 0 0 / 0.25);
-  transform: translate(12px, 12px);
+  filter: drop-shadow(0 8px 7px rgb(0 0 0 / 0.32));
   pointer-events: none;
-  white-space: nowrap;
+}
+
+.drag-ghost > * {
+  display: block;
+  overflow: visible;
+  transform: rotate(-2deg) scale(1.05);
+}
+
+.drag-ghost.is-refused {
+  opacity: 0.55;
+}
+
+.drag-ghost .thing-body {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thing {
+    transition: none;
+  }
+
+  .thing-body {
+    animation: none;
+  }
+
+  .drag-ghost > * {
+    transform: none;
+  }
 }
 
 /* ---- Side panel ---- */
@@ -724,9 +986,9 @@ input[aria-invalid="true"] {
   font-weight: 600;
 }
 
-/* ---- Unsorted tray ---- */
+/* ---- The floor strip ---- */
 
-.tray {
+.floor-strip {
   position: sticky;
   bottom: 0;
   z-index: 5;
@@ -743,12 +1005,12 @@ input[aria-invalid="true"] {
   box-shadow: 0 -4px 14px rgb(0 0 0 / 0.08);
 }
 
-.tray.is-over {
+.floor-strip.is-over {
   border-color: var(--accent);
   background: var(--accent-soft);
 }
 
-.tray h2 {
+.floor-strip h2 {
   flex: none;
 }
 
@@ -759,7 +1021,7 @@ input[aria-invalid="true"] {
   font-variant-numeric: tabular-nums;
 }
 
-.tray-things {
+.floor-things {
   display: flex;
   flex: 1;
   gap: 6px;
@@ -782,6 +1044,10 @@ input[aria-invalid="true"] {
 
 .chip-box {
   border-color: var(--box-edge);
+}
+
+.stage-head .button {
+  margin-left: auto;
 }
 
 .chip.is-selected {
@@ -837,7 +1103,7 @@ input[aria-invalid="true"] {
     display: flex;
   }
 
-  .tray {
+  .floor-strip {
     flex-direction: column;
     align-items: stretch;
     gap: 4px;

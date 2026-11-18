@@ -1,18 +1,19 @@
 /*
- * The page: a top bar, then the furniture picker, the front view of the open
- * piece, and a side panel for whatever is selected, with the unsorted tray
- * along the bottom.
+ * The page: a top bar, then the furniture picker, the open piece of furniture,
+ * and a side panel for whatever is selected, with the floor strip along the
+ * bottom.
  */
 
 import { StoreProvider, useStore } from '../state/store';
 import { AddBar } from './AddBar';
 import { DragProvider } from './drag';
+import { FloorStrip } from './FloorStrip';
 import { FurniturePicker } from './FurniturePicker';
 import { FurnitureView } from './FurnitureView';
 import { Header } from './Header';
 import { ItemEditor } from './ItemEditor';
 import { MeasurePanel } from './MeasurePanel';
-import { UnsortedTray } from './UnsortedTray';
+import { OpenAllButton } from './Openings';
 import { toDisplaySize } from '../model/units';
 
 export function App() {
@@ -34,10 +35,10 @@ function Page() {
     <div className="app">
       <Header />
       <main className="layout">
-        <aside className="card sidebar" aria-label="Furniture">
+        <aside className="card sidebar" aria-label="Furniture list and floor plan">
           <FurniturePicker />
         </aside>
-        <section className="card stage" aria-label="Front view">
+        <section className="card stage" aria-label="Furniture">
           <div className="stage-head">
             <h2>{piece?.name ?? 'No furniture open'}</h2>
             {piece && (
@@ -46,6 +47,7 @@ function Page() {
                 {piece.estimated && <span className="badge-inline">estimated</span>}
               </span>
             )}
+            {piece && <OpenAllButton piece={piece} />}
           </div>
           <AddBar />
           <FurnitureView />
@@ -54,7 +56,7 @@ function Page() {
           {editingThing ? <ItemEditor /> : <MeasurePanel />}
         </aside>
       </main>
-      <UnsortedTray />
+      <FloorStrip />
     </div>
   );
 }

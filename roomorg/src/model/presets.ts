@@ -14,25 +14,43 @@ export const MIN_RAIL_SPACE = 2.5;
 /** From the rail down to the shoulders of a hung garment: the hook and the hanger. */
 export const HANGER_GAP = 10;
 
+/** The space left between neighbours on a shelf or on the floor. */
+export const THING_GAP = 2;
+
+/** The space left between neighbours inside a box or a bag, where things are packed closer. */
+export const PACKED_GAP = 0.5;
+
+/** How high a pile of clothing may grow on the floor before a new pile starts. */
+export const FLOOR_PILE_HEIGHT = 45;
+
 /** New items get this loud colour until you choose one, so unfinished ones stand out. */
 export const UNFINISHED_COLOUR = '#ff4fa3';
 
 export interface OrganizerPreset {
   id: string;
   name: string;
+  kind: 'box' | 'bag';
   outer: Size3;
   wall: number;
 }
 
 /**
- * Sized so a closet shelf about 96 cm wide holds two large,
- * or one large + one medium + one small.
+ * The boxes are sized so a closet shelf about 96 cm wide holds two large, or
+ * one large + one medium + one small, with gaps between them.
+ * The bags are one kind of thing in three sizes for now.
  */
 export const ORGANIZER_PRESETS: OrganizerPreset[] = [
-  { id: 'small', name: 'Small', outer: { w: 18, h: 20, d: 50 }, wall: 0.3 },
-  { id: 'medium', name: 'Medium', outer: { w: 28, h: 20, d: 50 }, wall: 0.3 },
-  { id: 'large', name: 'Large', outer: { w: 46, h: 20, d: 50 }, wall: 0.3 },
+  { id: 'small', name: 'Small box', kind: 'box', outer: { w: 18, h: 20, d: 50 }, wall: 0.3 },
+  { id: 'medium', name: 'Medium box', kind: 'box', outer: { w: 28, h: 20, d: 50 }, wall: 0.3 },
+  { id: 'large', name: 'Large box', kind: 'box', outer: { w: 46, h: 20, d: 50 }, wall: 0.3 },
+  { id: 'pouch', name: 'Pouch', kind: 'bag', outer: { w: 22, h: 14, d: 8 }, wall: 0.2 },
+  { id: 'tote', name: 'Tote bag', kind: 'bag', outer: { w: 36, h: 34, d: 12 }, wall: 0.2 },
+  { id: 'backpack', name: 'Backpack', kind: 'bag', outer: { w: 30, h: 45, d: 18 }, wall: 0.3 },
 ];
+
+export function organizerPreset(id: string): OrganizerPreset {
+  return ORGANIZER_PRESETS.find((preset) => preset.id === id) ?? ORGANIZER_PRESETS[1];
+}
 
 export interface ClothingType {
   id: string;

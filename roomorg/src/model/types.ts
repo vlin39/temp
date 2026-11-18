@@ -36,7 +36,13 @@ export interface Room {
 /** Which way the front of a piece of furniture points on the plan. */
 export type Facing = 'north' | 'east' | 'south' | 'west';
 
-export type CellKind = 'shelf' | 'hanging' | 'drawer' | 'cabinet';
+/**
+ * - 'shelf': an open space things sit in.
+ * - 'hanging': a space with a rail.
+ * - 'drawer': slides out; things can only go in while it is open.
+ * - 'fixture': takes up room but stores nothing (a sink).
+ */
+export type CellKind = 'shelf' | 'hanging' | 'drawer' | 'fixture';
 
 /** One compartment of a piece of furniture. */
 export interface Cell {
@@ -57,6 +63,13 @@ export interface Column {
   /** Clear inside width. */
   width: number;
   cells: Cell[];
+}
+
+/** A door on the front of a piece. It covers the rectangle around the compartments it names. */
+export interface Door {
+  id: Id;
+  name: string;
+  cellIds: Id[];
 }
 
 export interface PanelThickness {
@@ -84,15 +97,21 @@ export interface Furniture {
   baseHeight: number;
   /** Side by side, left to right. Empty for furniture with no storage (a bed, a desk). */
   columns: Column[];
+  doors: Door[];
   /** True until one of its measurements is edited. */
   estimated: boolean;
 }
 
-/** A box, basket or bin that holds items. */
+/**
+ * Something that holds other things.
+ * A box is rigid: it holds bags and clothing, and needs room wherever it goes.
+ * A bag is soft: it holds clothing, and can go inside a box.
+ */
 export interface Organizer {
   id: Id;
+  kind: 'box' | 'bag';
   name: string;
-  /** A compartment's id, or null when it is in the unsorted tray. */
+  /** A compartment's id, a box's id (for a bag), or null when it is on the floor. */
   parentId: Id | null;
   /** Position among the things that share its parent. */
   order: number;
@@ -126,7 +145,7 @@ export interface Item {
   type: string;
   /** '#rrggbb'. */
   colour: string;
-  /** A compartment's id, an organizer's id, or null when it is in the unsorted tray. */
+  /** A compartment's id, an organizer's id, or null when it is on the floor. */
   parentId: Id | null;
   order: number;
   /** The laid-flat shape. The first 'body' part is the main one. */
@@ -137,11 +156,13 @@ export interface Item {
 }
 
 export interface Home {
-  version: 1;
+  version: 2;
   rooms: Room[];
   furniture: Furniture[];
   organizers: Organizer[];
   items: Item[];
+  /** The ids of the doors and drawers that are open. */
+  open: Id[];
   /** When a backup file was last downloaded (ISO date), or null. */
   lastBackupAt: string | null;
 }

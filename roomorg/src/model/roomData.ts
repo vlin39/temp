@@ -1,6 +1,6 @@
 /*
- * The starter home: the suite from the sketch, its furniture and compartments,
- * and the boxes named in the organization table.
+ * The starter home: the suite from the sketch, its furniture, compartments and
+ * doors, and the boxes named in the organization table.
  *
  * Which pieces exist, where they stand and which way they face are fixed here
  * for now. Their measurements can be edited in the app.
@@ -9,8 +9,8 @@
  * placeholder, marked `estimated`, until it is measured.
  */
 
-import { ORGANIZER_PRESETS } from './presets';
-import type { Cell, CellKind, Column, Facing, Furniture, Home, Organizer, Room, Size3 } from './types';
+import { organizerPreset } from './presets';
+import type { Cell, CellKind, Column, Door, Facing, Furniture, Home, Organizer, Room, Size3 } from './types';
 import { CM_PER_INCH } from './units';
 
 const inches = (n: number) => n * CM_PER_INCH;
@@ -23,6 +23,12 @@ interface CellSpec {
   kind?: CellKind;
   /** Clear height. Compartments without one share what is left equally. */
   height?: number;
+}
+
+interface DoorSpec {
+  name: string;
+  /** The compartments behind the door, as [column, compartment] counted from 1. Omit to cover the whole front. */
+  covers?: [number, number][];
 }
 
 interface PieceSpec {
@@ -38,6 +44,7 @@ interface PieceSpec {
   estimated?: boolean;
   /** Each column lists its compartments bottom to top. Omit for furniture with no storage. */
   columns?: { width?: number; cells: CellSpec[] }[];
+  doors?: DoorSpec[];
 }
 
 /** Builds a piece whose compartments add up exactly to its inside size. */
@@ -70,6 +77,14 @@ function makePiece(spec: PieceSpec): Furniture {
     return { id: `${spec.id}-c${columnIndex + 1}`, width: column.width ?? spareWidth / freeColumns, cells };
   });
 
+  const doors: Door[] = (spec.doors ?? []).map((door, doorIndex) => ({
+    id: `${spec.id}-door${doorIndex + 1}`,
+    name: door.name,
+    cellIds: door.covers
+      ? door.covers.map(([column, cell]) => `${spec.id}-c${column}-${cell}`)
+      : columns.flatMap((column) => column.cells.map((cell) => cell.id)),
+  }));
+
   return {
     id: spec.id,
     name: spec.name,
@@ -83,6 +98,7 @@ function makePiece(spec: PieceSpec): Furniture {
     dividerThickness: BOARD,
     baseHeight: base,
     columns,
+    doors,
     estimated: spec.estimated ?? true,
   };
 }
@@ -100,6 +116,7 @@ function closetB(id: string, name: string, x: number, y: number, facing: Facing,
     outer: { w: 100, h: 220, d: 58 },
     base: 6,
     columns: [{ cells: [{ name: hanging, kind: 'hanging', height: 110 }, ...shelves.map((shelf) => ({ name: shelf }))] }],
+    doors: [{ name: 'Doors' }],
   });
 }
 
@@ -128,9 +145,10 @@ function noStorage(id: string, name: string, roomId: string, x: number, y: numbe
 /** Boxes on one shelf, left to right, as [name, preset id] pairs. */
 function boxes(cellId: string, entries: [string, string][]): Organizer[] {
   return entries.map(([name, presetId], order) => {
-    const preset = ORGANIZER_PRESETS.find((candidate) => candidate.id === presetId)!;
+    const preset = organizerPreset(presetId);
     return {
       id: `${cellId}-box${order + 1}`,
+      kind: preset.kind,
       name,
       parentId: cellId,
       order,
@@ -191,6 +209,7 @@ export function createStarterHome(): Home {
           ],
         },
       ],
+      doors: [{ name: 'Doors' }],
     }),
     shelvesC('shelves-c1', 'Shelves C1', 110, 0, 'south'),
     shelvesC('shelves-c2', 'Shelves C2', 0, 50, 'east'),
@@ -219,10 +238,16 @@ export function createStarterHome(): Home {
       facing: 'west',
       outer: { w: 150, h: 85, d: 55 },
       base: 8,
+      // Each side: a cabinet with two shelves and a drawer above it. The middle: the sink, with a cabinet under it.
       columns: [
-        { width: 35, cells: [{ name: 'Left cabinet, lower', kind: 'cabinet' }, { name: 'Left cabinet, upper', kind: 'cabinet' }] },
-        { cells: [{ name: 'Under the sink', kind: 'cabinet' }, { name: 'Drawer', kind: 'drawer', height: 12 }] },
-        { width: 35, cells: [{ name: 'Right cabinet, lower', kind: 'cabinet' }, { name: 'Right cabinet, upper', kind: 'cabinet' }] },
+        { width: 35, cells: [{ name: 'Left cabinet, lower shelf' }, { name: 'Left cabinet, upper shelf' }, { name: 'Left drawer', kind: 'drawer', height: 12 }] },
+        { cells: [{ name: 'Under the sink' }, { name: 'Sink', kind: 'fixture', height: 15 }] },
+        { width: 35, cells: [{ name: 'Right cabinet, lower shelf' }, { name: 'Right cabinet, upper shelf' }, { name: 'Right drawer', kind: 'drawer', height: 12 }] },
+      ],
+      doors: [
+        { name: 'Left cabinet door', covers: [[1, 1], [1, 2]] },
+        { name: 'Under-sink doors', covers: [[2, 1]] },
+        { name: 'Right cabinet door', covers: [[3, 1], [3, 2]] },
       ],
     }),
     makePiece({
@@ -233,9 +258,8 @@ export function createStarterHome(): Home {
       y: 45,
       facing: 'west',
       outer: { w: 30, h: 75, d: 20 },
-      columns: [
-        { cells: [{ name: 'Bottom level', kind: 'cabinet' }, { name: 'Middle level', kind: 'cabinet' }, { name: 'Top level', kind: 'cabinet' }] },
-      ],
+      columns: [{ cells: [{ name: 'Bottom level' }, { name: 'Middle level' }, { name: 'Top level' }] }],
+      doors: [{ name: 'Door' }],
     }),
 
     // Bathroom fixtures, shown on the floor plan only.
@@ -254,5 +278,8 @@ export function createStarterHome(): Home {
     ...boxes('closet-b3-c1-2', [['Pajamas', 'large'], ['Belts', 'small'], ['Tank tops', 'small']]),
   ];
 
-  return { version: 1, rooms, furniture, organizers, items: [], lastBackupAt: null };
+  // The closets start with their doors open, so the first thing you see is what is in them.
+  const open = furniture.filter((piece) => piece.id.startsWith('closet-')).flatMap((piece) => piece.doors.map((door) => door.id));
+
+  return { version: 2, rooms, furniture, organizers, items: [], open, lastBackupAt: null };
 }

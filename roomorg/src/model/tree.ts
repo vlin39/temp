@@ -2,11 +2,13 @@
  * Where things are, and moving them.
  *
  * Organizers and items point at their parent by id:
- *   a compartment holds organizers and items,
- *   an organizer holds items,
- *   the unsorted tray (parent null) holds both.
+ *   a compartment holds boxes, bags and clothing (unless it is a fixture),
+ *   a box holds bags and clothing,
+ *   a bag holds clothing,
+ *   the floor (parent null) holds anything.
  */
 
+import { doorOf, openingsOf } from './furniture';
 import { newId } from './ids';
 import { UNFINISHED_COLOUR, clothingType, type OrganizerPreset } from './presets';
 import { Refusal } from './refusal';
@@ -25,16 +27,15 @@ export interface HomeIndex {
   items: Map<Id, Item>;
 }
 
-/** Something that sits in a compartment, an organizer or the tray. */
+/** Something that sits in a compartment, in an organizer or on the floor. */
 export type Child = { kind: 'organizer'; organizer: Organizer } | { kind: 'item'; item: Item };
 
-export type ParentKind = 'cell' | 'organizer' | 'tray';
+export type ParentKind = 'cell' | 'organizer' | 'floor';
 
-/** A place something can be moved to, for the "Move to" list. */
+/** A place something can be moved to, for the "Where" list. */
 export interface Destination {
   id: Id | null;
   label: string;
-  kind: ParentKind;
 }
 
 export function indexHome(home: Home): HomeIndex {
@@ -66,29 +67,49 @@ export function childrenOf(home: Home, parentId: Id | null): Child[] {
 }
 
 export function parentKindOf(index: HomeIndex, parentId: Id | null): ParentKind | null {
-  if (parentId === null) return 'tray';
+  if (parentId === null) return 'floor';
   if (index.cells.has(parentId)) return 'cell';
   if (index.organizers.has(parentId)) return 'organizer';
   return null;
 }
 
-/** May this parent hold this kind of thing? An organizer cannot hold another organizer. */
-export function canHold(index: HomeIndex, parentId: Id | null, kind: Child['kind']): boolean {
-  const parentKind = parentKindOf(index, parentId);
-  if (parentKind === null) return false;
-  return parentKind !== 'organizer' || kind === 'item';
+/**
+ * Why this parent cannot hold this thing, or null if it can.
+ * The sentence is written for the person using the app.
+ */
+export function whyNotHold(index: HomeIndex, parentId: Id | null, id: Id): string | null {
+  const organizer = index.organizers.get(id);
+  if (!organizer && !index.items.has(id)) return 'That no longer exists.';
+  if (parentId === null) return null;
+  if (parentId === id) return 'A thing cannot go inside itself.';
+
+  const cellRef = index.cells.get(parentId);
+  if (cellRef) return cellRef.cell.kind === 'fixture' ? `Nothing can be stored in ${cellRef.cell.name}.` : null;
+
+  const holder = index.organizers.get(parentId);
+  if (!holder) return 'That place no longer exists.';
+  if (!organizer) return null; // clothing goes in any box or bag
+  if (holder.kind === 'bag') return 'A bag can only hold clothing.';
+  return organizer.kind === 'box' ? 'A box cannot go inside another box.' : null;
+}
+
+export function canHold(index: HomeIndex, parentId: Id | null, id: Id): boolean {
+  return whyNotHold(index, parentId, id) === null;
 }
 
 export function isRail(index: HomeIndex, parentId: Id | null): boolean {
   return parentId !== null && index.cells.get(parentId)?.cell.kind === 'hanging';
 }
 
-/** The compartment a box or an item is in, directly or inside a box. Undefined if it is in the tray. */
+/** The compartment something is in, however deeply it is nested. Undefined if it is on the floor. */
 export function cellHolding(index: HomeIndex, id: Id): CellRef | undefined {
-  const own = index.items.get(id) ?? index.organizers.get(id);
-  const holder = own?.parentId ? index.organizers.get(own.parentId) : undefined;
-  const cellId = holder ? holder.parentId : own?.parentId;
-  return cellId ? index.cells.get(cellId) : undefined;
+  let parentId = (index.items.get(id) ?? index.organizers.get(id))?.parentId ?? null;
+  while (parentId !== null) {
+    const cellRef = index.cells.get(parentId);
+    if (cellRef) return cellRef;
+    parentId = index.organizers.get(parentId)?.parentId ?? null;
+  }
+  return undefined;
 }
 
 /** An item going onto a rail becomes hung; coming off, it goes back to its earlier fold. */
@@ -100,15 +121,13 @@ function refold(item: Item, ontoRail: boolean): Item {
 
 /**
  * Puts an organizer or item into a parent, at `position` among what is already there
- * (omit it to put the thing last).
+ * (omit it to put the thing last). This only checks what may hold what; place.ts adds
+ * the rule that a box needs room.
  */
 export function move(home: Home, id: Id, newParentId: Id | null, position = Infinity): Home {
   const index = indexHome(home);
-  const kind = index.organizers.has(id) ? 'organizer' : index.items.has(id) ? 'item' : null;
-  if (kind === null) throw new Refusal('That no longer exists.');
-  if (!canHold(index, newParentId, kind)) {
-    throw new Refusal(kind === 'organizer' ? 'A box cannot go inside another box.' : 'That cannot go there.');
-  }
+  const reason = whyNotHold(index, newParentId, id);
+  if (reason !== null) throw new Refusal(reason);
 
   const siblings = childrenOf(home, newParentId).map(childId).filter((sibling) => sibling !== id);
   const at = Math.max(0, Math.min(position, siblings.length));
@@ -129,37 +148,39 @@ export function move(home: Home, id: Id, newParentId: Id | null, position = Infi
   };
 }
 
-/** Deletes an item, or an organizer whose contents then go to the unsorted tray. */
+/** Deletes an item, or an organizer whose contents then go to the floor. */
 export function remove(home: Home, id: Id): Home {
   if (home.items.some((item) => item.id === id)) {
     return { ...home, items: home.items.filter((item) => item.id !== id) };
   }
   if (!home.organizers.some((organizer) => organizer.id === id)) throw new Refusal('That no longer exists.');
 
-  let nextTrayPlace = childrenOf(home, null).length;
+  let nextPlace = childrenOf(home, null).length;
+  const toFloor = <T extends Organizer | Item>(thing: T): T =>
+    thing.parentId === id ? { ...thing, parentId: null, order: nextPlace++ } : thing;
   return {
     ...home,
-    organizers: home.organizers.filter((organizer) => organizer.id !== id),
-    items: home.items.map((item) => (item.parentId === id ? { ...item, parentId: null, order: nextTrayPlace++ } : item)),
+    organizers: home.organizers.filter((organizer) => organizer.id !== id).map(toFloor),
+    items: home.items.map(toFloor),
   };
 }
 
-/** Adds an organizer of a preset size to a compartment or the tray. */
-export function addOrganizer(home: Home, parentId: Id | null, preset: OrganizerPreset): { home: Home; id: Id } {
+/** Adds a box or a bag of a preset size to the floor. */
+export function addOrganizer(home: Home, preset: OrganizerPreset): { home: Home; id: Id } {
   const organizer: Organizer = {
     id: newId(),
-    name: `${preset.name} box`,
+    kind: preset.kind,
+    name: preset.name,
     parentId: null,
-    order: 0,
+    order: childrenOf(home, null).length,
     outer: { ...preset.outer },
     wall: preset.wall,
   };
-  const added = { ...home, organizers: [...home.organizers, organizer] };
-  return { home: move(added, organizer.id, parentId), id: organizer.id };
+  return { home: { ...home, organizers: [...home.organizers, organizer] }, id: organizer.id };
 }
 
-/** Adds a clothing item, laid flat, to a compartment, an organizer or the tray. */
-export function addItem(home: Home, parentId: Id | null, typeId: string): { home: Home; id: Id } {
+/** Adds a clothing item, laid flat, to the floor. */
+export function addItem(home: Home, typeId: string): { home: Home; id: Id } {
   const type = clothingType(typeId);
   const item: Item = {
     id: newId(),
@@ -168,13 +189,12 @@ export function addItem(home: Home, parentId: Id | null, typeId: string): { home
     type: type.id,
     colour: UNFINISHED_COLOUR,
     parentId: null,
-    order: 0,
+    order: childrenOf(home, null).length,
     parts: type.parts.map((part) => ({ ...part })),
     fold: 'flat',
     previousFold: null,
   };
-  const added = { ...home, items: [...home.items, item] };
-  return { home: move(added, item.id, parentId), id: item.id };
+  return { home: { ...home, items: [...home.items, item] }, id: item.id };
 }
 
 const positive = (n: number) => Number.isFinite(n) && n > 0;
@@ -182,13 +202,14 @@ const positive = (n: number) => Number.isFinite(n) && n > 0;
 /** Changes an organizer's name, size or wall thickness. */
 export function updateOrganizer(home: Home, id: Id, changes: Partial<Pick<Organizer, 'name' | 'outer' | 'wall'>>): Home {
   const current = home.organizers.find((organizer) => organizer.id === id);
-  if (!current) throw new Refusal('That box no longer exists.');
+  if (!current) throw new Refusal('That no longer exists.');
   const next = { ...current, ...changes };
-  if (next.name.trim() === '') throw new Refusal('A box needs a name.');
+  const what = current.kind === 'box' ? 'box' : 'bag';
+  if (next.name.trim() === '') throw new Refusal(`A ${what} needs a name.`);
   if (![next.outer.w, next.outer.h, next.outer.d].every(positive)) throw new Refusal('A size must be more than zero.');
   if (!(next.wall >= 0)) throw new Refusal('A thickness cannot be less than zero.');
   if (2 * next.wall >= Math.min(next.outer.w, next.outer.d) || next.wall >= next.outer.h) {
-    throw new Refusal('The walls would leave no room inside the box.');
+    throw new Refusal(`The walls would leave no room inside the ${what}.`);
   }
   return { ...home, organizers: home.organizers.map((organizer) => (organizer.id === id ? next : organizer)) };
 }
@@ -223,46 +244,69 @@ export function updateItem(
   return { ...home, items: home.items.map((item) => (item.id === id ? next : item)) };
 }
 
-/** The names leading to something: room, furniture, compartment, organizer, then itself. */
+/** Opens a closed door or drawer, or closes an open one. */
+export function toggleOpen(home: Home, id: Id): Home {
+  return { ...home, open: home.open.includes(id) ? home.open.filter((other) => other !== id) : [...home.open, id] };
+}
+
+/** Opens every door and drawer of a piece, or closes them all. */
+export function setAllOpen(home: Home, furniture: Furniture, open: boolean): Home {
+  const ids = openingsOf(furniture);
+  const others = home.open.filter((id) => !ids.includes(id));
+  return { ...home, open: open ? [...others, ...ids] : others };
+}
+
+/** Opens whatever is closed in front of a thing: the door of its compartment, and the compartment itself if it is a drawer. */
+export function reveal(home: Home, id: Id): Home {
+  const cellRef = cellHolding(indexHome(home), id);
+  if (!cellRef) return home;
+  const inFront = [doorOf(cellRef.furniture, cellRef.cell.id)?.id, cellRef.cell.kind === 'drawer' ? cellRef.cell.id : undefined];
+  const closed = inFront.filter((opening): opening is Id => opening !== undefined && !home.open.includes(opening));
+  return closed.length === 0 ? home : { ...home, open: [...home.open, ...closed] };
+}
+
+/** The names leading to something: room, furniture, compartment, any box and bag, then itself. */
 export function pathTo(home: Home, id: Id): string[] {
   const index = indexHome(home);
-  const organizer = index.organizers.get(id);
-  const item = index.items.get(id);
-  const own = organizer ?? item;
+  const own = index.organizers.get(id) ?? index.items.get(id);
   if (!own) return [];
 
   const path = [own.name];
   let parentId = own.parentId;
-  const holder = parentId === null ? undefined : index.organizers.get(parentId);
-  if (holder) {
+  while (parentId !== null) {
+    const cellRef = index.cells.get(parentId);
+    if (cellRef) {
+      const room = home.rooms.find((candidate) => candidate.id === cellRef.furniture.roomId);
+      return [...(room ? [room.name] : []), cellRef.furniture.name, cellRef.cell.name, ...path];
+    }
+    const holder = index.organizers.get(parentId);
+    if (!holder) break;
     path.unshift(holder.name);
     parentId = holder.parentId;
   }
-  const cellRef = parentId === null ? undefined : index.cells.get(parentId);
-  if (!cellRef) return ['Unsorted', ...path];
-
-  const room = home.rooms.find((candidate) => candidate.id === cellRef.furniture.roomId);
-  return [...(room ? [room.name] : []), cellRef.furniture.name, cellRef.cell.name, ...path];
+  return ['Floor', ...path];
 }
 
-/** Every place something can be moved to: the tray, each compartment, and each organizer. */
+/** Every place something can be moved to: the floor, each compartment, and each box and bag. */
 export function destinations(home: Home): Destination[] {
-  const list: Destination[] = [{ id: null, label: 'Unsorted tray', kind: 'tray' }];
+  const list: Destination[] = [{ id: null, label: 'Floor' }];
   const organizersIn = (parentId: Id | null, prefix: string) => {
     for (const child of childrenOf(home, parentId)) {
-      if (child.kind === 'organizer') {
-        list.push({ id: child.organizer.id, label: `${prefix} › ${child.organizer.name}`, kind: 'organizer' });
-      }
+      if (child.kind !== 'organizer') continue;
+      const label = `${prefix} › ${child.organizer.name}`;
+      list.push({ id: child.organizer.id, label });
+      organizersIn(child.organizer.id, label);
     }
   };
 
-  organizersIn(null, 'Unsorted tray');
+  organizersIn(null, 'Floor');
   for (const furniture of home.furniture) {
     for (const column of furniture.columns) {
       // Listed top to bottom, the way the piece looks from the front.
       for (const cell of [...column.cells].reverse()) {
+        if (cell.kind === 'fixture') continue;
         const label = `${furniture.name} › ${cell.name}`;
-        list.push({ id: cell.id, label, kind: 'cell' });
+        list.push({ id: cell.id, label });
         organizersIn(cell.id, label);
       }
     }

@@ -158,7 +158,7 @@ const KIND_NAMES: Record<Cell['kind'], string> = {
   shelf: 'Shelf',
   hanging: 'Hanging space',
   drawer: 'Drawer',
-  cabinet: 'Cabinet',
+  fixture: 'Stores nothing',
 };
 
 function CellRow({ cell, selected, onSelect, onRename, onHeight, onRailDrop, onDrawerWall }: CellRowProps) {

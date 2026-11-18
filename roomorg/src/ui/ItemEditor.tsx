@@ -1,19 +1,21 @@
 /*
- * The side panel for the selected thing: a clothing item or an organizer.
+ * The side panel for the selected thing: a clothing item, a box or a bag.
  */
 
 import { useState } from 'react';
 import { flatOutline, storedSize } from '../model/folding';
-import { arrange, insideOf, reach } from '../model/layout';
+import { arrange, insideOf } from '../model/layout';
+import { place } from '../model/place';
 import { CLOTHING_TYPES, FOLD_OPTIONS, ORGANIZER_PRESETS, clothingType } from '../model/presets';
-import { childId, childrenOf, destinations, isRail, move, pathTo, remove, updateItem, updateOrganizer } from '../model/tree';
+import { canHold, childId, childrenOf, destinations, isRail, pathTo, remove, reveal, updateItem, updateOrganizer } from '../model/tree';
 import type { Fold, Id, Item, Organizer, Part, Size3 } from '../model/types';
 import { toDisplay, toDisplaySize } from '../model/units';
 import { useStore } from '../state/store';
 import { Contents } from './Contents';
-import { useDrag } from './drag';
+import { overClass, useDrag } from './drag';
 import { LengthField, TextField, TwoStepButton, cls } from './parts';
 import { ThingChip } from './ThingChip';
+import { FLAT, frontRect, type View } from './view';
 
 const PART_NAMES: Record<Part['role'], string> = { body: 'Body', sleeve: 'Each sleeve', leg: 'Each leg' };
 
@@ -38,11 +40,15 @@ function PanelHead({ title }: { title: string }) {
   );
 }
 
-/** Where a thing is, and a list to move it somewhere else without dragging. */
-function Whereabouts({ id, kind }: { id: Id; kind: 'item' | 'organizer' }) {
+/**
+ * Where a thing is, and a list to move it somewhere else without dragging.
+ * The list only offers places that may hold it; a box is still refused where
+ * there is no room. A door or drawer in the way is opened.
+ */
+function Whereabouts({ id }: { id: Id }) {
   const { state, index, edit } = useStore();
-  const parentId = (kind === 'item' ? index.items.get(id) : index.organizers.get(id))?.parentId ?? null;
-  const places = destinations(state.home).filter((place) => kind === 'item' || place.kind !== 'organizer');
+  const parentId = (index.items.get(id) ?? index.organizers.get(id))?.parentId ?? null;
+  const places = destinations(state.home).filter((candidate) => canHold(index, candidate.id, id));
 
   return (
     <label className="field">
@@ -50,11 +56,11 @@ function Whereabouts({ id, kind }: { id: Id; kind: 'item' | 'organizer' }) {
       <select
         id="move-to"
         value={parentId ?? ''}
-        onChange={(event) => edit((home) => move(home, id, event.target.value === '' ? null : event.target.value))}
+        onChange={(event) => edit((home) => reveal(place(home, id, event.target.value === '' ? null : event.target.value), id))}
       >
-        {places.map((place) => (
-          <option key={place.id ?? ''} value={place.id ?? ''}>
-            {place.label}
+        {places.map((candidate) => (
+          <option key={candidate.id ?? ''} value={candidate.id ?? ''}>
+            {candidate.label}
           </option>
         ))}
       </select>
@@ -152,7 +158,7 @@ function ClothingEditor({ item }: { item: Item }) {
           : `Takes ${toDisplaySize(stored.w, stored.d, stored.h)} (wide × deep × tall).`}
       </p>
 
-      <Whereabouts id={item.id} kind="item" />
+      <Whereabouts id={item.id} />
       <TwoStepButton className="button-danger" confirmLabel="Click again to delete" onConfirm={() => edit((home) => remove(home, item.id))}>
         Delete item
       </TwoStepButton>
@@ -185,15 +191,20 @@ function OrganizerEditor({ organizer }: { organizer: Organizer }) {
   const setOuter = (dimension: keyof Size3) => (cm: number) => change({ outer: { ...organizer.outer, [dimension]: cm } });
   const inside = insideOf(organizer);
   const children = childrenOf(state.home, organizer.id);
+  const isBag = organizer.kind === 'bag';
 
   return (
     <div className="panel-body">
-      <PanelHead title="Box" />
+      <PanelHead title={isBag ? 'Bag' : 'Box'} />
       <TextField id="organizer-name" label="Name" value={organizer.name} onCommit={(name) => change({ name })} />
 
       <h3>Inside ({children.length})</h3>
       <InsideView organizer={organizer} />
-      {children.length === 0 && <p className="hint">Empty. Drag clothing onto the box, or add some while it is selected.</p>}
+      {children.length === 0 && (
+        <p className="hint">
+          Empty. Drag {isBag ? 'clothing' : 'clothing or a bag'} onto it, or add some while it is selected.
+        </p>
+      )}
       <div className="chip-row">
         {children.map((child) => (
           <ThingChip key={childId(child)} child={child} zone={organizer.id} counted={false} />
@@ -202,7 +213,7 @@ function OrganizerEditor({ organizer }: { organizer: Organizer }) {
 
       <h3>Size</h3>
       <div className="preset-row">
-        {ORGANIZER_PRESETS.map((preset) => (
+        {ORGANIZER_PRESETS.filter((preset) => preset.kind === organizer.kind).map((preset) => (
           <button
             key={preset.id}
             type="button"
@@ -221,34 +232,31 @@ function OrganizerEditor({ organizer }: { organizer: Organizer }) {
       </div>
       <p className="stored-size">Inside: {toDisplaySize(inside.w, inside.d, inside.h)} (wide × deep × tall).</p>
 
-      <Whereabouts id={organizer.id} kind="organizer" />
+      <Whereabouts id={organizer.id} />
       <TwoStepButton
         className="button-danger"
-        confirmLabel="Click again: contents go to the tray"
+        confirmLabel="Click again: contents go to the floor"
         onConfirm={() => edit((home) => remove(home, organizer.id))}
       >
-        Delete box
+        Delete {organizer.kind}
       </TwoStepButton>
     </div>
   );
 }
 
-/** The inside of a box seen from the front, larger than it appears on the shelf. */
+/** The inside of a box or bag seen straight from the front, larger than it appears on the shelf. */
 function InsideView({ organizer }: { organizer: Organizer }) {
   const { state, index } = useStore();
   const { drag } = useDrag();
   const inside = insideOf(organizer);
   const placed = arrange(state.home, organizer.id, index);
 
-  // Leave room to show things that are too big for the box, up to three times its size.
-  const used = reach(placed);
-  const drawnW = Math.min(Math.max(inside.w, used.w), inside.w * 3);
-  const drawnH = Math.min(Math.max(inside.h, used.h), inside.h * 3);
+  // Leave room to show things that are too big for it, up to three times its size.
+  const drawnW = Math.min(Math.max(inside.w, ...placed.map((p) => p.x + p.w)), inside.w * 3);
+  const drawnH = Math.min(Math.max(inside.h, ...placed.map((p) => p.y + p.h)), inside.h * 3);
   const margin = 12;
   const scale = Math.min(250 / drawnW, 150 / drawnH);
-  const width = inside.w * scale;
-  const height = inside.h * scale;
-  const floor = margin + drawnH * scale;
+  const view: View = { ...FLAT, scale, originX: margin, originY: margin + drawnH * scale };
 
   return (
     <svg
@@ -259,14 +267,11 @@ function InsideView({ organizer }: { organizer: Organizer }) {
       aria-label={`Inside ${organizer.name}`}
     >
       <rect
-        className={cls('organizer-body', drag?.overZone === organizer.id && 'is-over')}
+        className={cls(organizer.kind === 'bag' ? 'bag-body' : 'organizer-body', overClass(drag, organizer.id))}
         data-drop={organizer.id}
-        x={margin}
-        y={floor - height}
-        width={width}
-        height={height}
+        {...frontRect(view, { x: 0, y: 0, z: 0, w: inside.w, h: inside.h })}
       />
-      <Contents placed={placed} originX={margin} originY={floor} scale={scale} maxRight={margin + drawnW * scale} />
+      <Contents placed={placed} view={view} maxRight={drawnW} />
     </svg>
   );
 }

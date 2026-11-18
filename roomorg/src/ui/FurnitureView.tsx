@@ -1,24 +1,45 @@
 /*
- * The front view of the open piece of furniture, drawn to scale: its panels,
- * its compartments, and everything in them.
+ * The open piece of furniture, drawn to scale and at an angle: its panels and
+ * compartments, its doors and drawers, everything in them, and the floor in
+ * front of it with whatever has been set down there.
+ *
+ * It is painted from the back forward: the floor, the outside of the piece,
+ * the inside of each compartment, the front edges of the panels, the things
+ * on the shelves, then the doors and drawers, then the things on the floor.
  */
 
-import { clearSpaces, panels, usableSpace } from '../model/furniture';
-import { arrange, reach } from '../model/layout';
+import { clearSpaces, doorRect, isReachable, panels, usableSpace } from '../model/furniture';
+import { arrange, arrangeFloor } from '../model/layout';
 import { cellHolding, childId, childrenOf } from '../model/tree';
 import type { Box, Cell, Furniture } from '../model/types';
 import { toDisplaySize } from '../model/units';
 import { useStore } from '../state/store';
 import { Contents } from './Contents';
-import { useDrag } from './drag';
+import { FLOOR_ZONE, overClass, useDrag } from './drag';
+import { DoorShape, DrawerShape, FixtureFront, leavesOf, openLeaf, useCell } from './Openings';
 import { cls, fitText, useElementSize } from './parts';
 import { ThingChip } from './ThingChip';
+import { ANGLED, extent, faces, frontRect, movedTo, polygon, toPixels, type Corner, type View } from './view';
 
-/** Room around the drawing so outlines and warning marks are not clipped. */
+/** Room around the drawing so outlines and warning marks are not cut off. */
 const MARGIN = 14;
 
 /** How far past the piece's side overflowing things may be drawn, as a share of its width. */
 const MAX_OVERHANG = 0.6;
+
+/** The least floor shown in front of a piece, so there is always somewhere to set things down, and the most. */
+const MIN_FLOOR_WIDTH = 90;
+const MIN_FLOOR_DEPTH = 45;
+const MAX_FLOOR_WIDTH = 240;
+
+/**
+ * The patch of floor things are set down on is far enough in front of the
+ * piece that anything up to this tall does not hide the piece behind it.
+ */
+const FLOOR_CLEAR_HEIGHT = 34;
+
+/** The back-left corner of that patch. It is also moved right, so on screen it sits straight below the piece. */
+const FLOOR_CORNER = { x: (FLOOR_CLEAR_HEIGHT / ANGLED.ky) * ANGLED.kx, z: -FLOOR_CLEAR_HEIGHT / ANGLED.ky };
 
 export function FurnitureView() {
   const { state } = useStore();
@@ -46,7 +67,7 @@ function CompartmentList() {
 
   const cellRef = selected?.kind === 'cell' ? index.cells.get(selected.id) : selected ? cellHolding(index, selected.id) : undefined;
   if (!cellRef || cellRef.furniture.id !== state.openFurnitureId) {
-    return <p className="hint compartment-list">Click a compartment to list what is in it.</p>;
+    return <p className="hint compartment-list">Click a compartment to list what is in it. Click a door or a drawer to open it.</p>;
   }
 
   const children = childrenOf(state.home, cellRef.cell.id);
@@ -63,110 +84,223 @@ function CompartmentList() {
 
 function Drawing({ piece, availableWidth }: { piece: Furniture; availableWidth: number }) {
   const { state, index } = useStore();
+  const { drag } = useDrag();
+  const home = state.home;
+  const { w: width, h: height, d: depth } = piece.outer;
+
   const spaces = clearSpaces(piece);
   const cells = piece.columns.flatMap((column) =>
-    column.cells.map((cell) => {
+    column.cells.map((cell, level) => {
       const space = spaces.get(cell.id)!;
-      return { cell, space, usable: usableSpace(cell, space), placed: arrange(state.home, cell.id, index) };
+      const reachable = isReachable(piece, cell, home.open);
+      // Shelves and hanging spaces are drawn here. Drawers draw their own contents when open.
+      const placed = reachable && cell.kind !== 'drawer' ? arrange(home, cell.id, index) : [];
+      return { cell, space, usable: usableSpace(cell, space), reachable, placed, isTop: level === column.cells.length - 1 };
     }),
   );
 
   // Things that do not fit hang out past the piece's side. Make room to show them, up to a limit.
-  const rightmost = Math.max(piece.outer.w, ...cells.map(({ usable, placed }) => usable.x + reach(placed).w));
-  const drawnWidth = Math.min(rightmost, piece.outer.w * (1 + MAX_OVERHANG));
+  const rightmost = Math.max(width, ...cells.flatMap(({ usable, placed }) => placed.map((p) => usable.x + p.x + p.w)));
+  const drawnRight = Math.min(rightmost, width * (1 + MAX_OVERHANG));
 
   // A piece with one column has room beside it for compartment names; a wider piece labels inside.
-  const gutter = piece.columns.length === 1 ? Math.min(170, Math.max(96, availableWidth * 0.28)) : 0;
-  const maxHeight = Math.max(280, window.innerHeight * 0.62);
-  const scale = Math.min((availableWidth - gutter - 2 * MARGIN) / drawnWidth, (maxHeight - 2 * MARGIN) / piece.outer.h);
+  const gutter = piece.columns.length === 1 ? Math.min(170, Math.max(96, availableWidth * 0.26)) : 0;
+  const room = { w: availableWidth - gutter - 2 * MARGIN, h: Math.max(320, window.innerHeight * 0.7) - 2 * MARGIN };
 
-  const height = piece.outer.h * scale;
-  const left = gutter + MARGIN;
-  const floor = MARGIN + height; // the pixel row of the furniture's floor line
+  /** Lays out the floor at a width, and finds the scale at which the whole scene fits the room there is. */
+  const fitScene = (floorWidth: number) => {
+    const floor = arrangeFloor(childrenOf(home, null), floorWidth);
+    const floorDepth = Math.max(floor.depth, MIN_FLOOR_DEPTH);
+    // Everything that can appear, with every door and drawer open, so the picture
+    // keeps one size whichever of them are open.
+    const bounds = extent(
+      [
+        [0, 0, 0],
+        [drawnRight, height, 0],
+        [0, height, depth],
+        [width, height, depth],
+        [FLOOR_CORNER.x, 0, FLOOR_CORNER.z - floorDepth],
+        [FLOOR_CORNER.x + floorWidth, 0, FLOOR_CORNER.z],
+        ...floor.placed.map((p): Corner => [FLOOR_CORNER.x + p.x + p.w, p.y + p.h, FLOOR_CORNER.z + p.z + p.d]),
+        ...piece.doors.flatMap((door) => leavesOf(piece, door).flatMap(openLeaf)),
+        ...cells.filter(({ cell }) => cell.kind === 'drawer').map(({ space }): Corner => [space.x, space.y, -space.d]),
+      ],
+      ANGLED,
+    );
+    const scale = Math.min(room.w / (bounds.right - bounds.left), room.h / (bounds.top - bounds.bottom));
+    return { floor, floorWidth, floorDepth, bounds, scale };
+  };
 
-  /** Turns a box measured from the piece's bottom-left corner into pixels. */
-  const toPixels = (box: { x: number; y: number; w: number; h: number }) => ({
-    x: left + box.x * scale,
-    y: floor - (box.y + box.h) * scale,
-    width: box.w * scale,
-    height: box.h * scale,
-  });
+  // Start with a floor as wide as the piece. If that leaves room beside the piece (a tall, narrow closet),
+  // widen the floor into it, so fewer things end up in front of one another.
+  let scene = fitScene(Math.max(width, MIN_FLOOR_WIDTH));
+  const widest = scene.bounds.left + room.w / scene.scale - FLOOR_CORNER.x;
+  if (widest > scene.floorWidth) scene = fitScene(Math.min(widest, MAX_FLOOR_WIDTH));
+  const { floor, floorWidth, floorDepth, bounds, scale } = scene;
+
+  const view: View = {
+    ...ANGLED,
+    scale,
+    originX: gutter + MARGIN - bounds.left * scale,
+    originY: MARGIN + bounds.top * scale,
+  };
+
+  const outside = faces({ x: 0, y: 0, z: 0, w: width, h: height, d: depth });
+  const floorView = movedTo(view, FLOOR_CORNER.x, 0, FLOOR_CORNER.z);
+  const floorMiddle = toPixels(floorView, floorWidth / 2, 0, -floorDepth / 2);
+
+  // Doors and drawers are painted from the bottom of the piece up, because
+  // you look down on it: an open drawer hides part of the door below it.
+  const openings = [
+    ...piece.doors.map((door) => ({ bottom: doorRect(piece, door).y, shape: <DoorShape key={door.id} piece={piece} door={door} view={view} /> })),
+    ...cells.flatMap(({ cell, space }) => {
+      if (cell.kind === 'drawer') return [{ bottom: space.y, shape: <DrawerShape key={cell.id} cell={cell} space={space} view={view} /> }];
+      if (cell.kind === 'fixture') return [{ bottom: space.y, shape: <FixtureFront key={cell.id} cell={cell} space={space} view={view} /> }];
+      return [];
+    }),
+  ].sort((a, b) => a.bottom - b.bottom);
 
   return (
     <svg
       className="furniture-drawing"
-      width={gutter + drawnWidth * scale + 2 * MARGIN}
-      height={height + 2 * MARGIN}
+      width={gutter + (bounds.right - bounds.left) * scale + 2 * MARGIN}
+      height={(bounds.top - bounds.bottom) * scale + 2 * MARGIN}
       role="group"
-      aria-label={`Front view of ${piece.name}`}
+      aria-label={`${piece.name}, seen from the front at an angle`}
     >
-      <rect className="interior" {...toPixels({ x: 0, y: 0, w: piece.outer.w, h: piece.outer.h })} />
-      {cells.map(({ cell, space }) => (
-        <CellShape key={cell.id} cell={cell} space={space} toPixels={toPixels} scale={scale} gutter={gutter} />
+      <polygon
+        className={cls('floor-zone', overClass(drag, FLOOR_ZONE))}
+        data-drop={FLOOR_ZONE}
+        data-append=""
+        points={polygon(floorView, [[0, 0, 0], [floorWidth, 0, 0], [floorWidth, 0, -floorDepth], [0, 0, -floorDepth]])}
+      />
+      {floor.placed.length === 0 && (
+        <text className="floor-hint" x={floorMiddle.x} y={floorMiddle.y + 4} textAnchor="middle">
+          Floor: drag things here to set them down
+        </text>
+      )}
+
+      <polygon className="piece-face piece-top" points={polygon(view, outside.top)} />
+      <polygon className="piece-face piece-side" points={polygon(view, outside.right)} />
+      <rect className="interior" {...frontRect(view, { x: 0, y: 0, z: 0, w: width, h: height })} />
+      {cells.map(({ cell, space, isTop }) => cell.kind === 'fixture' && isTop && <Basin key={cell.id} space={space} top={height} depth={depth} view={view} />)}
+
+      {cells.map(({ cell, space, reachable }) => (
+        <g key={cell.id}>
+          <clipPath id={`clip-${cell.id}`}>
+            <rect {...frontRect(view, { ...space, z: 0 })} />
+          </clipPath>
+          {reachable && <Compartment cell={cell} space={space} view={view} labelInside={gutter === 0} />}
+          {gutter > 0 && <GutterLabel cell={cell} space={space} view={view} right={gutter + MARGIN - 8} width={gutter - 4} />}
+        </g>
       ))}
+
       {panels(piece).map((panel, i) => (
-        <rect key={i} className={`panel panel-${panel.kind}`} {...toPixels(panel)} />
+        <rect key={i} className={`panel panel-${panel.kind}`} {...frontRect(view, { ...panel, z: 0 })} />
       ))}
-      {cells.map(({ cell, usable, placed }) => {
-        const corner = toPixels({ x: usable.x, y: usable.y, w: 0, h: 0 });
-        return (
-          <Contents
-            key={cell.id}
-            placed={placed}
-            originX={corner.x}
-            originY={corner.y}
-            scale={scale}
-            maxRight={left + drawnWidth * scale}
-          />
-        );
-      })}
+
+      {cells.map(({ cell, usable, placed }) => (
+        <Contents
+          key={cell.id}
+          placed={placed}
+          view={movedTo(view, usable.x, usable.y)}
+          maxRight={drawnRight - usable.x}
+          clipId={`clip-${cell.id}`}
+        />
+      ))}
+
+      {openings.map((opening) => opening.shape)}
+
+      <Contents placed={floor.placed} view={floorView} ordered={false} />
     </svg>
   );
 }
 
-interface CellShapeProps {
+interface CompartmentProps {
   cell: Cell;
   space: Box;
-  toPixels: (box: { x: number; y: number; w: number; h: number }) => { x: number; y: number; width: number; height: number };
-  scale: number;
-  /** Width of the label area to the left of the piece, or 0 to label inside the compartment. */
-  gutter: number;
+  view: View;
+  /** True to write the compartment's name inside it. */
+  labelInside: boolean;
 }
 
-/** One compartment: the area you can drop things on, its rail if it has one, and its label. */
-function CellShape({ cell, space, toPixels, scale, gutter }: CellShapeProps) {
-  const { state, dispatch } = useStore();
-  const { drag } = useDrag();
-  const area = toPixels(space);
-  const selected = state.selected?.kind === 'cell' && state.selected.id === cell.id;
+/**
+ * The inside of one open compartment: its back, floor and left wall, its rail
+ * if it has one, and the area you can drop things on. A drawer's inside is
+ * only the hole it slides into; the drawer itself is drawn by DrawerShape.
+ */
+function Compartment({ cell, space, view, labelInside }: CompartmentProps) {
+  const { className, select } = useCell(cell);
+  const opening = frontRect(view, { ...space, z: 0 });
+  const walls = faces({ ...space, z: 0 });
+  const isDrawer = cell.kind === 'drawer';
   const size = toDisplaySize(space.w, space.h);
-  const railY = area.y + cell.railDrop * scale;
+
+  const railY = space.y + space.h - cell.railDrop;
+  const railFrom = toPixels(view, space.x, railY, space.d / 2);
+  const railTo = toPixels(view, space.x + space.w, railY, space.d / 2);
 
   return (
-    <g className={cls('cell', selected && 'is-selected', drag?.overZone === cell.id && 'is-over')}>
-      <rect
-        className="cell-zone"
-        data-drop={cell.id}
-        {...area}
-        onClick={() => dispatch({ type: 'select', selected: { kind: 'cell', id: cell.id } })}
-      >
-        <title>{`${cell.name}: ${size} clear`}</title>
-      </rect>
-      {cell.kind === 'hanging' && <line className="rail" x1={area.x + 2} x2={area.x + area.width - 2} y1={railY} y2={railY} />}
-      {gutter > 0 ? (
-        <>
-          <text className="cell-name" x={gutter + MARGIN - 8} y={area.y + area.height / 2 - 1} textAnchor="end">
-            {fitText(cell.name, gutter - 4)}
+    <g className={isDrawer ? 'cell' : className}>
+      <g clipPath={`url(#clip-${cell.id})`}>
+        <polygon className="inside-back" points={polygon(view, walls.back)} />
+        <polygon className="inside-floor" points={polygon(view, walls.bottom)} />
+        <polygon className="inside-wall" points={polygon(view, walls.left)} />
+        {cell.kind === 'hanging' && <line className="rail" x1={railFrom.x} y1={railFrom.y} x2={railTo.x} y2={railTo.y} />}
+        {labelInside && !isDrawer && (
+          <text className="cell-name" x={opening.x + 5} y={opening.y + 12}>
+            {fitText(cell.name, opening.width - 10)}
           </text>
-          <text className="cell-size" x={gutter + MARGIN - 8} y={area.y + area.height / 2 + 12} textAnchor="end">
-            {size}
-          </text>
-        </>
-      ) : (
-        <text className="cell-name" x={area.x + 4} y={area.y + 12}>
-          {fitText(cell.name, area.width - 8)}
-        </text>
+        )}
+      </g>
+      {!isDrawer && (
+        <rect
+          className="cell-zone"
+          data-drop={cell.id}
+          {...opening}
+          onClick={select}
+        >
+          <title>{`${cell.name}: ${size} clear`}</title>
+        </rect>
       )}
+    </g>
+  );
+}
+
+/** A compartment's name and clear size, written beside it. */
+function GutterLabel({ cell, space, view, right, width }: { cell: Cell; space: Box; view: View; right: number; width: number }) {
+  const middle = toPixels(view, 0, space.y + space.h / 2).y;
+  return (
+    <>
+      <text className="cell-name" x={right} y={middle - 1} textAnchor="end">
+        {fitText(cell.name, width)}
+      </text>
+      <text className="cell-size" x={right} y={middle + 12} textAnchor="end">
+        {toDisplaySize(space.w, space.h)}
+      </text>
+    </>
+  );
+}
+
+/** A basin and tap on top of a piece, above a compartment that is a sink. */
+function Basin({ space, top, depth, view }: { space: Box; top: number; depth: number; view: View }) {
+  const inset = Math.min(8, space.w / 6);
+  const bowl: Corner[] = [
+    [space.x + inset, top, depth * 0.18],
+    [space.x + space.w - inset, top, depth * 0.18],
+    [space.x + space.w - inset, top, depth * 0.72],
+    [space.x + inset, top, depth * 0.72],
+  ];
+  const middle = space.x + space.w / 2;
+  const tap: Corner[] = [
+    [middle, top, depth * 0.86],
+    [middle, top + 14, depth * 0.86],
+    [middle, top + 14, depth * 0.6],
+  ];
+  return (
+    <g className="basin">
+      <polygon className="basin-bowl" points={polygon(view, bowl)} />
+      <polyline className="basin-tap" points={polygon(view, tap)} />
     </g>
   );
 }

@@ -12,7 +12,7 @@
 
 import { HANGER_GAP, MIN_CLEAR } from './presets';
 import { Refusal } from './refusal';
-import type { Box, Cell, Column, Furniture, Id } from './types';
+import type { Box, Cell, Column, Door, Furniture, Id } from './types';
 import { toDisplay } from './units';
 
 /**
@@ -79,6 +79,58 @@ export function usableSpace(cell: Cell, space: Box): Box {
     h: space.h - wall,
     d: space.d - 2 * wall,
   };
+}
+
+/**
+ * The rectangle a door covers on the front of its piece: the area around its
+ * compartments, widened to the middle of each neighbouring panel so that
+ * doors side by side meet.
+ */
+export function doorRect(f: Furniture, door: Door): { x: number; y: number; w: number; h: number } {
+  const spaces = clearSpaces(f);
+  const covered = door.cellIds.flatMap((id) => (spaces.has(id) ? [spaces.get(id)!] : []));
+  const left = Math.min(...covered.map((space) => space.x));
+  const right = Math.max(...covered.map((space) => space.x + space.w));
+  const bottom = Math.min(...covered.map((space) => space.y));
+  const top = Math.max(...covered.map((space) => space.y + space.h));
+
+  const floor = f.baseHeight + f.panel.bottom;
+  const atLeftEdge = left <= f.panel.side + TOLERANCE;
+  const atRightEdge = right >= f.outer.w - f.panel.side - TOLERANCE;
+  const atBottom = bottom <= floor + TOLERANCE;
+  const atTop = top >= f.outer.h - f.panel.top - TOLERANCE;
+
+  const x = left - (atLeftEdge ? f.panel.side : f.dividerThickness / 2);
+  const y = bottom - (atBottom ? f.panel.bottom : f.shelfThickness / 2);
+  return {
+    x,
+    y,
+    w: right + (atRightEdge ? f.panel.side : f.dividerThickness / 2) - x,
+    h: top + (atTop ? f.panel.top : f.shelfThickness / 2) - y,
+  };
+}
+
+/** The door in front of a compartment, if it has one. */
+export function doorOf(f: Furniture, cellId: Id): Door | undefined {
+  return f.doors.find((door) => door.cellIds.includes(cellId));
+}
+
+/** The ids of everything on a piece that opens: its doors and its drawers. */
+export function openingsOf(f: Furniture): Id[] {
+  const drawers = f.columns.flatMap((column) => column.cells.filter((cell) => cell.kind === 'drawer'));
+  return [...f.doors.map((door) => door.id), ...drawers.map((drawer) => drawer.id)];
+}
+
+/**
+ * Can you reach into this compartment right now? Not if it is behind a closed
+ * door, is a closed drawer, or stores nothing. `open` is the home's list of
+ * open doors and drawers.
+ */
+export function isReachable(f: Furniture, cell: Cell, open: Id[]): boolean {
+  if (cell.kind === 'fixture') return false;
+  if (cell.kind === 'drawer' && !open.includes(cell.id)) return false;
+  const door = doorOf(f, cell.id);
+  return !door || open.includes(door.id);
 }
 
 /** How long a garment can be and still hang clear of the compartment's floor. */
